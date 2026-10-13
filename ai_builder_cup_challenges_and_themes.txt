@@ -1,0 +1,333 @@
+================================================================================
+AI BUILDER CUP 2026 - CHALLENGES & THEMES COMPREHENSIVE DOCUMENTATION
+================================================================================
+Source URLs:
+1. https://hack2skill.com/event/aibuildercup2026/dashboard/challenges
+2. https://aibuildercup.com/themes.html
+
+Extracted via interactive browser session exploring all challenges, modals, tabs,
+submission guidelines, carousels, and criteria accordions.
+================================================================================
+
+
+--------------------------------------------------------------------------------
+PART 1: HACK2SKILL DASHBOARD & CHALLENGES DETAILS
+URL: https://hack2skill.com/event/aibuildercup2026/dashboard/challenges
+--------------------------------------------------------------------------------
+
+[1.1] EVENT OVERVIEW & TIMELINE
+- Initiative Name: Google Cloud AI Builder Cup 2026
+- Tagline: Build in JAPAC. Build for the world.
+- Host / Partners: Google Cloud & Hack2skill
+- Event Type: Hybrid | Free Entry
+- Team Size: Min 2 members, Max 4 members (Teams must consist of at least 2 members to be eligible for submissions; deadline for team formation is October 11, 2026).
+
+Event Schedule & Milestones (IST):
+• Registration:
+  - Start: Sep 01, 2026 @ 12:00 PM (IST)
+  - End: Oct 11, 2026 @ 11:59 PM (IST)
+• Team Formation:
+  - Start: Sep 01, 2026 @ 12:15 PM (IST)
+  - End: Oct 11, 2026 @ 11:59 PM (IST)
+• Prototype Submission:
+  - Start: Sep 07, 2026 @ 02:00 PM (IST)
+  - End: Oct 18, 2026 @ 11:59 PM (IST)
+• Problem Statement Explainer Session:
+  - Sep 11, 2026 @ 02:00 PM – 03:00 PM (IST) (Completed)
+• Prompt Your Jersey:
+  - Sep 18, 2026 @ 12:00 AM – Sep 27, 2026 @ 11:59 PM (IST) (Completed)
+• Prototype Evaluation:
+  - Oct 19, 2026 @ 12:00 AM – Nov 06, 2026 @ 11:59 PM (IST)
+• Top 50 Teams Announcement:
+  - Nov 07, 2026 @ 11:00 AM – 11:59 PM (IST)
+• Mentorship Week (Google Experts):
+  - Nov 10, 2026 @ 12:00 AM – Nov 30, 2026 @ 11:59 PM (IST)
+• In-Person Grand Finale:
+  - Dec 04, 2026 (Full day in-person grand finale)
+
+
+[1.2] DASHBOARD SECTIONS & NAVIGATION TABS EXPLORED
+• Roadmap:
+  - Displays milestone timeline, module statuses, countdowns, and progress.
+• Team Management:
+  - Manage teammates, invites, team profile, roles (Team requirement: 2 to 4 members).
+• Submissions:
+  - Active prototype submission module closing on Oct 18, 2026 @ 11:59 PM IST.
+• Forms:
+  - Upcoming, ongoing, and past forms for participant data and logistics.
+• Interactions:
+  - Interaction portal for announcements and participant queries.
+• Resources:
+  - Guides, documentation, templates, and reference materials.
+• Challenges:
+  - The 6 core problem statements with detailed modal cards.
+• Announcements:
+  - Official organizer broadcasts and updates.
+• Breakout Zone:
+  - Networking and breakout sessions for participants.
+
+
+[1.3] CHALLENGES & DETAILED MODAL SPECIFICATIONS
+
+CHALLENGE 1: BFSI: Intelligent Risk, Fraud & Financial Experiences
+------------------------------------------------------------------
+• Problem Statement:
+  Build an AI-powered solution that addresses meaningful challenges across banking, financial services, insurance, or related industries. Solutions may focus on detecting and mitigating fraud or risk, automating complex processes, improving customer interactions, or delivering more personalized and informed financial experiences.
+• Suggested Solution Directions:
+  - Fraud detection
+  - Transaction anomaly analysis
+  - Document intelligence
+  - Financial assistance / AI financial advisors
+  - Personalized recommendations
+  - Compliance automation
+  - Risk assessment & credit scoring
+  - Claims processing automation
+• Suggested Google Cloud Technologies:
+  - Gemini on Vertex AI for reasoning and conversational experiences
+  - BigQuery for transaction and data analytics
+  - Cloud Storage
+  - Cloud Run
+  - Pub/Sub
+  - Vertex AI Search & Conversation
+
+CHALLENGE 2: Retail & Commerce: Intelligent Customer and Business Experiences
+----------------------------------------------------------------------------
+• Problem Statement:
+  Build an AI-powered solution that transforms how businesses understand, engage, and serve customers while improving operational efficiency across physical and digital commerce. Solutions may address discovery, personalization, conversational shopping, demand planning, inventory, customer insights, or fraud.
+• Suggested Solution Directions:
+  - Hyper-personalization
+  - Conversational commerce & shopping assistants
+  - Product discovery & visual search
+  - Demand forecasting & planning
+  - Basket analysis
+  - Customer segmentation & behavioral insights
+  - Inventory intelligence & optimization
+  - Fraud mitigation in transactions
+• Suggested Google Cloud Technologies:
+  - Gemini on Vertex AI
+  - Vertex AI Search / Agent Search for intelligent product and information discovery
+  - BigQuery
+  - Cloud Storage
+  - Cloud Run
+  - Cloud Vision API
+
+CHALLENGE 3: Manufacturing: Intelligent Operations & Industrial Efficiency
+--------------------------------------------------------------------------
+• Problem Statement:
+  Build an AI-powered solution that addresses challenges related to efficiency, quality, reliability, supply and demand, or sustainability across manufacturing and industrial operations. Solutions should demonstrate how AI can transform operational data into meaningful insights, recommendations, or actions.
+• Suggested Solution Directions:
+  - Predictive equipment maintenance
+  - Visual quality inspection & automated defect detection
+  - Production & yield optimization
+  - Supply-chain intelligence & resilience
+  - Demand forecasting
+  - Waste reduction
+  - Operational copilots for factory floor technicians
+  - Worker safety monitoring
+• Suggested Google Cloud Technologies:
+  - Gemini on Vertex AI for reasoning and operational assistance
+  - Vertex AI for predictive modeling and machine learning
+  - Cloud Vision AI
+  - BigQuery
+  - Pub/Sub
+  - Cloud Run
+  - Cloud Storage
+
+CHALLENGE 4: Media, Content & Digital Experiences
+-------------------------------------------------
+• Problem Statement:
+  Build an AI-powered solution that transforms how content is created, discovered, personalized, understood, or experienced. Solutions may address challenges across media, entertainment, publishing, education, communication, or other digital content ecosystems.
+• Suggested Solution Directions:
+  - Personalized content recommendations
+  - Interactive storytelling
+  - Automated content creation and media tagging
+  - Video and audio summarization
+  - Misinformation analysis and content verification
+  - Audience insights and sentiment analysis
+  - Personalized learning experiences
+  - Subtitling and automated multi-language translation
+• Suggested Google Cloud Technologies:
+  - Gemini on Vertex AI
+  - Imagen for generative image creation
+  - Veo for video generation
+  - Speech-to-Text & Text-to-Speech for audio experiences
+  - Cloud Translation for multilingual capabilities
+  - Vertex AI Search
+  - Cloud Storage
+  - Cloud Run
+
+CHALLENGE 5: Future of Work & Enterprise Productivity
+-----------------------------------------------------
+• Problem Statement:
+  Build an AI-powered solution that transforms how individuals and organizations access knowledge, collaborate, make decisions, and complete everyday work. Solutions should demonstrate meaningful improvements in productivity, efficiency, knowledge accessibility, or workflow execution.
+• Suggested Solution Directions:
+  - Enterprise knowledge assistants
+  - AI copilots for office and operational workflows
+  - Document intelligence & automated extraction
+  - Meeting intelligence (automated summaries, action items, minutes)
+  - Workflow automation
+  - Research assistants & smart synthesis
+  - Intelligent enterprise search
+  - Code generation tools & HR onboarding assistants
+• Suggested Google Cloud Technologies:
+  - Gemini on Vertex AI
+  - Vertex AI Search / Agent Search for enterprise search and knowledge management
+  - BigQuery
+  - Cloud Run
+  - Cloud Storage
+  - Cloud Functions / Pub/Sub
+
+CHALLENGE 6: Sustainability & Social Impact
+-------------------------------------------
+• Problem Statement:
+  Build an AI-powered solution that addresses a meaningful environmental or societal challenge. Solutions may focus on improving resource efficiency, increasing accessibility, strengthening resilience, supporting communities, or enabling more informed and sustainable decision-making.
+• Suggested Solution Directions:
+  - Climate and environmental intelligence
+  - Disaster preparedness & early warning systems
+  - Sustainable agriculture & crop monitoring
+  - Resource optimization (energy, water, raw materials)
+  - Accessibility solutions for underserved populations
+  - Community services support
+  - Waste reduction and circular economy initiatives
+• Suggested Google Cloud Technologies:
+  - Gemini on Vertex AI for reasoning and natural-language interfaces
+  - BigQuery for analyzing large geospatial and environmental datasets
+  - Vertex AI
+  - Google Earth Engine
+  - Vision AI
+  - Cloud Storage
+  - Cloud Run
+  - Pub/Sub
+
+
+[1.4] PROTOTYPE SUBMISSION REQUIREMENTS & FORM FIELDS
+(Extracted from Hack2skill Submissions Module & Interactive Submission Modal)
+
+Mandatory Submission Rules:
+1. Pitch Deck (PDF):
+   - Participants must submit their pitch deck using the prescribed template provided for the challenge.
+   - Prescribed Presentation Template:
+     https://docs.google.com/presentation/d/13rg7vW43mEH6DkpuusAE6fdoEylSFz8waNpE4RLzoUg/edit?slide=id.p#slide=id.p/export/pptx
+   - Converted & uploaded as PDF (Maximum file size: 5 MB).
+   - Submissions not following the required format may be subject to disqualification.
+2. Video Demonstration Link:
+   - Participants must submit a 3 to 4 minute video demonstration of their solution.
+   - Must clearly demonstrate working functionality of the submitted solution.
+   - Publicly accessible link on YouTube, Vimeo, or Google Drive.
+   - Videos exceeding the prescribed duration may attract a penalty or result in disqualification from advancing to prototype evaluation.
+3. Deployed Prototype Link:
+   - Participants must provide a valid and accessible link to a deployed, working prototype.
+   - Must be deployed on Google Cloud Platform (Cloud Run, GCP, or Firebase).
+   - The prototype must remain functional throughout the evaluation process.
+   - If the application, APIs, integrations, or deployment components are unavailable or non-functional during evaluation, no additional consideration, retries, or allowances will be provided.
+4. GitHub Repository Link:
+   - Participants must provide an accessible, public GitHub repository containing all relevant source code and supporting documentation.
+   - Must remain publicly accessible throughout the entire evaluation process.
+5. Brief Description:
+   - Text explanation (Maximum 1024 characters) detailing what was built.
+   - Must explicitly describe how Google Cloud/Firebase services are leveraged (e.g., Gemini, Cloud Run, Firestore, Vertex AI).
+6. Challenge Category:
+   - Selection of the corresponding theme category from the dropdown menu.
+
+Submission Deadline:
+- October 18, 2026 at 11:59 PM (IST)
+
+
+
+================================================================================
+PART 2: AI BUILDER CUP THEMES OFFICIAL PORTAL
+URL: https://aibuildercup.com/themes.html
+================================================================================
+
+[2.1] THEMES PORTAL OVERVIEW
+- Page Title: Themes | AI Builder Cup 2026
+- Canonical URL: https://aibuildercup.com/themes.html
+- Primary Message: "Every team builds against one of the following themes. Choose the one closest to the problem you want to solve."
+
+Multi-Language Support (Interactive Dropdown):
+- English (default)
+- Indonesian (Bahasa Indonesia)
+- Simplified Chinese (简体中文)
+- Korean (한국어)
+- Japanese (日本語)
+
+
+[2.2] WHAT YOU'LL BUILD (PROTOTYPE SPECIFICATION)
+"A working prototype that addresses your chosen problem statement. The goal is a functional solution that demonstrates a clear idea in action—not just a pitch deck or a mockup. Crucially, all submissions must leverage Google AI models (like Gemini or Gemma) or be built using agentic platforms (such as Agent Platform, Antigravity, or AI Studio), and they must be deployed on Google Cloud via Cloud Run or Firebase.
+We'll be hosting online sessions covering the overall program and a walkthrough of the problem statements, so you can attend for clarity as you build."
+
+Key Technical Mandates:
+• Core AI Models / Platforms:
+  - Google AI models: Family of Gemini or Gemma models
+  - Agentic platforms: Agent Platform, Google Antigravity, or Google AI Studio
+• Deployment & Infrastructure:
+  - Must be deployed on Google Cloud Platform using Cloud Run or Firebase.
+
+
+[2.3] WHAT YOU'LL SUBMIT
+Following requirements are mandatory while submitting your solution:
+1. Clear Proposal:
+   - Submit a compelling vision for your AI solution, highlighting its positive impact and alignment with one of the problem statements in a deck/PPT converted into a PDF.
+   - Clearly articulate the problem your solution addresses and how it will benefit the community.
+   - Demonstrate the feasibility of your project and its potential for scalability.
+2. Functional Prototype:
+   - Build a working prototype using Google Cloud's AI tools & deployed on Cloud Run / GCP / Firebase.
+   - Ensure the prototype effectively demonstrates your solution's capabilities and benefits.
+3. Comprehensive Documentation:
+   - Include a link to a public YouTube or Vimeo video or public Google Drive link (3 minutes) showcasing your AI creation in action.
+4. Category Specification:
+   - Clearly identify the problem statement you are submitting for.
+
+
+[2.4] SUBMISSION SPECIFICS
+• Functionality:
+  - Your project must be functional and demonstrate a clear solution to the chosen challenge.
+  - The solution should be user-friendly, accessible, and scalable.
+  - Ensure that your project aligns with the hackathon's focus on impactful solutions.
+• Platform Compatibility:
+  - Your solution should be compatible with the specified Google Cloud platform and tools.
+  - Consider factors like scalability, performance, and integration with existing systems.
+• Language:
+  - All submission materials, including code, documentation, and presentations, must be in English.
+
+
+[2.5] JUDGING CRITERIA (WEIGHTED SCORING BREAKDOWN)
+(Extracted from Interactive Criteria Accordion Toggles)
+
+1. Technical Merit & Gen AI Implementation — 40%
+   • Meaningful use of Gen AI:
+     - How effectively and meaningfully has Generative AI been incorporated into the solution?
+     - Does the use of Gen AI contribute directly to solving the problem or enhancing the overall solution?
+   • Technical implementation:
+     - Is the solution functional, technically sound, and appropriately implemented?
+   • Scalability & sustainability:
+     - Does the solution demonstrate potential for wider adoption, scalability, and future development beyond the prototype stage?
+
+2. Problem Alignment & Impact — 25%
+   • Problem alignment:
+     - How effectively does the solution address the chosen problem statement, challenge objective, or theme?
+   • Potential impact:
+     - Does the solution demonstrate clear and meaningful value for its intended users, organization, industry, community, or other relevant stakeholders?
+
+3. Innovation & Creativity — 25%
+   • Originality & differentiation:
+     - Does the solution demonstrate a fresh perspective, novel approach, or meaningful differentiation from existing solutions?
+   • Innovation in the use of Gen AI:
+     - Does the solution demonstrate a creative or innovative application of Generative AI beyond a basic or superficial implementation?
+
+4. User Experience & Solution Design — 10%
+   • Usability & accessibility:
+     - Is the solution intuitive, user-friendly, and reasonably accessible to its intended users?
+   • Experience & integration:
+     - Do the various components, including the Gen AI capabilities, work together cohesively to deliver a smooth and meaningful user experience?
+
+
+[2.6] CONTACT & COMMUNITY INFORMATION
+• WhatsApp / Phone Support: +91 98703 30830
+• Discord Community: https://discord.gg/x5GRzJbKpa
+• Official Support Email: support+aibuildercup@hack2skill.com
+• General Support Email: support@hack2skill.com
+• Copyright & Credits:
+  - © Google Cloud AI Builder Cup. ALL RIGHTS RESERVED
+  - © Gen AI Academy APAC Edition. ALL RIGHTS RESERVED
+================================================================================
