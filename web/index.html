@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Shared, governed project memory for AI-powered software teams.">
+<title>ContextOS — Shared intelligence</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script src="/assets/app.js" defer></script>
+</head>
+<body>
+<a href="#main" class="skip">Skip to workspace</a>
+<aside class="sidebar">
+<a class="brand" href="#overview"><span class="brand-icon">c<span>•</span></span>Context<span class="brand-os">OS</span></a>
+<div class="workspace-label">WORKSPACE</div>
+<div class="project-switch"><span class="project-mark">C</span><span><span id="project-name">Checkout reliability</span><small>Product & engineering</small></span><span class="chevron">⌄</span></div>
+<div class="workspace-label nav-label">PLATFORM</div>
+<nav aria-label="Main navigation" id="nav"></nav>
+<div class="sidebar-bottom"><div class="sidebar-note"><span class="live-dot"></span> One shared understanding<p>Good context travels with<br>the work.</p></div><button class="export-btn" data-action="export">↗ Export workspace</button><div class="profile"><span class="avatar" id="profile-initial">D</span><div id="profile-label">Developer<small>Demo persona</small></div></div></div>
+</aside>
+<div class="shell">
+<header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="crumb">Overview</strong></div><div class="top-actions"><span class="mode-pill" id="mode">Connecting</span><label class="persona-label" for="persona">Viewing as</label><select id="persona" aria-label="Demo persona"><option value="developer">Developer</option><option value="pm">Product manager</option><option value="architect">Architect</option><option value="qa">QA engineer</option><option value="security">Security</option></select></div></header>
+<main id="main" tabindex="-1"><div class="loading">Opening your shared workspace…</div></main>
+<footer class="page-footer"><span>ContextOS · Shared intelligence for agentic teams</span><span id="footer-mode">Synthetic demo workspace</span></footer>
+</div>
+<dialog id="dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

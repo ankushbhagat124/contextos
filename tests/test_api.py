@@ -42,6 +42,7 @@ def test_sessions_isolated_and_requests_validated(client):
 def test_ingest_candidate_requires_independent_review(client):
     p = client.post('/api/ingest', json={'notes': 'Customers need clear error messages after a declined card.', 'source': 'Workshop'}).json()
     assert p['status'] == 'pending'
+    # Seven seeded items exist; Developer cannot see restricted RES-001.
     assert len(client.get('/api/workspace').json()['contexts']) == 6
     client.post('/api/persona', json={'role': 'pm'})
     assert client.post(f"/api/proposals/{p['id']}/review", json={'hash': p['hash'], 'decision': 'approve'}).status_code == 200

@@ -30,3 +30,9 @@ Local synthetic sandbox is explicitly distinct from authenticated production. Ne
 ## Peer-review protocol
 
 User expects feedback from gemini.md (created by another tool/person) to be evaluated and applicable fixes implemented without straying from the blueprint. Write dispositions and evidence to chatgpt.md. Do not overwrite gemini.md. First check: not present. Core domain test run: 8 passing.
+
+## Working prototype checkpoint
+
+Five-view UI now implemented. Browser-tested the complete governed-change workflow and source version adoption at mobile width. Preview server was started in an execution session on 127.0.0.1:8000; restart via README if it no longer runs. Synthetic browser workspace now contains an architecture-v2 demonstration and two runs, one stale.
+
+Gemini Round 3 comments are addressed in chatgpt.md. Recheck gemini.md at each implementation/verification milestone as the user requested. Docker is unavailable locally; deployment package is written but not built. No remote Git operations have been performed.

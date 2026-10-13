@@ -31,3 +31,12 @@ Append an entry in every implementation commit: change, reason, verification, li
 - Added same-origin write checks, response security headers and request bounds.
 - Fixed an integration-test finding: new demo sessions now persist even when their first API operation returns an error.
 - Validation: 14 domain/API tests passing. Two upstream dependency deprecation warnings; live Google services untested without configuration.
+
+## 2026-10-14 — F07–F08: working workspace and deployment preparation
+
+- Built responsive Overview, Shared Knowledge, Agent Workspace, Change Reviews and Context Insights with safe text rendering, keyboard controls, mobile navigation and a source inspector.
+- Connected ingestion, proposals, independent approval/rejection, revision history, rollback proposals, search/filtering, reruns, persona switching and visible-evidence export to the API.
+- Added Dockerfile, .dockerignore, .env.example, deployment guide, three-minute demo script and non-destructive rehearsal helpers. Docker is not installed locally, so image build remains unverified.
+- Read Gemini Round 3 review and recorded all ten dispositions in chatgpt.md; fixed dynamic project labels, cutoff clarity and test explanation. Did not alter gemini.md.
+- Browser verification at mobile width: developer task → exact v1 manifest → architecture proposal → independent architect approval → old run marked stale → rerun manifest includes v2. Local preview is http://127.0.0.1:8000.
+- Local validation: JavaScript syntax passes, isolated rehearsal passes, 14 Python tests pass. Gemini/Firestore/Firebase live verification still requires project setup.

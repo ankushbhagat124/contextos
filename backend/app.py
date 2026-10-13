@@ -118,8 +118,9 @@ def create_app(store=None, ai=None):
             # A bounded public-demo allowance also counts failed calls.
             if len(s['usage']) >= 50:
                 raise d.Problem('This workspace has reached its 50-call demo allowance. Export and start a new sandbox.', 429)
-            from datetime import datetime
-            recent = [u for u in s['usage'] if (datetime.fromisoformat(d.now()) - datetime.fromisoformat(u['at'])).total_seconds() < 60]
+            from datetime import datetime, timezone, timedelta
+            cutoff = datetime.now(timezone.utc) - timedelta(seconds=60)
+            recent = [u for u in s['usage'] if datetime.fromisoformat(u['at']) > cutoff]
             if len(recent) >= 6:
                 raise d.Problem('Please wait a minute before making more model requests.', 429)
             s['usage'].append({'id': run_id, 'at': d.now(), 'kind': kind, 'status': 'pending', 'source_ids': sources, 'private_role': role if kind == 'extraction' else None})
