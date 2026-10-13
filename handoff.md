@@ -10,7 +10,7 @@ README.md → this file → features.md → context.md → design/architecture.m
 
 ## Current stage
 
-Documentation foundation created; implementation underway. No cloud project or credentials supplied. Local Git initially had no commits. Python dependencies are being installed in .venv.
+Documentation, governed domain and API/model adapters implemented. Fourteen local tests pass; UI is next. No cloud project or credentials supplied. Dependencies are installed and locked in requirements.txt. Local commits exist; no remote configured.
 
 ## Build order
 

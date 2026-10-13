@@ -22,3 +22,12 @@ Append an entry in every implementation commit: change, reason, verification, li
 - Deliberate limits: 30 contexts and 750 KB per transactional workspace; a byte-based estimate, not actual tokenization; Firestore needs live verification.
 - Validation: 8 domain tests passed. Dependency versions captured in requirements.txt.
 - User added a peer-review workflow: read forthcoming gemini.md and write reasoned responses to chatgpt.md while preserving the original product scope. File not present at first check.
+
+## 2026-10-14 — F05–F06: API and model workflows
+
+- Added validated FastAPI routes, opaque demo sessions, server-stored personas and Firebase-verified API identity mode.
+- Added Gemini/Vertex SDK adapter for structured extraction and grounded persona tasks. Offline mode is an explicit deterministic rehearsal; live failures do not fall back silently.
+- Added persistent usage reservations, failed-call accounting, workspace rate limits, exact task manifests, stale-during-inference detection, and filtered export.
+- Added same-origin write checks, response security headers and request bounds.
+- Fixed an integration-test finding: new demo sessions now persist even when their first API operation returns an error.
+- Validation: 14 domain/API tests passing. Two upstream dependency deprecation warnings; live Google services untested without configuration.
