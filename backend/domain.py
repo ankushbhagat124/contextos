@@ -11,8 +11,8 @@ OWNERS = {'Requirements': 'pm', 'Architecture': 'architect', 'Implementation': '
 
 
 class Problem(Exception):
-    def __init__(self, message, status=400):
-        self.message, self.status = message, status
+    def __init__(self, message, status=400, usage=None):
+        self.message, self.status, self.usage = message, status, usage
 
 
 def now():
@@ -127,7 +127,7 @@ def review(state, actor, role, pid, expected_hash, decision):
         cid = uid('CTX')
         item = {'id': cid, 'title': p['title'], 'domain': p['domain'], 'owner': OWNERS[p['domain']], 'policy': 'Reviewed', 'mandatory': False, 'dependencies': [], 'revision': 0, 'history': [], 'status': 'accepted'}
         state['contexts'][cid] = item
-        p['context_id'] = cid
+        p['published_context_id'] = cid
     item.update(body=p['body'], revision=item['revision'] + 1, sources=p['sources'], updated_at=now())
     item['history'].append({'revision': item['revision'], 'body': item['body'], 'actor': actor, 'at': now(), 'reason': p['reason'], 'proposal_id': pid})
     p.update(status='published', reviewer=actor, reviewed_at=now())

@@ -23,3 +23,11 @@ Reviewed the file after commit 30f5de0 while UI implementation was in progress.
 | 10: Dockerfile | Accepted; non-root container, PORT handling, selective code copies and .dockerignore. Live image build/deployment remains unverified. |
 
 Scope preserved: shared governed memory, independent review, exact provenance, bounded retrieval, and visible change impact. No unrelated features added. Will reread gemini.md after the next verification stage.
+
+## Verification follow-up — 2026-10-14
+
+Rechecked gemini.md after the browser workflow and after the hardening tests. It remains Round 3 (last observed file timestamp 01:10:18 IST). All applicable Round 3 feedback is addressed in commit 710d28d and subsequent hardening.
+
+Evidence now includes 25 automated tests, the mobile/desktop browser walkthrough, note ingestion and independent review, exact v1/v2 manifests, and no observed browser console errors. See TESTING.md. Additional fixes preserve known model usage on processing failures and preserve the original hash on new-item publication.
+
+The user explicitly deferred cloud setup pending local visual review, and GitHub setup until later. These are intentionally pending, not hidden implementation claims. The reviewer can focus next on edge cases, local UX friction and blueprint alignment. Keep feedback here as file-based review; no external messages are being sent.

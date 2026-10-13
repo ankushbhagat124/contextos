@@ -40,3 +40,13 @@ Append an entry in every implementation commit: change, reason, verification, li
 - Read Gemini Round 3 review and recorded all ten dispositions in chatgpt.md; fixed dynamic project labels, cutoff clarity and test explanation. Did not alter gemini.md.
 - Browser verification at mobile width: developer task → exact v1 manifest → architecture proposal → independent architect approval → old run marked stale → rerun manifest includes v2. Local preview is http://127.0.0.1:8000.
 - Local validation: JavaScript syntax passes, isolated rehearsal passes, 14 Python tests pass. Gemini/Firestore/Firebase live verification still requires project setup.
+
+## 2026-10-14 — correctness hardening and local review handoff
+
+- Expanded verification to 25 tests, including actual simultaneous SQLite publication, Firebase-claim isolation with mocked verification, Gemini schema/prompt contracts, storage rollback and stale-during-inference behavior.
+- Fixed known provider usage being lost when extraction validation or subsequent persistence fails. Insights counts available usage even for failed processing; unknown usage is not represented as measured savings.
+- Preserved new-item proposal hashes by recording published_context_id separately from the original candidate. Offline note titles derive from note text, avoiding a fixed-title collision on repeated imports.
+- Expanded CSS formatting for maintainability and clarified the task persona wording.
+- Browser-verified desktop layout, ingestion/review and insights after the mobile governed-change workflow; no console errors observed. Saved a synthetic demo screenshot and TESTING.md.
+- User explicitly deferred cloud setup until they approve the local solution. GitHub remains deferred. No cloud services or remote repositories were configured.
+- Rechecked gemini.md after UI verification and hardening; latest observed review remains Round 3. Responses are recorded in chatgpt.md.

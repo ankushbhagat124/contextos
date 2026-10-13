@@ -74,3 +74,77 @@ def test_rate_limit(client):
     for _ in range(6):
         assert client.post('/api/tasks', json={'query': 'payment', 'budget': 6000}).status_code == 200
     assert client.post('/api/tasks', json={'query': 'payment', 'budget': 6000}).status_code == 429
+
+
+def test_invalid_extraction_records_known_usage(client, monkeypatch):
+    from backend.domain import Problem
+    def invalid(notes):
+        raise Problem('Invalid extraction', 502, usage={'provider': 'vertex', 'total_tokens': 230})
+    monkeypatch.setattr(client.app.state.ai, 'extract', invalid)
+    response = client.post('/api/ingest', json={'notes': 'A sufficiently long note.', 'source': 'Test'})
+    assert response.status_code == 502
+    state = client.get('/api/workspace').json()
+    assert state['usage'][0]['total_tokens'] == 230
+    assert state['usage'][0]['status'] == 'failed'
+    assert not state['proposals']
+
+
+def test_source_change_during_model_call_marks_new_run_stale(client, monkeypatch):
+    from backend.domain import propose, review
+    client.get('/api/workspace')
+    workspace = client.cookies.get('contextos_session')
+    original = client.app.state.ai.task
+    def concurrent_change(role, query, manifest):
+        def mutation(s):
+            p = propose(s, 'dev', 'developer', {'context_id': 'ARC-001', 'base_revision': 1, 'body': 'A concurrent reviewed design.', 'reason': 'Concurrent update', 'sources': []})
+            review(s, 'architect', 'architect', p['id'], p['hash'], 'approve')
+        client.app.state.store.mutate(workspace, mutation)
+        return original(role, query, manifest)
+    monkeypatch.setattr(client.app.state.ai, 'task', concurrent_change)
+    response = client.post('/api/tasks', json={'query': 'payment retry architecture', 'budget': 6000})
+    assert response.status_code == 200
+    run = response.json()
+    assert run['stale']
+    assert next(s for s in run['manifest']['sources'] if s['id'] == 'ARC-001')['revision'] == 1
+
+
+def test_firebase_claims_are_authoritative_and_isolate_workspaces(tmp_path, monkeypatch):
+    import firebase_admin
+    from firebase_admin import auth
+    monkeypatch.setenv('AUTH_MODE', 'firebase')
+    monkeypatch.setenv('AI_MODE', 'offline')
+    monkeypatch.setattr(firebase_admin, '_apps', {'test': object()})
+    verified = []
+    def verify(token, check_revoked):
+        verified.append(check_revoked)
+        identities = {
+            'dev-token': {'uid':'dev-a','contextos_workspace':'team-a','contextos_role':'developer'},
+            'arch-token': {'uid':'arch-a','contextos_workspace':'team-a','contextos_role':'architect'},
+            'other-token': {'uid':'other','contextos_workspace':'team-b','contextos_role':'architect'},
+        }
+        if token not in identities:
+            raise ValueError('Invalid signature')
+        return identities[token]
+    monkeypatch.setattr(auth, 'verify_id_token', verify)
+    app = create_app(SQLiteStore(tmp_path / 'auth.db'), AI())
+    c = TestClient(app, headers={'x-contextos-client':'workspace'})
+    assert c.get('/api/workspace').status_code == 401
+    c.headers['Authorization'] = 'Bearer dev-token'
+    assert c.post('/api/persona', json={'role':'security'}).status_code == 403
+    p = c.post('/api/proposals', json={'context_id':'ARC-001','base_revision':1,'body':'A reviewed design','reason':'New evidence'}).json()
+    c.headers['Authorization'] = 'Bearer other-token'
+    assert not c.get('/api/workspace').json()['proposals']
+    assert c.post(f"/api/proposals/{p['id']}/review", json={'hash':p['hash'],'decision':'approve'}).status_code == 404
+    c.headers['Authorization'] = 'Bearer arch-token'
+    assert c.post(f"/api/proposals/{p['id']}/review", json={'hash':p['hash'],'decision':'approve'}).status_code == 200
+    assert all(verified)
+
+
+def test_static_assets_security_headers_and_missing_client_header(client):
+    for path in ('/', '/assets/app.js', '/assets/style.css', '/assets/favicon.svg'):
+        response = client.get(path)
+        assert response.status_code == 200
+        assert response.headers['x-content-type-options'] == 'nosniff'
+    assert client.get('/api/workspace').headers['cache-control'] == 'no-store'
+    client.headers.pop('x-contextos-client')
+    assert client.post('/api/persona', json={'role':'security'}).status_code == 403

@@ -22,7 +22,8 @@ Open http://127.0.0.1:8000. Each browser receives an isolated synthetic payment-
 
 - [Features](features.md), [requirements](requirements.md), [change log](context.md), [handoff](handoff.md)
 - [Architecture](design/architecture.md), [hackathon alignment](hackathon.md)
-- [Demo walkthrough](demo.md), [deployment](DEPLOYMENT.md)
+- [Demo walkthrough](demo.md), [deployment](DEPLOYMENT.md), [verification](TESTING.md)
+- Peer review: `gemini.md`; builder responses: [chatgpt.md](chatgpt.md)
 - Original specification: `ContextOS_Complete_Project_Blueprint.md`
 - Original event notes: `ai_builder_cup_challenges_and_themes.txt`
 

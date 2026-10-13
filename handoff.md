@@ -1,38 +1,70 @@
-# Handoff
+# Handoff — ContextOS local prototype
 
-## User intent
+Last updated: 14 October 2026, Asia/Kolkata.
 
-Build ContextOS feature by feature into a strong hackathon prototype/MVP, commit stages locally, and continuously maintain context.md, features.md, requirements.md, handoff.md and design/architecture.md. Author: Faizan Choudhary <choudharyfaizan15@gmail.com>. User explicitly deferred GitHub setup. Do not push or invent a remote.
+## User direction
+
+Build ContextOS feature by feature from the two supplied documents, commit stages locally, and maintain context.md, features.md, requirements.md, handoff.md and design/architecture.md. Git author: **Faizan Choudhary <choudharyfaizan15@gmail.com>**.
+
+**User explicitly deferred Google Cloud setup until the local solution looks good. GitHub setup is also deferred. Do not deploy, push, or repeatedly request cloud credentials before that local review.**
+
+## Review protocol
+
+Gemini writes gemini.md; we write chatgpt.md. Check gemini.md after implementation and verification milestones. Evaluate comments against the original ContextOS idea; apply useful fixes, explain deferred/declined comments. Never overwrite gemini.md. Latest read: Round 3 reviewing 30f5de0; all material comments addressed and responses recorded. A later edit may arrive independently.
 
 ## Read order
 
-README.md → this file → features.md → context.md → design/architecture.md → hackathon.md. Consult the original blueprint for the broader vision.
+README.md → this file → features.md → context.md → design/architecture.md → hackathon.md → chatgpt.md and latest gemini.md. The blueprint contains the broader roadmap. The referenced SHARED_AGENT_CONTEXT_PLATFORM.md was not present; the two supplied files are preserved.
 
-## Current stage
+## Implemented
 
-Documentation, governed domain and API/model adapters implemented. Fourteen local tests pass; UI is next. No cloud project or credentials supplied. Dependencies are installed and locked in requirements.txt. Local commits exist; no remote configured.
+- FastAPI modular backend with SQLite local persistence and bounded Firestore adapter.
+- Isolated synthetic browser sandbox, five personas, protected context and filtered derived views.
+- Immutable accepted revisions, proposals, owner/independent review, content hashes, stale-base conflicts, rollback-as-new-revision and audit events.
+- Permission-first lexical retrieval, dependency closure, mandatory constraints, explicit byte-based context budget and exact payload manifests.
+- Role-specific tasks and note ingestion; Google Gen AI SDK adapters for Vertex and API-key Gemini.
+- Explicit offline deterministic rehearsal, failed-call records, known usage preservation and quotas.
+- Transitive stale-run detection and explicit rerun with current sources.
+- Responsive five-view UI, review comparison, source inspector, search/filter, histories and JSON evidence export.
+- Dockerfile, env template, local rehearsal helpers, deployment and demo guides.
 
-## Build order
+## Run and verify
 
-1. Persistence and access policy.
-2. Reviewed immutable publication and history.
-3. Bounded retrieval with manifests.
-4. Gemini extraction and persona tasks.
-5. Change propagation and usage.
-6. Five-view UI, regression tests, deployment instructions.
-7. Configure Google Cloud, verify live AI and durable deployment.
-8. Public repo and submission artifacts, following user direction.
+```sh
+.venv/bin/uvicorn backend.app:app --host 127.0.0.1 --port 8000
+.venv/bin/python -m pytest -q
+node --check web/app.js
+.venv/bin/python scripts/rehearsal.py
+```
 
-## Decisions
+Open http://127.0.0.1:8000. Dependencies are installed in .venv and frozen in requirements.txt. A preview server may still be running; check before starting another. Browser demo data lives in ignored `.data/contextos.db`. Preserve it. A private browser window creates a fresh sandbox without destroying older ones.
 
-Local synthetic sandbox is explicitly distinct from authenticated production. Never describe deterministic rehearsal as Gemini. No fabricated metrics or promised competition result. Keep changes scoped to this repository. Update this file and log before ending each work session.
+## Verified evidence
 
-## Peer-review protocol
+25 local tests pass (domain, API, concurrent SQLite mutation, mocked Firebase/Gemini). Browser checked at mobile and desktop widths: task → v1 sources → proposal → independent review → v2 → stale prior run → rerun with v2. Also checked note ingestion and PM publication, Insights, and console logs. Screenshot in artifacts/contextos-desktop.jpg. Full details: TESTING.md.
 
-User expects feedback from gemini.md (created by another tool/person) to be evaluated and applicable fixes implemented without straying from the blueprint. Write dispositions and evidence to chatgpt.md. Do not overwrite gemini.md. First check: not present. Core domain test run: 8 passing.
+## Important limits
 
-## Working prototype checkpoint
+- Currently offline, no live model call verified. Do not describe rehearsal as Gemini reasoning.
+- Firebase backend claims checks are tested with mocks; UI currently has only a development token bridge, not a production login flow.
+- Firestore adapter is unverified against a live project. One aggregate document per workspace, 750 KB cap; 30 contexts and 50 model calls. Scale-out storage redesign is future work.
+- Token estimates are UTF-8 bytes, not model tokenization. Context budget excludes instruction/task/output overhead. Actual provider totals are separate; no savings benchmark has been run.
+- No semantic search, automatic dedup/merge, normal task-chat threading, arbitrary policy management, project-creation UI, MCP or repository integrations.
+- Docker unavailable locally; container build and Cloud Run deployment unverified.
+- Synthetic demo role switching is deliberate impersonation, not production security.
 
-Five-view UI now implemented. Browser-tested the complete governed-change workflow and source version adoption at mobile width. Preview server was started in an execution session on 127.0.0.1:8000; restart via README if it no longer runs. Synthetic browser workspace now contains an architecture-v2 demonstration and two runs, one stale.
+## Next steps after user's local review
 
-Gemini Round 3 comments are addressed in chatgpt.md. Recheck gemini.md at each implementation/verification milestone as the user requested. Docker is unavailable locally; deployment package is written but not built. No remote Git operations have been performed.
+1. Address local UX feedback and any new Gemini review notes.
+2. Once user requests cloud setup, select their project, verify live Gemini and Firestore, configure access/abuse controls, build/deploy and test durability.
+3. Implement normal Firebase sign-in if needed for real multi-user use.
+4. Configure GitHub only when user resumes that work; no remote exists now.
+5. Prepare pitch using required template, record compliant video and validate submission gates in hackathon.md.
+
+## Git checkpoints
+
+- f15abd4 — plan, source documents and judging alignment.
+- eed4fea — governed revisions, persistence and retrieval.
+- 30f5de0 — persona API and model adapters.
+- 710d28d — interactive UI and deployment kit.
+- Latest hardening checkpoint: see `git log -1`; its hash is intentionally not self-embedded.

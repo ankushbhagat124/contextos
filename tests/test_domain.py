@@ -85,3 +85,38 @@ def test_rollback_is_new_reviewed_revision():
     assert s['contexts']['ARC-001']['revision'] == 3
     assert s['contexts']['ARC-001']['body'] == original
     assert len(s['contexts']['ARC-001']['history']) == 3
+
+
+def test_simultaneous_publication_has_exactly_one_winner(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+    db = SQLiteStore(tmp_path / 'race.db')
+    a = db.mutate('shared', lambda s: change(s, 'First candidate'))
+    b = db.mutate('shared', lambda s: change(s, 'Second candidate'))
+    def publish(p):
+        try:
+            db.mutate('shared', lambda s: review(s, 'architect', 'architect', p['id'], p['hash'], 'approve'))
+            return 200
+        except Problem as e:
+            return e.status
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        assert sorted(pool.map(publish, [a,b])) == [200,409]
+    assert db.read('shared')['contexts']['ARC-001']['revision'] == 2
+
+
+def test_storage_limit_rolls_back_without_losing_history(tmp_path):
+    db = SQLiteStore(tmp_path / 'limit.db')
+    before = db.read('limited')
+    with pytest.raises(Problem) as e:
+        db.mutate('limited', lambda s: s.update(oversized='x' * 800000))
+    assert e.value.status == 413
+    assert db.read('limited') == before
+
+
+def test_new_context_publication_preserves_proposal_hash():
+    from backend.domain import digest
+    s = seed()
+    p = propose(s, 'dev', 'developer', {'title':'New topic','domain':'Requirements','body':'New requirement','reason':'Workshop','sources':[]})
+    review(s, 'pm', 'pm', p['id'], p['hash'], 'approve')
+    published = s['proposals'][p['id']]
+    assert digest(published) == p['hash']
+    assert published['published_context_id'] in s['contexts']

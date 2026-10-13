@@ -127,10 +127,10 @@ def create_app(store=None, ai=None):
         app.state.store.mutate(workspace, mutation)
         return run_id
 
-    def finish_usage(state, call_id, usage=None):
+    def finish_usage(state, call_id, usage=None, failed=False):
         entry = next(u for u in state['usage'] if u['id'] == call_id)
         entry.update(usage or {})
-        entry['status'] = 'completed' if usage is not None else 'failed'
+        entry['status'] = 'completed' if usage is not None and not failed else 'failed'
 
     @app.get('/api/health')
     def health():
@@ -173,6 +173,7 @@ def create_app(store=None, ai=None):
         wid, actor, role = identity(request, response)
         manifest = d.assemble(app.state.store.read(wid), role, data.query, data.budget)
         call_id = reserve(wid, role, [x['id'] for x in manifest['sources']], 'task')
+        usage = None
         try:
             output, usage = app.state.ai.task(role, data.query, manifest)
             run = {'id': d.uid('RUN'), 'query': data.query, 'role': role, 'actor': actor, 'output': output, 'manifest': manifest, 'usage': usage, 'created_at': d.now(), 'stale': False}
@@ -182,14 +183,15 @@ def create_app(store=None, ai=None):
                 finish_usage(s, call_id, usage)
             app.state.store.mutate(wid, save)
             return run
-        except Exception:
-            app.state.store.mutate(wid, lambda s: finish_usage(s, call_id))
+        except Exception as exc:
+            app.state.store.mutate(wid, lambda s: finish_usage(s, call_id, usage or getattr(exc, 'usage', None), failed=True))
             raise
 
     @app.post('/api/ingest')
     def ingest(data: IngestInput, request: Request, response: Response):
         wid, actor, role = identity(request, response)
         call_id = reserve(wid, role, [], 'extraction')
+        usage = None
         try:
             candidate, usage = app.state.ai.extract(data.notes)
             # Domain validation remains independent of the model's structured output.
@@ -199,8 +201,8 @@ def create_app(store=None, ai=None):
                 finish_usage(s, call_id, usage)
                 return result
             return app.state.store.mutate(wid, save)
-        except Exception:
-            app.state.store.mutate(wid, lambda s: finish_usage(s, call_id))
+        except Exception as exc:
+            app.state.store.mutate(wid, lambda s: finish_usage(s, call_id, usage or getattr(exc, 'usage', None), failed=True))
             raise
 
     @app.get('/api/export')

@@ -43,7 +43,7 @@ class AI:
 
     def extract(self, notes):
         if self.mode == 'offline':
-            return {'title': 'Requirement from stakeholder notes', 'domain': 'Requirements', 'body': notes.strip(), 'reason': 'Imported notes preserved verbatim for human classification and review.'}, {'provider': 'offline', 'model': None, 'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0}
+            return {'title': ' '.join(notes.strip().split())[:80], 'domain': 'Requirements', 'body': notes.strip(), 'reason': 'Imported notes preserved verbatim for human classification and review.'}, {'provider': 'offline', 'model': None, 'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0}
         schema = {'type': 'OBJECT', 'properties': {'title': {'type': 'STRING'}, 'domain': {'type': 'STRING', 'enum': ['Requirements', 'Architecture', 'Implementation', 'Quality', 'Security']}, 'body': {'type': 'STRING'}, 'reason': {'type': 'STRING'}}, 'required': ['title', 'domain', 'body', 'reason']}
         text, usage = self.generate('Extract one focused candidate context item from these stakeholder notes. Preserve normative requirements and open questions; do not invent decisions. This is a proposal, not accepted knowledge. Notes:\n' + notes, schema)
         try:
@@ -52,6 +52,6 @@ class AI:
                 raise ValueError()
             if result['domain'] not in schema['properties']['domain']['enum'] or len(result['body'].encode()) > 10000 or len(result['title']) > 120 or len(result['reason']) > 1500:
                 raise ValueError()
-            return result, usage
+            return {key: result[key] for key in schema['required']}, usage
         except (ValueError, TypeError) as exc:
-            raise Problem('Gemini returned an invalid extraction. Nothing was published.', 502) from exc
+            raise Problem('Gemini returned an invalid extraction. Nothing was published.', 502, usage=usage) from exc
