@@ -26,3 +26,7 @@ Documentation foundation created; implementation underway. No cloud project or c
 ## Decisions
 
 Local synthetic sandbox is explicitly distinct from authenticated production. Never describe deterministic rehearsal as Gemini. No fabricated metrics or promised competition result. Keep changes scoped to this repository. Update this file and log before ending each work session.
+
+## Peer-review protocol
+
+User expects feedback from gemini.md (created by another tool/person) to be evaluated and applicable fixes implemented without straying from the blueprint. Write dispositions and evidence to chatgpt.md. Do not overwrite gemini.md. First check: not present. Core domain test run: 8 passing.
