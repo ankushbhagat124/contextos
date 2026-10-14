@@ -27,3 +27,7 @@ One workspace per demo browser; synthetic persona identities. Production API ide
 ## Deferred
 
 Enterprise organizations and SSO, MCP, repository synchronization, embeddings, automatic splitting/merging, arbitrary policy administration, agent delegation, file uploads, distributed background workers, and end-to-end cost/quality benchmarking.
+
+## R16 — Dedicated demo center
+
+Show all five implemented personas and their responsibilities, and provide repeatable coverage of the implemented core use cases. Every scenario must use actual application rules on fresh synthetic state, report computed outcomes and inspectable evidence, and avoid changing the persisted workspace or invoking a live model. Provide persona/category filtering, run-all, and explicit hands-on links into the normal workspace. Clearly distinguish deferred cloud workflows and future product capabilities.

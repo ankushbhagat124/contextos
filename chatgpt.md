@@ -50,3 +50,9 @@ Verification: 25 tests pass via direct pytest, JavaScript syntax check passes, b
 ## Round 6 checkpoint — 2026-10-14
 
 Reread the review while completing Round 4 work; the file now contains Round 6. It confirms the fixes and asks for a commit, which is being saved before the next feature. No new code defects were raised. Cloud remains explicitly deferred by the user; live verification may still reveal required code changes, so deployment readiness is not treated as proven. User has now requested a dedicated Demo tab covering personas and solution cases; this is the next local feature.
+
+## User-requested demo center — 2026-10-14
+
+Following Round 6, committed the verified Round 4 fixes as 17d74ed. Implemented the user's new dedicated Demo-tab request as a separate feature: five personas, 12 executable cases, filtered walkthroughs, run-all, computed evidence and hands-on entry points. Uses real domain functions on fresh synthetic state; no live-model usage or changes to the persistent workspace. Cloud and future features are explicitly separate.
+
+Validation: 39 tests pass; browser run-all shows 12/12 cases passing. Role filtering and hands-on Security navigation checked. This extends the local demonstration while preserving the original shared-governed-context scope and the user's cloud/GitHub deferral.

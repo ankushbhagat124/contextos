@@ -2,6 +2,7 @@
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const paths = {
+ demo:'M8 5l11 7-11 7z',
  overview:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
  knowledge:'M5 3h10l4 4v14H5z M14 3v5h5 M8 12h8 M8 16h6',
  tasks:'M4 5h16v12H9l-5 4z M8 9h8 M8 13h5',
@@ -18,10 +19,11 @@ const paths = {
 const icon = (name) => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name] || paths.knowledge}"/></svg>`;
 const roleNames = {developer:'Developer',pm:'Product manager',architect:'Architect',qa:'QA engineer',security:'Security'};
 const owners = {Requirements:'pm',Architecture:'architect',Implementation:'developer',Quality:'qa',Security:'security'};
-const navItems = [['overview','Overview'],['knowledge','Shared knowledge'],['tasks','Agent workspace'],['reviews','Change reviews'],['insights','Context insights']];
+const navItems = [['overview','Overview'],['knowledge','Shared knowledge'],['tasks','Agent workspace'],['reviews','Change reviews'],['insights','Context insights'],['demo','Demo']];
 let state, activeRun, selectedContext, toastTimer, queryFilter = '', domainFilter = 'All domains';
 let currentView = location.hash.slice(1) || 'overview';
 let busy = false;
+let demoCatalog = [], demoRole = 'all', demoCategory = 'All cases', demoSelected = 'handoff', demoReports = {}, demoRunning = null;
 let firebaseToken = ''; // Kept in memory only, never in browser storage.
 
 async function api(path, body) {
@@ -39,6 +41,7 @@ function toast(message, error = false) {
 }
 async function refresh() {
   state = await api('workspace');
+  if (state.auth_mode === 'demo' && !demoCatalog.length) demoCatalog = (await api('demo/scenarios')).scenarios;
   $('#project-name').textContent = state.project.name;
   $('#persona').value = state.role; $('#persona').disabled = state.auth_mode !== 'demo';
   $('#profile-initial').textContent = roleNames[state.role][0];
@@ -72,7 +75,7 @@ function render() {
   const pending = state.proposals.filter(p => p.status === 'pending').length;
   $('#nav').innerHTML = navItems.map(([id,label]) => `<a href="#${id}" class="nav-item ${currentView === id ? 'active' : ''}" ${currentView === id ? 'aria-current="page"' : ''} title="${label}">${icon(id)}<span class="nav-text">${label}</span>${id === 'reviews' && pending ? `<span class="nav-badge">${pending}</span>` : ''}</a>`).join('');
   $('#crumb').textContent = navItems.find(x => x[0] === currentView)[1];
-  $('#main').innerHTML = ({overview, knowledge, tasks, reviews, insights})[currentView]();
+  $('#main').innerHTML = ({overview, knowledge, tasks, reviews, insights, demo})[currentView]();
   if (currentView === 'knowledge') $('#search').value = queryFilter;
 }
 function overview() {
@@ -101,6 +104,35 @@ function knowledge() {
   return heading('SHARED KNOWLEDGE','Decisions worth remembering.','Accepted, versioned, and available to the people who need them.',btn(`${icon('plus')} Add knowledge`,'ingest',true))+
   `<div class="toolbar"><div class="search"><input id="search" type="search" placeholder="Search decisions, requirements, or source IDs…" aria-label="Search shared knowledge"></div><select id="domain-filter" aria-label="Filter by domain">${['All domains',...Object.keys(owners)].map(d => `<option ${d === domainFilter ? 'selected' : ''}>${d}</option>`).join('')}</select><span class="muted" id="knowledge-count" aria-live="polite">${list.length} context items</span></div><div id="knowledge-results">${knowledgeResults(list)}</div>`;
 }
+const demoPersonas = {
+ pm: {title:'Product manager',initial:'PM',focus:'Preserve the business intent',authority:'Owns requirements; reviews product scope and acceptance criteria.'},
+ architect: {title:'Architect',initial:'AR',focus:'Keep the design coherent',authority:'Owns architecture; reviews design changes and tradeoffs.'},
+ developer: {title:'Developer',initial:'DE',focus:'Build with accepted context',authority:'Uses requirements and architecture; proposes discoveries for review.'},
+ qa: {title:'QA engineer',initial:'QA',focus:'Verify the right outcome',authority:'Owns quality knowledge; checks scenarios and stale test assumptions.'},
+ security: {title:'Security',initial:'SE',focus:'Protect knowledge boundaries',authority:'Owns security rules and can inspect explicitly restricted findings.'}
+};
+function demo() {
+  if (state.auth_mode !== 'demo') return heading('DEMO CENTER','A guided view of ContextOS.','Synthetic multi-persona scenarios are available only in demo mode.') + '<div class="note">Your authenticated workspace does not allow persona impersonation. Use a separately configured synthetic demo instance to run these walkthroughs.</div>';
+  const list = demoCatalog.filter(s => (demoRole === 'all' || s.roles.includes(demoRole)) && (demoCategory === 'All cases' || s.category === demoCategory));
+  if (!list.some(s => s.id === demoSelected) && list.length) demoSelected = list[0].id;
+  const selected = list.find(s => s.id === demoSelected);
+  const results = Object.values(demoReports);
+  const passed = results.filter(r => r.passed).length;
+  const failed = results.length - passed;
+  const personas = Object.entries(demoPersonas).map(([role,p]) => `<button class="demo-persona ${demoRole===role?'selected':''}" data-action="demo-persona" data-role="${role}" aria-pressed="${demoRole===role}"><span class="demo-avatar">${p.initial}</span><strong>${p.title}</strong><span>${p.focus}</span><small>${p.authority}</small></button>`).join('');
+  const report = selected && demoReports[selected.id];
+  return heading('INTERACTIVE DEMO','One project. Five perspectives.','Explore every implemented core workflow, then try it with your own decisions.',btn(demoRunning ? 'Running scenarios…' : `${icon('check')} Run all ${demoCatalog.length} cases`,'demo-all',true,demoRunning?'disabled':'')) +
+    `<section class="demo-intro"><div><span class="tag green">Isolated, repeatable rehearsal</span><h2>See the rules working, not just the screens.</h2><p>Each scenario runs real application rules against fresh synthetic data. Your workspace stays intact. No model calls are made.</p></div><div class="demo-score"><strong>${passed}<span> / ${demoCatalog.length}</span></strong><small>scenarios passed this session</small>${failed ? `<span class="tag amber">${failed} needs attention</span>` : ''}</div></section>`+
+    `<div class="demo-section-head"><h2>Choose a perspective</h2><button class="text-btn" data-action="demo-persona" data-role="all" aria-pressed="${demoRole==='all'}">Show all personas</button></div><div class="demo-personas">${personas}</div>`+
+    `<div class="demo-section-head"><div><h2>Explore the solution</h2><p class="muted">${list.length} cases${demoRole==='all'?' across the team':` involving ${demoPersonas[demoRole].title}`}</p></div><select id="demo-category" aria-label="Demo case category">${['All cases',...new Set(demoCatalog.map(s=>s.category))].map(category=>`<option${category===demoCategory?' selected':''}>${category}</option>`).join('')}</select></div>`+
+    `<div class="demo-workbench"><section class="panel demo-case-list" aria-label="Demo scenarios">${list.length?list.map(s=>`<button class="demo-case ${s.id===demoSelected?'selected':''}" data-action="demo-select" data-id="${s.id}" aria-pressed="${s.id===demoSelected}"><span class="demo-case-label"><span class="tag">${s.category}</span><span class="demo-case-status">${demoReports[s.id] ? (demoReports[s.id].passed?'✓ Passed':'! Needs attention') : 'Not run'}</span></span><strong>${s.title}</strong><span>${s.summary}</span></button>`).join(''):empty('No cases in this combination','Choose All cases or show all personas.')}</section><section class="panel demo-detail">${selected ? `<div class="form-panel"><div class="eyebrow">${selected.category.toUpperCase()} WALKTHROUGH</div><h2 class="demo-detail-title">${selected.title}</h2><p class="subtitle">${selected.summary}</p><div class="demo-cast">${selected.roles.map(role=>`<span class="tag green">${demoPersonas[role].title}</span>`).join('<span class="muted">→</span>')}</div><div class="button-group">${btn(demoRunning ? 'Running…' : report ? 'Run again' : 'Run this scenario','demo-run',true,`data-id="${selected.id}" ${demoRunning?'disabled':''}`)}${btn('Try in workspace ↗','demo-try',false,`data-id="${selected.id}" ${demoRunning?'disabled':''}`)}</div>${report ? `<div class="note ${report.passed?'':'amber'}">${report.passed ? 'All checks passed.' : 'This scenario needs attention.'} ${report.steps.filter(s=>s.passed).length} of ${report.steps.length} checks verified against fresh synthetic state.</div><ol class="demo-steps">${report.steps.map((step,index)=>`<li><span class="demo-step-number ${step.passed?'':'failed'}">${step.passed?'✓':index+1}</span><div><strong>${esc(step.title)}</strong><p>${esc(step.detail)}</p></div></li>`).join('')}</ol><details class="history"><summary>Inspect scenario evidence</summary><pre class="demo-evidence">${esc(JSON.stringify(report.evidence,null,2))}</pre></details>` : `<div class="demo-ready">${icon('branch')}<h3>Follow the decision, step by step.</h3><p>Run this case to see each action, the policy result, and the source evidence. Results are computed by the application, not pre-filled success labels.</p></div>`}<p class="form-help">Try in workspace changes your demo persona to ${demoPersonas[selected.role].title} and opens ${selected.view}. Any edits there follow the normal review process.</p></div>` : empty('Choose a case','Select another category to continue.')}</section></div>`+
+    `<section class="panel gap-top"><div class="panel-head"><div><h2>What this demo proves—and what comes next</h2><p>Local behavior and cloud readiness are tracked separately.</p></div></div><div class="demo-coverage"><div><span class="tag green">Available locally</span><p>Shared knowledge, note candidates, manual authoring, independent review, exact snapshots, restricted access, conflicts, rollback, dependency alerts and usage transparency.</p></div><div><span class="tag amber">Awaiting cloud setup</span><p>Live Gemini reasoning and extraction, real Firebase accounts, Firestore persistence across instances, and Google Cloud deployment.</p></div><div><span class="tag">Future roadmap</span><p>Semantic search, MCP and IDE access, repository synchronization, automatic knowledge consolidation, and enterprise administration.</p></div></div></section>`;
+}
+async function runDemoCase(id) {
+  try {demoReports[id] = await api(`demo/scenarios/${id}`,{});}
+  catch(error) {demoReports[id] = {passed:false,steps:[{title:'Scenario could not complete',passed:false,detail:error.message}],evidence:{}};}
+}
+
 function runOutput(run) {
   return `<section class="panel result"><div class="form-panel"><div class="result-head"><div><h2>${run.stale ? 'Context has changed' : 'Your task briefing'}</h2><small>${roleNames[run.role]} · ${formatTime(run.created_at)} · ${esc(run.id)}</small></div><span class="tag ${run.stale ? 'amber' : 'green'}">${run.stale ? 'Needs review' : 'Current snapshot'}</span></div>${run.stale ? '<div class="note amber">An accepted dependency changed. This output remains tied to its original sources. Rerun to adopt current knowledge.</div>' : ''}<div class="prose">${esc(run.output)}</div><div class="dialog-actions">${btn('Inspect context','manifest',false,`data-id="${esc(run.id)}"`)}${btn('Rerun with latest context','rerun',false,`data-id="${esc(run.id)}"`)}</div></div></section>`;
 }
@@ -161,6 +193,27 @@ function addKnowledge() {
 }
 async function action(el) {
   const a = el.dataset.action, id = el.dataset.id;
+  if (a === 'demo-persona') {demoRole = el.dataset.role; render(); return;}
+  if (a === 'demo-select') {demoSelected = id; render(); return;}
+  if (a === 'demo-run' || a === 'demo-all') {
+    demoRunning = a === 'demo-all' ? 'all' : id;
+    render();
+    try {
+      for (const scenarioId of (a === 'demo-all' ? demoCatalog.map(s=>s.id) : [id])) {await runDemoCase(scenarioId); render();}
+    } finally {demoRunning = null; render();}
+    toast('Scenario results are ready. Your workspace was not changed.');
+    return;
+  }
+  if (a === 'demo-try') {
+    const scenario = demoCatalog.find(s=>s.id===id);
+    await api('persona',{role:scenario.role});
+    activeRun = undefined; selectedContext = undefined; queryFilter = ''; domainFilter = 'All domains';
+    sessionStorage.setItem('task-draft',scenario.query);
+    await refresh(); go(scenario.view);
+    if (id === 'manual' || id === 'ingestion') {addKnowledge(); if (id==='manual') await action(document.querySelector('[data-action="knowledge-mode"][data-mode="manual"]'));}
+    toast(`Ready to explore as ${demoPersonas[scenario.role].title}.`);
+    return;
+  }
   if (a === 'navigate') return go(el.dataset.view);
   if (a === 'close') return $('#dialog').close();
   if (a === 'context') return openContext(id);
@@ -180,7 +233,7 @@ async function action(el) {
     });
     return;
   }
-  if (a === 'guide') return modal('A decision that travels with the work','A short, end-to-end ContextOS rehearsal.',`<div class="source-list">${[['1. Start as Developer','Run “Implement payment retries” in Agent workspace. Inspect the source revisions.'],['2. Propose a design change','Open Payment retry architecture. Propose reducing the retry limit from three to two; preserve its other constraints.'],['3. Review as Architect','Use the persona selector, open Change reviews, and approve the exact proposal.'],['4. Follow the impact','Return to Agent workspace. The previous run is stale. Rerun and inspect architecture v2.'],['5. Verify the boundary','Security can see a restricted finding; Developer cannot retrieve it or its derived outputs.']].map(([t,d])=>`<div class="source-item"><strong>${t}</strong><small>${d}</small></div>`).join('')}</div><div class="note">This is a synthetic sandbox. Persona switching demonstrates policy behavior; production identity uses verified accounts.</div>`);
+  if (a === 'guide') return go('demo');
   if (a === 'export') {
     const data = await api('export'); const url = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})); const link = document.createElement('a'); link.href = url; link.download = 'contextos-evidence.json'; link.click(); URL.revokeObjectURL(url); toast('Visible workspace evidence exported.'); return;
   }
@@ -216,7 +269,7 @@ document.addEventListener('input', e => {
 document.addEventListener('compositionend', e => {
   if (e.target.id === 'search') {queryFilter = e.target.value; updateKnowledgeResults();}
 });
-document.addEventListener('change',e => {if (e.target.id === 'domain-filter') {domainFilter = e.target.value; updateKnowledgeResults();}});
+document.addEventListener('change',e => {if (e.target.id === 'demo-category') {demoCategory = e.target.value; render();} if (e.target.id === 'domain-filter') {domainFilter = e.target.value; updateKnowledgeResults();}});
 $('#dialog').addEventListener('click', e => {
   const dialog = $('#dialog');
   if (e.target !== dialog || busy) return;

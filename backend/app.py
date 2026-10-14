@@ -132,6 +132,22 @@ def create_app(store=None, ai=None):
         entry.update(usage or {})
         entry['status'] = 'completed' if usage is not None and not failed else 'failed'
 
+    @app.get('/api/demo/scenarios')
+    def demo_scenarios(request: Request, response: Response):
+        identity(request, response)
+        if auth_mode != 'demo':
+            raise d.Problem('Synthetic scenarios are available only in demo mode.', 403)
+        from backend.demo import SCENARIOS
+        return {'scenarios': SCENARIOS}
+
+    @app.post('/api/demo/scenarios/{scenario_id}')
+    def demo_scenario(scenario_id: str, request: Request, response: Response):
+        identity(request, response)
+        if auth_mode != 'demo':
+            raise d.Problem('Synthetic scenarios are available only in demo mode.', 403)
+        from backend.demo import run_scenario
+        return run_scenario(scenario_id)
+
     @app.get('/api/health')
     def health():
         return {'status': 'ok', 'ai_mode': app.state.ai.mode, 'auth_mode': auth_mode}

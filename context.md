@@ -58,3 +58,12 @@ Append an entry in every implementation commit: change, reason, verification, li
 - Added manual topic proposal mode using the existing independent-review pipeline; no AI call required. Browser verified PM → pending QA review.
 - Added safe backdrop dismissal (protects edited drafts and in-flight work), plus root favicon route and HTTP regression coverage.
 - Recorded factual corrections about Python 3.14 stability, single-stage Dockerfile, current test count and unverified cloud claims in chatgpt.md. No infrastructure changes.
+
+## 2026-10-14 — F11: dedicated interactive Demo tab
+
+- User requested a proper demo tab showing personas and cases. Added a sixth navigation view with five persona cards, category filters, 12 runnable cases, per-step computed checks, expandable evidence and run-all progress.
+- Added backend/demo.py using the same domain logic against fresh synthetic in-memory state. Explicit offline adapter avoids model calls even when live AI is configured; endpoints reject Firebase mode.
+- Added hands-on entry points that switch the demo persona, prepare a task prompt and open the relevant workspace view. Normal workspace actions retain their existing review rules.
+- Added scenario regression tests and API checks proving that all cases pass without altering the persisted workspace or usage ledger. 39 tests pass.
+- Browser verified 12/12 scenarios, Security filtering, permission results, and hands-on navigation to restricted Security context. Local UI clearly separates implemented behavior, deferred cloud setup and roadmap.
+- Read Gemini Round 6; no new defects, earlier changes verified. Saved Round 4 fixes in commit 17d74ed before starting this feature. Cloud/GitHub remain deferred.

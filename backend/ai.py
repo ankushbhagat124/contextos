@@ -9,8 +9,8 @@ SYSTEM = '''You are ContextOS, a software-team assistant. The application, never
 
 
 class AI:
-    def __init__(self):
-        self.mode = os.getenv('AI_MODE', 'offline')
+    def __init__(self, mode=None):
+        self.mode = mode or os.getenv('AI_MODE', 'offline')
         if self.mode not in ('offline', 'vertex', 'gemini'):
             raise RuntimeError('AI_MODE must be offline, vertex, or gemini.')
         self.model = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')

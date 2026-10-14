@@ -130,6 +130,8 @@ def test_firebase_claims_are_authoritative_and_isolate_workspaces(tmp_path, monk
     c = TestClient(app, headers={'x-contextos-client':'workspace'})
     assert c.get('/api/workspace').status_code == 401
     c.headers['Authorization'] = 'Bearer dev-token'
+    assert c.get('/api/demo/scenarios').status_code == 403
+    assert c.post('/api/demo/scenarios/restricted', json={}).status_code == 403
     assert c.post('/api/persona', json={'role':'security'}).status_code == 403
     p = c.post('/api/proposals', json={'context_id':'ARC-001','base_revision':1,'body':'A reviewed design','reason':'New evidence'}).json()
     c.headers['Authorization'] = 'Bearer other-token'

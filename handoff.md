@@ -72,3 +72,9 @@ Open http://127.0.0.1:8000. Dependencies are installed in .venv and frozen in re
 ## Latest review checkpoint — Round 4
 
 Round 4 reviewed and dispositions appended to chatgpt.md. Fixed direct pytest invocation, focus-preserving/IME-aware search, safe backdrop dismissal and favicon. Added manual topic proposals (no model call), still requiring independent owner review. Browser sandbox now also includes a pending Quality proposal “Retry latency acceptance checks” authored by PM. 25 tests pass with `.venv/bin/pytest -q`. Python 3.14 remains the runtime; review's prerelease claim was corrected with an official source. Cloud/GitHub deferral unchanged.
+
+## Dedicated Demo tab (latest feature)
+
+User requested a complete local demo center. Open /#demo: all five implemented personas, 12 runnable cases, role/category filters, run-all, computed steps and evidence. Scenario execution uses fresh in-memory synthetic state and the real domain rules, makes no model calls and leaves workspace data unchanged. “Try in workspace” deliberately switches the demo persona and opens a relevant normal screen. Live cloud flows are labeled pending; future features are labeled roadmap.
+
+39 tests pass, including isolated scenario/API checks and Firebase-mode denial. Browser: 12/12 cases pass, Security filtering and hands-on navigation verified. Last Gemini review read was Round 6, confirming previous fixes and requesting the now-saved polish commit 17d74ed. Continue checking the review file at milestones.

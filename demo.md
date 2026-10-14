@@ -30,3 +30,11 @@ Export visible workspace JSON after the workflow. Record actual model usage and 
 ## Known boundaries
 
 Demo personas are deliberately switchable synthetic identities. Production API auth is separate. Documents are rendered as safe plain text. Search is lexical. Ingestion creates one candidate; automatic topic matching and merge assistance are not implemented. Full-context and selected-context numbers are byte-based estimates, not actual token counts.
+
+## Interactive Demo tab
+
+Open `http://127.0.0.1:8000/#demo` or select Demo in navigation. Choose Product Manager, Architect, Developer, QA or Security to filter relevant cases, or show all personas. Run one case or all twelve. Each produces computed step results and an expandable evidence record. Cases use isolated synthetic state and consume no model quota.
+
+The cases cover shared-intent handoffs, note extraction rehearsal, manual proposals, review permissions, changed-source impact, restricted retrieval and derived views, stale competing proposals, rollback, budget overflow, rejection, audit provenance and usage transparency. “Try in workspace” switches to the appropriate demo persona and opens the relevant screen with a prepared task prompt when applicable. This mode uses your normal persistent demo workspace; the isolated scenario runner does not.
+
+Live AI/cloud capabilities and deferred roadmap items are separately labeled. Use the interactive tab for local walkthroughs; live Gemini verification is still necessary for the final competition submission.
