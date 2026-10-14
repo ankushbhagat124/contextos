@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose an improvement aligned with governed shared context.
+title: '[Feature] '
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Who encounters this problem, in which workflow, and why does it matter?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe the behavior and how we can verify it.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and constraints
+      description: Include permission, privacy, provenance, model-usage or hackathon implications where relevant.

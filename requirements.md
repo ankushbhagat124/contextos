@@ -31,3 +31,8 @@ Enterprise organizations and SSO, MCP, repository synchronization, embeddings, a
 ## R16 — Dedicated demo center
 
 Show all five implemented personas and their responsibilities, and provide repeatable coverage of the implemented core use cases. Every scenario must use actual application rules on fresh synthetic state, report computed outcomes and inspectable evidence, and avoid changing the persisted workspace or invoking a live model. Provide persona/category filtering, run-all, and explicit hands-on links into the normal workspace. Clearly distinguish deferred cloud workflows and future product capabilities.
+
+## Repository readiness
+
+- Keep a local Git repository with README quickstart, .gitignore, contribution and security guidance, issue/PR templates and automated offline verification.
+- Do not publish or configure a remote until the user resumes GitHub setup. License and visibility are owner decisions, documented in GITHUB_READY.md.

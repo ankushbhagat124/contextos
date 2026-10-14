@@ -60,3 +60,32 @@ Thumbs.db
 *.db-wal
 coverage.xml
 htmlcov/
+
+# Coverage, tool caches and local test output
+.coverage
+.coverage.*
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+*.log
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite3-journal
+*.sqlite-wal
+*.sqlite3-wal
+*.sqlite-shm
+*.sqlite3-shm
+test-results/
+playwright-report/
+
+# Private keys, local cloud auth and exported workspace data
+*.pem
+*.key
+*.p12
+*.pfx
+application_default_credentials.json
+service_account*.json
+.aws/
+contextos-evidence*.json

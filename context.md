@@ -67,3 +67,11 @@ Append an entry in every implementation commit: change, reason, verification, li
 - Added scenario regression tests and API checks proving that all cases pass without altering the persisted workspace or usage ledger. 39 tests pass.
 - Browser verified 12/12 scenarios, Security filtering, permission results, and hands-on navigation to restricted Security context. Local UI clearly separates implemented behavior, deferred cloud setup and roadmap.
 - Read Gemini Round 6; no new defects, earlier changes verified. Saved Round 4 fixes in commit 17d74ed before starting this feature. Cloud/GitHub remain deferred.
+
+## 2026-10-14 — GitHub preparation
+
+- Reworked README with local quickstart, screenshots, demo entry point, architecture, verification and explicit cloud limitations.
+- Added contribution/security guidance, GitHub readiness checklist, issue and PR templates, EditorConfig and Git attributes. Expanded ignore rules for runtime artifacts, keys, local cloud auth and workspace exports.
+- Added GitHub Actions for offline tests, JavaScript validation, rehearsal, repository hygiene and a container build without publishing; added weekly Dependabot updates. Hosted CI and container build remain unverified.
+- Added scripts/check_repo.py to check candidate Git paths, required documentation and README links. It is explicitly not a content/history secret scanner.
+- No remote, push, deployment or license grant created. Owner chooses repository visibility and license before publication. Gemini Round 6 file unchanged at this milestone.

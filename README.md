@@ -2,29 +2,115 @@
 
 **Define once. Share intelligently. Evolve together.**
 
-A governed memory workspace for software teams: accepted decisions, role-specific tasks, reviewable changes, exact source manifests, and visible downstream impact.
+ContextOS is a shared, governed memory workspace for software teams and their AI agents. Keep accepted requirements, architecture decisions, and constraints connected as work moves between Product, Architecture, Development, QA, and Security.
 
-## Start locally
+> **Status:** Working local hackathon prototype. Offline rehearsal is the default. Live Gemini, Firebase, Firestore, and Google Cloud deployment require separate verification. This repository does not claim production readiness or measured productivity savings.
+
+![ContextOS workspace](artifacts/contextos-desktop.jpg)
+
+## Why ContextOS?
+
+A requirement should survive the handoff from a product conversation to implementation and testing. ContextOS gives every role a shared source of accepted knowledge, records exactly which revisions an agent used, and flags affected work when a decision changes.
+
+- **Governed knowledge:** Propose → independent owner review → immutable accepted revision.
+- **Bounded retrieval:** Permission filtering, mandatory constraints, explicit context budgets, and exact source manifests.
+- **Change awareness:** Dependency-based stale-run alerts, fresh reruns, and rollback through new revisions.
+- **Inspectable behavior:** Review comparisons, history, attributable audit events, and separate estimates/provider usage.
+- **Interactive demo:** Five personas and twelve executable scenarios with computed checks and evidence.
+
+## Quick start
+
+Prerequisites: **Python 3.14**, Git, and a browser. Node.js is needed only for the JavaScript syntax check; the UI has no frontend install or build step. No cloud account or API key is required for local rehearsal.
+
+### macOS / Linux
 
 ```sh
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements.txt
 .venv/bin/uvicorn backend.app:app --host 127.0.0.1 --port 8000
 ```
 
-Open http://127.0.0.1:8000. Each browser receives an isolated synthetic payment-project sandbox. Persona switching is a demo facility, not production authentication. Local data persists in `.data/contextos.db`. Offline responses are explicitly labeled deterministic rehearsal output; no Google AI call is claimed.
+### Windows PowerShell
 
-```sh
-.venv/bin/python -m pytest -q
+```powershell
+py -3.14 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
 ```
 
-## Project map
+Open **[the workspace](http://127.0.0.1:8000)** or **[the Demo tab](http://127.0.0.1:8000/#demo)**.
 
-- [Features](features.md), [requirements](requirements.md), [change log](context.md), [handoff](handoff.md)
-- [Architecture](design/architecture.md), [hackathon alignment](hackathon.md)
-- [Demo walkthrough](demo.md), [deployment](DEPLOYMENT.md), [verification](TESTING.md)
-- Peer review: `gemini.md`; builder responses: [chatgpt.md](chatgpt.md)
-- Original specification: `ContextOS_Complete_Project_Blueprint.md`
-- Original event notes: `ai_builder_cup_challenges_and_themes.txt`
+Each browser gets an isolated synthetic checkout project. SQLite data persists in ignored `.data/contextos.db`. Use a private browser window for a fresh sandbox; existing workspaces are preserved. Persona switching is a demo facility, not real-user authentication.
 
-Cloud deployment, live model verification, public repository, pitch PDF, and video are separate submission gates. See the handoff for verified status.
+Offline answers are explicitly labeled deterministic source briefings. To configure a live model later, see [.env.example](.env.example) and [DEPLOYMENT.md](DEPLOYMENT.md). Environment variables are set explicitly; `.env` is not loaded automatically.
+
+## Try the complete workflow
+
+1. Open **Demo** and choose a persona, or select **Run all 12 cases**. These scenarios are isolated, make no model calls, and leave your workspace unchanged.
+2. Choose **Try in workspace** to explore the corresponding persistent workflow.
+3. As **Developer**, run a payment-retry task and inspect its source manifest.
+4. Propose an architecture revision; switch to **Architect** to review and publish it.
+5. Inspect the previous task's stale warning, then rerun with the updated source.
+
+The Demo tab also covers note ingestion, manual authoring, restricted access, stale competing proposals, rejection, rollback, mandatory budget constraints, audit history, and truthful usage reporting. [Demo guide →](demo.md)
+
+## Development checks
+
+From the repository root:
+
+```sh
+.venv/bin/pytest -q
+node --check web/app.js
+.venv/bin/python scripts/rehearsal.py
+.venv/bin/python scripts/check_repo.py
+```
+
+Windows: use `.\.venv\Scripts\python.exe -m pytest -q` and the same Python executable for the helper scripts.
+
+**39 automated tests passed locally**, plus browser walkthroughs at mobile and desktop widths. Google service calls are mocked in adapter tests. [Verification details and limits →](TESTING.md)
+
+GitHub Actions is configured to run tests, repository checks, JavaScript syntax validation, and a Linux container build after the repository is pushed. The hosted workflow has **not yet run**; its presence is not evidence of a successful Linux/cloud deployment.
+
+## Architecture
+
+```text
+Buildless web UI
+       │ same-origin JSON API
+       ▼
+FastAPI ── identity + policy ── governed revisions + retrieval
+       │                              │
+       ├─ Google Gen AI SDK           ├─ SQLite (local)
+       │  Vertex / Gemini adapters    └─ Firestore adapter (cloud gate)
+       └─ isolated synthetic demo scenarios
+```
+
+One deployable service keeps the prototype easy to run. A workspace is a bounded transactional aggregate: 30 contexts, 750 KB serialized storage, and 50 model-call attempts. Larger deployments need storage decomposition and operational controls. [Architecture and decisions →](design/architecture.md)
+
+## Repository map
+
+| Path | Purpose |
+|---|---|
+| `backend/` | API, authorization, governance, retrieval, persistence, model adapters, demo scenarios |
+| `web/` | Buildless HTML/CSS/JavaScript workspace |
+| `tests/` | Domain, API, concurrency, adapter and demo regression tests |
+| `scripts/` | Non-destructive rehearsal, sandbox smoke check and repository hygiene |
+| `.github/` | CI, dependency-update configuration, issue and PR templates |
+| `artifacts/` | Synthetic demo screenshots |
+| [features.md](features.md) / [requirements.md](requirements.md) | Feature status and acceptance requirements |
+| [context.md](context.md) / [handoff.md](handoff.md) | Change rationale and resumable project context |
+| [hackathon.md](hackathon.md) | Judging alignment and submission gates |
+| [gemini.md](gemini.md) / [chatgpt.md](chatgpt.md) | Peer review and builder responses |
+
+Original sources: [project blueprint](ContextOS_Complete_Project_Blueprint.md) and [event notes](ai_builder_cup_challenges_and_themes.txt).
+
+## Limitations and next steps
+
+The local demo is ready for review. Cloud setup and GitHub publication are deferred by the project owner. Live AI, durable cloud deployment, normal Firebase sign-in, public judge access, and submission artifacts remain open gates. Semantic search, MCP/IDE integration, repository synchronization, and enterprise administration are future work. [Deployment guide →](DEPLOYMENT.md)
+
+## Contributing and security
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before making changes. Keep synthetic demo data separate from real project information and follow [SECURITY.md](SECURITY.md) for vulnerability reporting. See [GITHUB_READY.md](GITHUB_READY.md) for repository settings to enable after publication.
+
+## License
+
+A distribution license has **not yet been selected**. No open-source license grant is implied. The project owner should choose and add an appropriate `LICENSE` before public release.

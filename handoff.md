@@ -6,11 +6,11 @@ Last updated: 14 October 2026, Asia/Kolkata.
 
 Build ContextOS feature by feature from the two supplied documents, commit stages locally, and maintain context.md, features.md, requirements.md, handoff.md and design/architecture.md. Git author: **Faizan Choudhary <choudharyfaizan15@gmail.com>**.
 
-**User explicitly deferred Google Cloud setup until the local solution looks good. GitHub setup is also deferred. Do not deploy, push, or repeatedly request cloud credentials before that local review.**
+**User explicitly deferred Google Cloud setup until the local solution looks good. GitHub publishing is deferred; local GitHub preparation is authorized and complete. Do not deploy, push, or repeatedly request cloud credentials before that local review.**
 
 ## Review protocol
 
-Gemini writes gemini.md; we write chatgpt.md. Check gemini.md after implementation and verification milestones. Evaluate comments against the original ContextOS idea; apply useful fixes, explain deferred/declined comments. Never overwrite gemini.md. Latest read: Round 3 reviewing 30f5de0; all material comments addressed and responses recorded. A later edit may arrive independently.
+Gemini writes gemini.md; we write chatgpt.md. Check gemini.md after implementation and verification milestones. Evaluate comments against the original ContextOS idea; apply useful fixes, explain deferred/declined comments. Never overwrite gemini.md. Latest read: Round 6; previous fixes verified and responses recorded. A later edit may arrive independently.
 
 ## Read order
 
@@ -41,7 +41,7 @@ Open http://127.0.0.1:8000. Dependencies are installed in .venv and frozen in re
 
 ## Verified evidence
 
-25 local tests pass (domain, API, concurrent SQLite mutation, mocked Firebase/Gemini). Browser checked at mobile and desktop widths: task → v1 sources → proposal → independent review → v2 → stale prior run → rerun with v2. Also checked note ingestion and PM publication, Insights, and console logs. Screenshot in artifacts/contextos-desktop.jpg. Full details: TESTING.md.
+39 local tests pass (domain, API, concurrent SQLite mutation, mocked Firebase/Gemini and isolated demo scenarios). Browser checked at mobile and desktop widths: task → v1 sources → proposal → independent review → v2 → stale prior run → rerun with v2. Also checked note ingestion and PM publication, Insights, and console logs. Screenshot in artifacts/contextos-desktop.jpg. Full details: TESTING.md.
 
 ## Important limits
 
@@ -78,3 +78,7 @@ Round 4 reviewed and dispositions appended to chatgpt.md. Fixed direct pytest in
 User requested a complete local demo center. Open /#demo: all five implemented personas, 12 runnable cases, role/category filters, run-all, computed steps and evidence. Scenario execution uses fresh in-memory synthetic state and the real domain rules, makes no model calls and leaves workspace data unchanged. “Try in workspace” deliberately switches the demo persona and opens a relevant normal screen. Live cloud flows are labeled pending; future features are labeled roadmap.
 
 39 tests pass, including isolated scenario/API checks and Firebase-mode denial. Browser: 12/12 cases pass, Security filtering and hands-on navigation verified. Last Gemini review read was Round 6, confirming previous fixes and requesting the now-saved polish commit 17d74ed. Continue checking the review file at milestones.
+
+## GitHub preparation (latest task)
+
+Local repository now includes README, expanded .gitignore, .editorconfig, .gitattributes, CONTRIBUTING.md, SECURITY.md, GITHUB_READY.md, issue/PR templates, CI and Dependabot. Run `python scripts/check_repo.py` for path/link hygiene. CI is configured but has not run on GitHub; Docker build remains unverified locally. No license was selected and no remote was created. See GITHUB_READY.md for publication decisions and checks. Local commits use the user's requested author.

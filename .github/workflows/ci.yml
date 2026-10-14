@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Offline tests and repository checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      AI_MODE: offline
+      AUTH_MODE: demo
+      STORE_BACKEND: sqlite
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Check repository hygiene
+        run: python scripts/check_repo.py
+      - name: Run offline regression suite
+        run: pytest -q
+      - name: Validate browser JavaScript
+        run: node --check web/app.js
+      - name: Rehearse the governed workflow
+        run: python scripts/rehearsal.py
+
+  container:
+    name: Build Linux container
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Build without publishing
+        run: docker build --tag contextos:ci .

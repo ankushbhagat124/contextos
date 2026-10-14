@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible problem using synthetic data.
+title: '[Bug] '
+body:
+  - type: markdown
+    attributes:
+      value: For security vulnerabilities, follow SECURITY.md instead of posting sensitive details here.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: What should happen, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Include the persona, view or demo case, and minimal synthetic input.
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Commit and environment
+      placeholder: Commit SHA, OS, Python version, browser, offline or live mode
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence
+      description: Relevant output or screenshots. Remove tokens, personal data and confidential source content.

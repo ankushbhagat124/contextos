@@ -10,3 +10,14 @@ __pycache__
 *credentials*.json
 *service-account*.json
 .DS_Store
+
+.aws
+.gcp
+node_modules
+*.pem
+*.key
+*.p12
+*.pfx
+service_account*.json
+application_default_credentials.json
+contextos-evidence*.json

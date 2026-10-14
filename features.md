@@ -24,3 +24,7 @@ Round 4 refinement: manual topic authoring is implemented under F03/F07; search 
 | F11 | Dedicated Demo tab: five persona perspectives, 12 executable scenarios, evidence, run-all and hands-on entry points | Implemented; 12/12 browser scenarios passed |
 
 Demo coverage: cross-role handoff; note candidates; manual authoring; owner authorization and exact review hashes; stale work and refresh; restricted sources/derived views; competing revisions; rollback; mandatory budget constraints; rejection; audit provenance; truthful usage. Live cloud flows and advanced roadmap are visibly separate.
+
+| ID | Feature | Status |
+|---|---|---|
+| F12 | GitHub-ready documentation, ignore rules, contribution/security guidance, templates, CI and dependency updates | Prepared locally; hosted CI and publication pending |
