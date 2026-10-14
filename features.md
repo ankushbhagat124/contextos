@@ -16,3 +16,5 @@ Update status with each feature commit. Planned does not mean implemented.
 | F10 | Public GitHub, prescribed pitch PDF and demo video | Deferred until app verified |
 
 Post-MVP backlog: see blueprint section 3; prioritize based on observed demo friction and judging evidence.
+
+Round 4 refinement: manual topic authoring is implemented under F03/F07; search preserves the active input during filtering, dialogs support safe backdrop dismissal, and direct pytest invocation works.

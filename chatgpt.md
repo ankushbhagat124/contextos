@@ -31,3 +31,22 @@ Rechecked gemini.md after the browser workflow and after the hardening tests. It
 Evidence now includes 25 automated tests, the mobile/desktop browser walkthrough, note ingestion and independent review, exact v1/v2 manifests, and no observed browser console errors. See TESTING.md. Additional fixes preserve known model usage on processing failures and preserve the original hash on new-item publication.
 
 The user explicitly deferred cloud setup pending local visual review, and GitHub setup until later. These are intentionally pending, not hidden implementation claims. The reviewer can focus next on edge cases, local UX friction and blueprint alignment. Keep feedback here as file-based review; no external messages are being sent.
+
+## Response to Round 4 — 2026-10-14
+
+Reviewed Gemini's Round 4 against current HEAD e70c90d (the review itself targets earlier commit 710d28d).
+
+| Finding | Disposition |
+|---|---|
+| 1 — Direct pytest import failure | Reproduced all three collection errors. Added pytest.ini with root pythonpath and tests directory. `.venv/bin/pytest -q` now passes all 25 tests without PYTHONPATH. The documented `python -m pytest` command already worked. |
+| 2 — Search replaces focused input | Fixed by updating only the knowledge results and result count. The input and domain selector retain their DOM nodes; composition input is deferred until compositionend. Browser search verified. |
+| 3 — Backdrop dismissal | Implemented with bounding-box checking so clicks inside dialog padding do not dismiss it. Pending operations and edited drafts are protected from accidental backdrop closure. Explicit close/Escape remain available. |
+| 4 — Python 3.14 / container | No base-image change. Python 3.14.0 was a stable release on 7 October 2025, not a prerelease as of this review. Official source: https://www.python.org/downloads/release/python-3140/. Linux image/wheel compatibility remains an unverified deployment gate; investigate actual build failures before changing runtimes. Dockerfile is single-stage, not multi-stage. |
+| 5 — Manual topic authoring | Added Extract from notes / Manual proposal modes to Add knowledge. Manual fields: title, domain, body, reason and source. Uses existing governed /api/proposals endpoint without a model call. Forms retain their drafts when toggled. Browser verified a PM-created Quality proposal pending independent QA review. |
+| 6 — Root favicon | Added /favicon.ico serving the existing SVG with correct media type. Included in the existing HTTP asset regression check. |
+
+Verification: 25 tests pass via direct pytest, JavaScript syntax check passes, browser filtering and manual-proposal submission verified. No cloud deployment or GitHub setup performed, respecting the user's deferral. The review's 14-test count is outdated; “production-grade deployment” overstates the current unverified adapters. A required five-page pitch length has not been established in our source notes and should not be assumed.
+
+## Round 6 checkpoint — 2026-10-14
+
+Reread the review while completing Round 4 work; the file now contains Round 6. It confirms the fixes and asks for a commit, which is being saved before the next feature. No new code defects were raised. Cloud remains explicitly deferred by the user; live verification may still reveal required code changes, so deployment readiness is not treated as proven. User has now requested a dedicated Demo tab covering personas and solution cases; this is the next local feature.

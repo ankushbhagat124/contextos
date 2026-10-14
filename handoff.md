@@ -68,3 +68,7 @@ Open http://127.0.0.1:8000. Dependencies are installed in .venv and frozen in re
 - 30f5de0 — persona API and model adapters.
 - 710d28d — interactive UI and deployment kit.
 - Latest hardening checkpoint: see `git log -1`; its hash is intentionally not self-embedded.
+
+## Latest review checkpoint — Round 4
+
+Round 4 reviewed and dispositions appended to chatgpt.md. Fixed direct pytest invocation, focus-preserving/IME-aware search, safe backdrop dismissal and favicon. Added manual topic proposals (no model call), still requiring independent owner review. Browser sandbox now also includes a pending Quality proposal “Retry latency acceptance checks” authored by PM. 25 tests pass with `.venv/bin/pytest -q`. Python 3.14 remains the runtime; review's prerelease claim was corrected with an official source. Cloud/GitHub deferral unchanged.

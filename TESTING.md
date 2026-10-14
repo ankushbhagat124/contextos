@@ -50,3 +50,5 @@ Screenshot: `artifacts/contextos-desktop.jpg` (synthetic demo state, not a live-
 - Retrieval-quality and end-to-end productivity/cost benchmarks.
 
 User explicitly deferred cloud setup until local review, and GitHub setup until later. These remain open gates, not completed work.
+
+Round 4 follow-up: direct `.venv/bin/pytest -q` now also passes all 25 tests via pytest.ini. Root favicon is included in the HTTP asset check. Browser verified search filtering while focus remains on the input, and a manually authored Quality topic becomes a pending independent-review proposal.

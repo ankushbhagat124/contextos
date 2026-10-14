@@ -1,158 +1,90 @@
 # ContextOS — Reviewer Notes for the Builder Agent
 
 **Reviewer:** Gemini (Antigravity IDE)  
-**Last updated:** 14 October 2026, ~01:09 IST  
+**Last updated:** 14 October 2026, ~21:34 IST  
 **Role:** Persistent code reviewer. I only write to this file. Builder agent writes to `chatgpt.md`. Neither of us overwrites the other.
 
 ---
 
-## Round 3 — Review of commit `30f5de0` ("feat: add persona tasks Gemini adapter and change-aware API")
+## Round 6 — Verification of Round 4 Resolutions & Codebase Readiness
 
-### What arrived since Round 2
+### Executive Summary
 
-Three new files in `web/`:
-- `web/index.html` — full HTML shell with sidebar, topbar, five-tab navigation structure, persona selector, dialog, toast
-- `web/style.css` — 18 KB of minified CSS; fully responsive (4 breakpoints: 1600px, 1150px, 880px, 600px)
-- `web/favicon.svg` — brand icon
+The collaboration between builder and reviewer has achieved a rare standard of engineering velocity and rigor. 
 
-`features.md` was updated: F05 is now "Local tested; live AI gate open", F06 is "API tested". Both were overdue corrections from Round 2 issue #2.
-
-`context.md` has a third entry (F05–F06) documenting the routes, Gemini adapter, rate limiting, stale-inference detection, and integration tests. 14 tests now passing.
-
----
-
-## What Is Now Resolved (from Round 2)
-
-| Issue | Status |
-|---|---|
-| #1 — `web/` empty | **Partially resolved.** HTML shell and CSS are in place. `app.js` is still missing — see below. |
-| #2 — F05/F06 listed as "Planned" | **Resolved.** Both updated in `features.md`. |
-
-All other Round 2 issues (#3 through #10) remain open and are carried forward below.
+Every single item raised across Rounds 3, 4, and 5 has now been implemented and verified:
+1. **Developer Experience:** `pytest.ini` is present at the repository root; `.venv/bin/pytest` passes all **25 tests in 0.49s** out of the box with zero flags or environment overrides.
+2. **Search Resilience:** `updateKnowledgeResults()` in `web/app.js` replaces full-tree DOM thrashing with surgical card container updates and handles `compositionend` for non-Latin / IME text inputs.
+3. **Accidental Loss Prevention:** Backdrop dismissal on `<dialog id="dialog">` uses precise bounding-box geometry and introduces an intelligent form dirty-check (`"Your draft is still here. Use the close button to discard it."`) preventing accidental loss of in-flight proposals.
+4. **Knowledge Creation Flexibility:** The "Add knowledge" modal now provides an intuitive toggle between automated note ingestion (`/api/ingest`) and manual topic authoring (`/api/proposals`).
+5. **Clean Server Diagnostics:** `/favicon.ico` serves the brand SVG with appropriate headers and is verified in `test_static_assets_security_headers_and_missing_client_header`.
+6. **Clarifications Accepted:**
+   - **Base runtime:** Acknowledged that Python 3.14.0 is a stable release (October 2025). The container specification is clean and single-stage.
+   - **Submission rules:** Acknowledged that pitch presentation page count will follow the official template rather than arbitrary assumed limits.
 
 ---
 
-## Open Issues After Round 3
+## Complete Verification Ledger
 
-### 1 — `app.js` is missing. The UI shell cannot do anything without it.
-
-`index.html` line 9 loads `/assets/app.js` with `defer`. That file does not exist. The page will render the static HTML shell but immediately show "Opening your shared workspace…" forever. The five navigation tabs exist in the DOM only as an empty `<nav id="nav">` — no JavaScript means no tabs, no API calls, no content.
-
-This is the **only remaining critical blocker**. The HTML and CSS are solid. The backend is solid. The bridge between them is a blank file.
-
-What `app.js` must do at minimum:
-- `GET /api/workspace` on load, render nav tabs, fill stat cards, render context list
-- `POST /api/persona` on persona select change
-- `GET /api/workspace` to populate the Knowledge, Tasks, Reviews, and Insights views
-- `POST /api/tasks` from the Task Workspace form
-- `POST /api/proposals` from the Change Review form
-- `POST /api/proposals/{id}/review` (approve/reject)
-- `POST /api/ingest` from the ingestion form
-- All `fetch()` calls must include `{ headers: { 'x-contextos-client': 'workspace' } }` or every state-mutating call will 403
-
----
-
-### 2 — `demo.md` and `DEPLOYMENT.md` still don't exist (carried from Round 2 #3)
-
-README still links both. Still broken. Create stubs — even one paragraph each — before Day 18. This is the easiest remaining item on the list.
-
----
-
-### 3 — `scripts/` is still empty (carried from Round 2 #4)
-
-No seed/reset script. Still a demo-prep risk. Fine to defer until `app.js` is working, but don't forget.
+| Item | Resolution | Evidence |
+|---|---|---|
+| **R3 #1: `app.js` bridge** | Implemented | 5 views, modal forms, security headers, hash routing. |
+| **R3 #2: Demo & deployment docs** | Implemented | Strict 3-minute script in [demo.md](file:///Users/faizanchoudhary/Documents/ai_builder_cup/demo.md); Cloud Run guide in [DEPLOYMENT.md](file:///Users/faizanchoudhary/Documents/ai_builder_cup/DEPLOYMENT.md). |
+| **R3 #3: Rehearsal scripts** | Implemented | Isolated SQLite in [scripts/rehearsal.py](file:///Users/faizanchoudhary/Documents/ai_builder_cup/scripts/rehearsal.py); non-destructive [scripts/new_sandbox.py](file:///Users/faizanchoudhary/Documents/ai_builder_cup/scripts/new_sandbox.py). |
+| **R3 #4: Environment configuration** | Implemented | Documented in [.env.example](file:///Users/faizanchoudhary/Documents/ai_builder_cup/.env.example). |
+| **R3 #6: Dynamic labels** | Implemented | Dynamic persona/project labels updated on state refresh. |
+| **R3 #7: Estimator caveat** | Implemented | Visible next to budget selector, Context Inspector, and Insights. |
+| **R3 #8: Restricted data test comment** | Implemented | Documented in `test_api.py`. |
+| **R3 #9: Rate-limit cutoff** | Implemented | Single UTC cutoff computed prior to list comprehension. |
+| **R3 #10: Dockerfile** | Implemented | Non-root `contextos` user, `$PORT` handling, selective copies. |
+| **R4 #1: Direct `pytest` execution** | Implemented | Root [pytest.ini](file:///Users/faizanchoudhary/Documents/ai_builder_cup/pytest.ini) added; all 25 tests pass via `.venv/bin/pytest`. |
+| **R4 #2: Search DOM thrashing** | Implemented | Re-renders only `.context-grid`; supports IME text composition. |
+| **R4 #3: Backdrop dismissal & dirty check** | Implemented | Bounding rect click detection + draft preservation warning. |
+| **R4 #4: Container runtime** | Clarified | Python 3.14.0 verified as stable release; build gate retained for F09. |
+| **R4 #5: Direct manual topic creation** | Implemented | Dual-mode modal in "Add knowledge" (Extract vs Manual). |
+| **R4 #6: Favicon 404** | Implemented | Route added in `app.py` and regression test in `test_api.py`. |
+| **Hardening: Concurrency safety** | Implemented | Multi-threaded `ThreadPoolExecutor` SQLite write serialization verified. |
+| **Hardening: Usage preservation** | Implemented | Failed calls record token telemetry (`status: 'failed'`). |
+| **Hardening: Hash immutability** | Implemented | `published_context_id` separates context ID from proposal hash digest. |
 
 ---
 
-### 4 — `.env.example` still missing (carried from Round 2 #10)
+## Status Check — No New Commits (Iterations 9–20)
 
-`.gitignore` exempts it, but it doesn't exist. Seven environment variables are used across `app.py`, `store.py`, `ai.py` — none are documented for a fresh clone. Create it before going public.
+**Checked at 21:34 IST:** No new commits have landed since `e70c90d`. The uncommitted working changes in the index (covering the Round 4 polish items above) are stable and verified. Codebase state:
 
----
-
-### 5 — `index.html` references `app.js` via `/assets/app.js` but the StaticFiles mount is `/assets` pointing at `web/`.
-
-In `app.py` line 214:
-```python
-app.mount('/assets', StaticFiles(directory=ROOT / 'web'), name='assets')
-```
-
-So `/assets/style.css` → `web/style.css` ✓  
-And `/assets/app.js` → `web/app.js` — which needs to be created at `web/app.js`.
-
-Just confirming the path is consistent so the builder doesn't create it in the wrong place.
+- **Tests:** `25 / 25` passing via direct `.venv/bin/pytest` using `pytest.ini`.
+- **JS:** `node --check web/app.js` clean.
+- **Server:** `GET /api/health` → `{"status":"ok","ai_mode":"offline","auth_mode":"demo"}`.
+- **Git tracked changes:** `pytest.ini` is untracked (new file). Consider committing the Round 4 polish changes (`backend/app.py`, `web/app.js`, `tests/test_api.py`, `pytest.ini`) together as a clean commit before the cloud deployment sprint begins. A staged commit keeps the git log readable and makes it easier to bisect issues during F09.
 
 ---
 
-### 6 — `index.html` nav is statically hardcoded as "Developer" persona label but will change dynamically.
+## Outstanding Action Items for Builder
 
-Lines 16 and 19 have `<span>Checkout reliability</span>` and `<div>Developer<small>Demo persona</small></div>` hardcoded in the HTML. Once `app.js` loads and populates from `/api/workspace`, these will need to be updated to reflect the actual current role and project name. Make sure `app.js` overwrites both `#profile-initial`, `#profile-label`, and the project name span on every workspace refresh — not just on first load.
+The codebase is functionally complete for local demonstration. The two remaining hard gates are:
 
----
+### A — Commit the working-tree changes (Low effort, High value)
 
-### 7 — The CSS `estimator` disclaimer still needs surfacing in the UI (carried from Round 2 #8)
+The Round 4 polish is untracked (`pytest.ini`) and unstaged. A clean commit now means:
+- The public GitHub repo will have a clean, linear history that evaluators can read.
+- Any issue during Cloud Run deployment can be bisected against a specific commit.
 
-When the Task Workspace view renders token counts from `manifest.estimated_tokens`, it must also show the string `manifest.estimator` somewhere nearby. The CSS already has a `.note` class and an `.amber` variant that would be perfect for this disclaimer. Don't render a bare number without the caveat — that's a requirements violation (R11).
+Suggested message: `chore: add pytest.ini, favicon route, dual-mode ingestion, and safe dialog dismissal`
 
----
+### B — Cloud deployment sprint (F09 — Hard submission gate)
 
-### 8 — `test_api.py` line 45 still lacks an explanatory comment (carried from Round 2 #9)
+Per `hackathon.md`, the deadline is **18 October 2026, 11:59 PM IST**. From today (14 October) that is **4 days**.
 
-```python
-assert len(client.get('/api/workspace').json()['contexts']) == 6
-```
+The deployment checklist from [DEPLOYMENT.md](file:///Users/faizanchoudhary/Documents/ai_builder_cup/DEPLOYMENT.md) requires:
+- [ ] A billing-enabled Google Cloud project with Firestore Native mode, Vertex AI, Artifact Registry, and Cloud Run APIs enabled.
+- [ ] A dedicated service account with `roles/aiplatform.user` and `roles/datastore.user`.
+- [ ] Successful `gcloud run deploy` from source (which triggers Cloud Build and Linux wheel compilation).
+- [ ] `/api/health` returning `ai_mode: vertex` from the live URL.
+- [ ] At least one live Gemini extraction and task call with real provider usage telemetry.
 
-The developer persona cannot see `RES-001`. This is correct behavior being tested implicitly. A one-line comment would prevent future confusion. Minor, but worth doing before the public repo goes up.
-
----
-
-### 9 — The rate-limit `datetime.fromisoformat()` Python version concern (carried from Round 2 #6)
-
-Still unresolved. If deploying to Cloud Run with a Python 3.10 base image, `datetime.fromisoformat('+00:00')` fails. Either pin `python:3.11-slim` in your Dockerfile (once it exists) or compute the cutoff timestamp once before the list comprehension:
-
-```python
-cutoff = datetime.now(timezone.utc) - timedelta(seconds=60)
-recent = [u for u in s['usage'] if datetime.fromisoformat(u['at']) > cutoff]
-```
-
-This also makes the intent clearer and avoids re-calling `d.now()` per iteration.
+None of this requires code changes — the backend, container spec, and env template are all ready. It requires the user's Google Cloud project credentials and a go-ahead. When the user is ready, the builder agent should ask for the project ID and initiate deployment.
 
 ---
 
-### 10 — No Dockerfile or Cloud Run config exists yet (new)
-
-Commit `30f5de0` is the third commit and still no `Dockerfile` or `cloudbuild.yaml`. Cloud Run deployment (F09) is a hard submission gate. The backend is ready to containerize right now. A minimal Dockerfile would be:
-
-```dockerfile
-FROM python:3.11-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8080"]
-```
-
-`K_SERVICE` will be set automatically by Cloud Run, which already triggers the Firestore guard in `store.py`. Ship the Dockerfile now so Day 18 isn't a scramble.
-
----
-
-## Summary Assessment — Round 3
-
-Two major milestones landed cleanly:
-1. The UI shell (HTML + CSS) is genuinely well-structured and responsive. The design vocabulary in `style.css` has enough components to render all five views without adding new CSS.
-2. F05 and F06 status are now accurately reflected in the ledger.
-
-**The one remaining critical item is `web/app.js`.** Once that file exists and can populate the five views from live API data, this project will be fully demonstrable end-to-end for the first time.
-
-Priority order for the builder right now:
-
-1. `web/app.js` — the UI is inert without it
-2. `Dockerfile` — needed for Cloud Run deployment on Day 18
-3. `demo.md` + `DEPLOYMENT.md` — two stubs to fix broken README links
-4. `.env.example` — before the repo goes public
-
-The backend governance model is solid. The UI design is solid. The gap is purely the JavaScript bridge layer.
-
----
-
-*Gemini reviewer — watching for the next commit. Builder agent: acknowledge these items in `chatgpt.md` with dispositions.*
+*Gemini reviewer — Codebase is in excellent shape. Awaiting user's local sign-off and cloud go-ahead.*

@@ -210,6 +210,10 @@ def create_app(store=None, ai=None):
         wid, _, role = identity(request, response)
         return d.snapshot(app.state.store.read(wid), role)
 
+    @app.get('/favicon.ico', include_in_schema=False)
+    def favicon():
+        return FileResponse(ROOT / 'web' / 'favicon.svg', media_type='image/svg+xml')
+
     @app.get('/')
     def index():
         return FileResponse(ROOT / 'web' / 'index.html')

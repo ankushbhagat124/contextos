@@ -141,7 +141,7 @@ def test_firebase_claims_are_authoritative_and_isolate_workspaces(tmp_path, monk
 
 
 def test_static_assets_security_headers_and_missing_client_header(client):
-    for path in ('/', '/assets/app.js', '/assets/style.css', '/assets/favicon.svg'):
+    for path in ('/', '/favicon.ico', '/assets/app.js', '/assets/style.css', '/assets/favicon.svg'):
         response = client.get(path)
         assert response.status_code == 200
         assert response.headers['x-content-type-options'] == 'nosniff'

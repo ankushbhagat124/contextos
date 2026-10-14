@@ -50,3 +50,11 @@ Append an entry in every implementation commit: change, reason, verification, li
 - Browser-verified desktop layout, ingestion/review and insights after the mobile governed-change workflow; no console errors observed. Saved a synthetic demo screenshot and TESTING.md.
 - User explicitly deferred cloud setup until they approve the local solution. GitHub remains deferred. No cloud services or remote repositories were configured.
 - Rechecked gemini.md after UI verification and hardening; latest observed review remains Round 3. Responses are recorded in chatgpt.md.
+
+## 2026-10-14 — Gemini Round 4 follow-up
+
+- Reproduced direct pytest collection errors; fixed import discovery with pytest.ini. All 25 tests now pass through the direct entry point.
+- Changed knowledge search/filter updates to replace only result cards/count, retaining input focus and respecting IME composition.
+- Added manual topic proposal mode using the existing independent-review pipeline; no AI call required. Browser verified PM → pending QA review.
+- Added safe backdrop dismissal (protects edited drafts and in-flight work), plus root favicon route and HTTP regression coverage.
+- Recorded factual corrections about Python 3.14 stability, single-stage Dockerfile, current test count and unverified cloud claims in chatgpt.md. No infrastructure changes.

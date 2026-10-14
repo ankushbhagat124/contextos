@@ -85,11 +85,21 @@ function overview() {
   `<div class="grid-2"><section class="panel"><div class="panel-head"><div><h2>Shared knowledge</h2><p>Current decisions your team can build on.</p></div><button class="text-btn" data-action="navigate" data-view="knowledge">View all ${icon('arrow')}</button></div>${state.contexts.slice(0,4).map(contextRow).join('')}</section><section class="panel"><div class="panel-head"><div><h2>Workspace activity</h2><p>A traceable story of how knowledge evolves.</p></div>${icon('clock')}</div><div class="panel-body">${eventRows(state.events.slice(0,4))}</div><div class="panel-bottom"><button class="text-btn" data-action="navigate" data-view="insights">View context insights ${icon('arrow')}</button></div></section></div>`+
   (stale.length ? `<div class="note amber">${stale.length} agent run${stale.length === 1 ? '' : 's'} used knowledge affected by an accepted change. Review the source manifest and rerun with current context.</div>` : '');
 }
+function filteredKnowledge() {
+  return state.contexts.filter(c => (domainFilter === 'All domains' || c.domain === domainFilter) && `${c.title} ${c.body} ${c.id}`.toLowerCase().includes(queryFilter.toLowerCase()));
+}
+function knowledgeResults(list) {
+  return (list.length ? `<div class="context-grid">${list.map(c => `<button class="context-card" data-action="context" data-id="${esc(c.id)}"><span class="card-meta"><span class="tag ${c.policy === 'Restricted' ? 'purple' : 'green'}">${esc(c.domain)}</span><span class="version">v${c.revision}</span></span><h3>${esc(c.title)}</h3><p>${esc(c.body)}</p><span class="card-footer"><span>${esc(c.id)} · ${roleNames[c.owner]}</span><span>${c.mandatory ? '● Required' : c.policy === 'Restricted' ? '● Restricted' : '✓ Accepted'}</span></span></button>`).join('')}</div>` : empty('No matching knowledge','Try a broader search or choose another domain.'));
+}
+function updateKnowledgeResults() {
+  const list = filteredKnowledge();
+  $('#knowledge-results').innerHTML = knowledgeResults(list);
+  $('#knowledge-count').textContent = `${list.length} context items`;
+}
 function knowledge() {
-  const list = state.contexts.filter(c => (domainFilter === 'All domains' || c.domain === domainFilter) && `${c.title} ${c.body} ${c.id}`.toLowerCase().includes(queryFilter.toLowerCase()));
+  const list = filteredKnowledge();
   return heading('SHARED KNOWLEDGE','Decisions worth remembering.','Accepted, versioned, and available to the people who need them.',btn(`${icon('plus')} Add knowledge`,'ingest',true))+
-  `<div class="toolbar"><div class="search"><input id="search" type="search" placeholder="Search decisions, requirements, or source IDs…" aria-label="Search shared knowledge"></div><select id="domain-filter" aria-label="Filter by domain">${['All domains',...Object.keys(owners)].map(d => `<option ${d === domainFilter ? 'selected' : ''}>${d}</option>`).join('')}</select><span class="muted">${list.length} context items</span></div>`+
-  (list.length ? `<div class="context-grid">${list.map(c => `<button class="context-card" data-action="context" data-id="${esc(c.id)}"><span class="card-meta"><span class="tag ${c.policy === 'Restricted' ? 'purple' : 'green'}">${esc(c.domain)}</span><span class="version">v${c.revision}</span></span><h3>${esc(c.title)}</h3><p>${esc(c.body)}</p><span class="card-footer"><span>${esc(c.id)} · ${roleNames[c.owner]}</span><span>${c.mandatory ? '● Required' : c.policy === 'Restricted' ? '● Restricted' : '✓ Accepted'}</span></span></button>`).join('')}</div>` : empty('No matching knowledge','Try a broader search or choose another domain.'));
+  `<div class="toolbar"><div class="search"><input id="search" type="search" placeholder="Search decisions, requirements, or source IDs…" aria-label="Search shared knowledge"></div><select id="domain-filter" aria-label="Filter by domain">${['All domains',...Object.keys(owners)].map(d => `<option ${d === domainFilter ? 'selected' : ''}>${d}</option>`).join('')}</select><span class="muted" id="knowledge-count" aria-live="polite">${list.length} context items</span></div><div id="knowledge-results">${knowledgeResults(list)}</div>`;
 }
 function runOutput(run) {
   return `<section class="panel result"><div class="form-panel"><div class="result-head"><div><h2>${run.stale ? 'Context has changed' : 'Your task briefing'}</h2><small>${roleNames[run.role]} · ${formatTime(run.created_at)} · ${esc(run.id)}</small></div><span class="tag ${run.stale ? 'amber' : 'green'}">${run.stale ? 'Needs review' : 'Current snapshot'}</span></div>${run.stale ? '<div class="note amber">An accepted dependency changed. This output remains tied to its original sources. Rerun to adopt current knowledge.</div>' : ''}<div class="prose">${esc(run.output)}</div><div class="dialog-actions">${btn('Inspect context','manifest',false,`data-id="${esc(run.id)}"`)}${btn('Rerun with latest context','rerun',false,`data-id="${esc(run.id)}"`)}</div></div></section>`;
@@ -143,6 +153,12 @@ async function runTask(query,budget) {
   const run = await api('tasks',{query,budget}); activeRun = run;
   await refresh(); go('tasks'); toast('Task saved with its source manifest.');
 }
+function addKnowledge() {
+  modal('Bring knowledge into the workspace','Extract a candidate from notes or write a topic directly. Both require review.',
+    `<div class="button-group" role="group" aria-label="Knowledge authoring mode"><button class="btn primary" data-action="knowledge-mode" data-mode="extract" aria-pressed="true">Extract from notes</button><button class="btn" data-action="knowledge-mode" data-mode="manual" aria-pressed="false">Manual proposal</button></div>
+    <form id="ingest-form" class="gap-top"><label class="field">Stakeholder notes<textarea class="tall" name="notes" required minlength="10" maxlength="8000" placeholder="Paste a decision, requirement, or meeting note…"></textarea></label><label class="field">Source reference<input name="source" required maxlength="200" placeholder="e.g. Product workshop, 14 October"></label><div class="note">${state.ai_mode === 'offline' ? 'Offline mode preserves your notes verbatim as a requirement candidate. Gemini extraction becomes available when configured.' : 'Gemini extracts one candidate topic. Nothing is accepted until human review.'}</div><button type="submit" class="btn primary">${icon('spark')} Create review candidate</button></form>
+    <form id="manual-proposal-form" class="gap-top" hidden><label class="field">Topic title<input name="title" required maxlength="120"></label><label class="field">Domain<select name="domain">${Object.keys(owners).map((domain,index) => `<option${index === 0 ? ' selected' : ''}>${domain}</option>`).join('')}</select></label><label class="field">Proposed content<textarea name="body" required maxlength="10000" class="tall"></textarea></label><label class="field">Reason for this topic<input name="reason" required maxlength="1500"></label><label class="field">Source reference<input name="source" required maxlength="200"></label><div class="note">No model call is needed. An independent reviewer who owns this domain must approve your proposal. New topics use the Reviewed policy and are visible to project members after publication.</div><button type="submit" class="btn primary">Send manual proposal for review</button></form>`);
+}
 async function action(el) {
   const a = el.dataset.action, id = el.dataset.id;
   if (a === 'navigate') return go(el.dataset.view);
@@ -152,7 +168,18 @@ async function action(el) {
   if (a === 'restore') {const h = selectedContext.history.find(x => x.revision === Number(el.dataset.revision)); return editContext(h.body,`Restore content from v${h.revision}; preserve all subsequent revision history.`);}
   if (a === 'manifest') return manifest(id);
   if (a === 'open-run') {activeRun = state.tasks.find(t => t.id === id); go('tasks'); window.scrollTo({top:0,behavior:'smooth'}); return;}
-  if (a === 'ingest') return modal('Bring knowledge into the workspace','Turn stakeholder notes into a reviewable proposal.',`<form id="ingest-form"><label class="field">Stakeholder notes<textarea class="tall" name="notes" required minlength="10" maxlength="8000" placeholder="Paste a decision, requirement, or meeting note. For example: customers must see a clear explanation when their card is declined…"></textarea></label><label class="field">Source reference<input name="source" required maxlength="200" placeholder="e.g. Product workshop, 14 October"></label><div class="note">${state.ai_mode === 'offline' ? 'Offline mode preserves your notes verbatim as a requirement candidate. Gemini extraction becomes available when configured.' : 'Gemini extracts one candidate topic. Nothing is accepted until human review.'}</div><button type="submit" class="btn primary">${icon('spark')} Create review candidate</button></form>`);
+  if (a === 'ingest') return addKnowledge();
+  if (a === 'knowledge-mode') {
+    const manual = el.dataset.mode === 'manual';
+    $('#manual-proposal-form').hidden = !manual;
+    $('#ingest-form').hidden = manual;
+    document.querySelectorAll('[data-action="knowledge-mode"]').forEach(button => {
+      const selected = (button.dataset.mode === 'manual') === manual;
+      button.setAttribute('aria-pressed', String(selected));
+      button.classList.toggle('primary', selected);
+    });
+    return;
+  }
   if (a === 'guide') return modal('A decision that travels with the work','A short, end-to-end ContextOS rehearsal.',`<div class="source-list">${[['1. Start as Developer','Run “Implement payment retries” in Agent workspace. Inspect the source revisions.'],['2. Propose a design change','Open Payment retry architecture. Propose reducing the retry limit from three to two; preserve its other constraints.'],['3. Review as Architect','Use the persona selector, open Change reviews, and approve the exact proposal.'],['4. Follow the impact','Return to Agent workspace. The previous run is stale. Rerun and inspect architecture v2.'],['5. Verify the boundary','Security can see a restricted finding; Developer cannot retrieve it or its derived outputs.']].map(([t,d])=>`<div class="source-item"><strong>${t}</strong><small>${d}</small></div>`).join('')}</div><div class="note">This is a synthetic sandbox. Persona switching demonstrates policy behavior; production identity uses verified accounts.</div>`);
   if (a === 'export') {
     const data = await api('export'); const url = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})); const link = document.createElement('a'); link.href = url; link.download = 'contextos-evidence.json'; link.click(); URL.revokeObjectURL(url); toast('Visible workspace evidence exported.'); return;
@@ -166,13 +193,14 @@ document.addEventListener('click', async e => {
   try {await action(el);} catch(err) {toast(err.message,true);} finally {el.disabled = wasDisabled; busy = false;}
 });
 document.addEventListener('submit', async e => {
-  const form = e.target; if (!['task-form','proposal-form','ingest-form','auth-form'].includes(form.id)) return;
+  const form = e.target; if (!['task-form','proposal-form','ingest-form','manual-proposal-form','auth-form'].includes(form.id)) return;
   e.preventDefault(); if (busy) return; busy = true;
   const button = form.querySelector('[type="submit"]'), previous = button.innerHTML; button.disabled = true; button.textContent = 'Working…';
   const data = Object.fromEntries(new FormData(form));
   try {
     if (form.id === 'task-form') {sessionStorage.setItem('task-draft',data.query); await runTask(data.query,Number(data.budget));}
     if (form.id === 'proposal-form') {await api('proposals',{context_id:selectedContext.id,base_revision:selectedContext.revision,body:data.body,reason:data.reason,sources:selectedContext.sources}); $('#dialog').close(); await refresh(); go('reviews'); toast('Change proposed. The accepted revision is unchanged.');}
+    if (form.id === 'manual-proposal-form') {const {source,...proposal} = data; await api('proposals',{...proposal,sources:[source]}); $('#dialog').close(); await refresh(); go('reviews'); toast('Manual proposal created. Independent owner review is required.');}
     if (form.id === 'ingest-form') {await api('ingest',data); $('#dialog').close(); await refresh(); go('reviews'); toast('Review candidate created.');}
     if (form.id === 'auth-form') {firebaseToken = data.token.trim(); await refresh();}
   } catch(err) {toast(err.message,true);} finally {busy = false; button.disabled = false; button.innerHTML = previous;}
@@ -183,9 +211,21 @@ $('#persona').addEventListener('change',async e => {
   try {await api('persona',{role:e.target.value}); activeRun = undefined; selectedContext = undefined; $('#dialog').close(); await refresh(); toast(`Viewing as ${roleNames[state.role]}. Permissions applied.`);} catch(err) {e.target.value = state.role; toast(err.message,true);} finally {busy = false; e.target.disabled = state?.auth_mode !== 'demo';}
 });
 document.addEventListener('input', e => {
-  if (e.target.id === 'search') {queryFilter = e.target.value; const start = e.target.selectionStart; render(); $('#search').focus(); if (start !== null) {try {$('#search').setSelectionRange(start,start);} catch {}}}
+  if (e.target.id === 'search' && !e.isComposing) {queryFilter = e.target.value; updateKnowledgeResults();}
 });
-document.addEventListener('change',e => {if (e.target.id === 'domain-filter') {domainFilter = e.target.value;render();}});
+document.addEventListener('compositionend', e => {
+  if (e.target.id === 'search') {queryFilter = e.target.value; updateKnowledgeResults();}
+});
+document.addEventListener('change',e => {if (e.target.id === 'domain-filter') {domainFilter = e.target.value; updateKnowledgeResults();}});
+$('#dialog').addEventListener('click', e => {
+  const dialog = $('#dialog');
+  if (e.target !== dialog || busy) return;
+  const rect = dialog.getBoundingClientRect();
+  if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) return;
+  const dirty = [...dialog.querySelectorAll('input,textarea,select')].some(field => field.tagName === 'SELECT' ? field.value !== [...field.options].find(o => o.defaultSelected)?.value : field.value !== field.defaultValue);
+  if (dirty) {toast('Your draft is still here. Use the close button to discard it.'); return;}
+  dialog.close();
+});
 window.addEventListener('hashchange',() => {currentView = location.hash.slice(1) || 'overview';render();});
 refresh().catch(err => {
   $('#mode').textContent = 'Workspace unavailable';
