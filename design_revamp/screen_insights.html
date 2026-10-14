@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ContextOS — Institutional Context Insights &amp; Telemetry</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#f5dfca",
+            "on-tertiary": "#ffffff",
+            "error": "#ba1a1a",
+            "on-surface": "#1d1c15",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#93816f",
+            "surface-bright": "#fef9ee",
+            "primary-container": "#161d26",
+            "secondary-container": "#fcdfa8",
+            "on-tertiary-fixed-variant": "#534435",
+            "surface-dim": "#dedacf",
+            "on-surface-variant": "#45474b",
+            "on-primary-fixed-variant": "#404751",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#261900",
+            "tertiary": "#020100",
+            "primary-fixed": "#dce3f0",
+            "surface-tint": "#585f6a",
+            "outline-variant": "#dedacf",
+            "inverse-surface": "#323029",
+            "inverse-primary": "#c0c7d3",
+            "tertiary-container": "#251a0d",
+            "on-primary-fixed": "#151c25",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#776136",
+            "surface-container-low": "#f8f3e8",
+            "inverse-on-surface": "#f5f0e5",
+            "secondary": "#715b30",
+            "surface-variant": "#e7e2d7",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#fef9ee",
+            "secondary-fixed-dim": "#dfc38f",
+            "on-secondary-fixed-variant": "#57441b",
+            "secondary-fixed": "#fcdfa8",
+            "surface-container-highest": "#e7e2d7",
+            "on-background": "#1d1c15",
+            "outline": "#75777c",
+            "primary-fixed-dim": "#c0c7d3",
+            "background": "#fef9ee",
+            "tertiary-fixed-dim": "#d8c3af",
+            "on-primary-container": "#7e8590",
+            "on-primary": "#ffffff",
+            "primary": "#161d26",
+            "surface-container": "#f2ede2",
+            "surface-container-high": "#ede8dd",
+            "on-tertiary-fixed": "#24190d"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-sm": "0.75rem",
+            "space-xs": "0.25rem",
+            "margin": "2rem",
+            "space-sm": "0.5rem",
+            "margin-sm": "1rem",
+            "space-lg": "1.5rem",
+            "margin-lg": "3rem",
+            "gutter-lg": "2rem",
+            "space-md": "1rem",
+            "space-xl": "2.5rem",
+            "gutter": "1.5rem"
+          },
+          "fontFamily": {
+            "display-lg": ["EB Garamond"],
+            "label-lg": ["Inter"],
+            "code-metrics": ["Courier Prime"],
+            "display-lg-mobile": ["EB Garamond"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-sm": ["EB Garamond"],
+            "headline-md": ["EB Garamond"],
+            "headline-lg": ["EB Garamond"],
+            "body-md": ["Inter"],
+            "code-provenance": ["Courier Prime"],
+            "label-md": ["Inter"]
+          },
+          "fontSize": {
+            "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "code-metrics": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+            "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-md": ["26px", { "lineHeight": "34px", "fontWeight": "600" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "code-provenance": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+            "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f2ede2;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #dedacf;
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed min-h-screen">
+<!-- Side Navigation Bar (Anchored from Shared Components JSON) -->
+<aside class="fixed top-0 bottom-0 left-0 w-72 h-screen z-40 bg-[#161d26] border-r border-[#202936] flex flex-col justify-between p-4">
+<div class="flex flex-col gap-5">
+<!-- Header / Brand Section -->
+<div class="pt-2 pb-4 border-b border-[#242e3d]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-[#10151c] border border-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary-fixed" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md tracking-tight font-medium text-inverse-on-surface leading-tight">ContextOS</div>
+<div class="font-code-provenance text-code-provenance text-secondary-fixed tracking-tight">Sovereign Intelligence Node</div>
+</div>
+</div>
+<div class="mt-4 px-2.5 py-1.5 bg-[#10151c]/70 border border-secondary/40 flex items-center justify-between text-left">
+<div class="truncate">
+<div class="font-label-md text-label-md text-secondary-fixed-dim uppercase tracking-wider">Active Partition</div>
+<div class="font-label-lg text-label-lg text-inverse-on-surface truncate">Checkout reliability</div>
+</div>
+<span class="material-symbols-outlined text-secondary-fixed-dim text-sm" data-icon="unfold_more">unfold_more</span>
+</div>
+</div>
+<!-- Main Navigation Items (Active: Context Insights) -->
+<nav class="flex flex-col space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-primary-container font-label-lg text-label-lg hover:bg-[#1f2937]/50 hover:text-surface-bright transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-base" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-primary-container font-label-lg text-label-lg hover:bg-[#1f2937]/50 hover:text-surface-bright transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-base" data-icon="menu_book">menu_book</span>
+<span>Knowledge Repository</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-primary-container font-label-lg text-label-lg hover:bg-[#1f2937]/50 hover:text-surface-bright transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-base" data-icon="task_alt">task_alt</span>
+<span>Agent Tasks</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-on-primary-container font-label-lg text-label-lg hover:bg-[#1f2937]/50 hover:text-surface-bright transition-colors duration-150" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-base" data-icon="rate_review">rate_review</span>
+<span>Change Reviews</span>
+</div>
+<span class="font-code-provenance text-code-provenance px-1.5 py-0.2 bg-secondary text-surface-container-lowest font-bold">2</span>
+</a>
+<!-- ACTIVE TAB -->
+<a class="flex items-center gap-3 px-3 py-2 bg-[#1b232e] text-secondary-fixed border-l-2 border-secondary-fixed font-label-lg text-label-lg transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-base text-secondary-fixed" data-icon="insights">insights</span>
+<span>Context Insights</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-primary-container font-label-lg text-label-lg hover:bg-[#1f2937]/50 hover:text-surface-bright transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-base" data-icon="play_circle">play_circle</span>
+<span>Demo Center</span>
+</a>
+</nav>
+<!-- Primary Action CTA -->
+<div class="px-2 pt-2">
+<button class="w-full flex items-center justify-center gap-2 py-2 px-3 bg-secondary text-on-secondary font-label-lg text-label-lg border border-secondary-fixed hover:bg-on-secondary-fixed-variant transition-colors duration-150 shadow-none">
+<span class="material-symbols-outlined text-sm" data-icon="shield">shield</span>
+<span>Execute Audit</span>
+</button>
+</div>
+</div>
+<!-- Footer of Sidebar -->
+<div class="flex flex-col gap-3 pt-3 border-t border-[#242e3d]">
+<div class="flex items-center justify-between px-2 text-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed animate-pulse"></span>
+<span class="font-code-provenance text-code-provenance text-inverse-on-surface text-xs">One shared understanding</span>
+</div>
+<span class="font-code-provenance text-code-provenance text-secondary-fixed-dim text-xs">SYNCED</span>
+</div>
+<nav class="flex flex-col space-y-0.5">
+<a class="flex items-center gap-3 px-3 py-1.5 text-on-primary-container font-label-md text-label-md hover:bg-[#1f2937]/50 hover:text-surface-bright transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-1.5 text-on-primary-container font-label-md text-label-md hover:bg-[#1f2937]/50 hover:text-surface-bright transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="receipt_long">receipt_long</span>
+<span>Archival Ledger</span>
+</a>
+</nav>
+<!-- Persona / Profile Box -->
+<div class="mt-1 p-2.5 bg-[#10151c] border border-[#242e3d] flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container border border-secondary flex items-center justify-center shrink-0">
+<span class="font-code-metrics text-code-metrics text-primary font-bold">SL</span>
+</div>
+<div class="truncate">
+<div class="font-label-lg text-label-lg text-inverse-on-surface truncate">Sarah Lin</div>
+<div class="font-code-provenance text-code-provenance text-secondary-fixed-dim text-xs truncate">Staff Product Principal</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar (Anchored from Shared Components JSON) -->
+<header class="sticky top-0 right-0 left-72 z-30 flex justify-between items-center h-14 px-6 ml-72 w-[calc(100%-18rem)] bg-surface-container-low border-b border-outline-variant">
+<!-- Breadcrumb & Workspace Identifiers -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant">
+<span>Workspaces</span>
+<span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+<span>Checkout reliability</span>
+<span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-semibold">Context Insights</span>
+</div>
+<div class="font-code-provenance text-code-provenance px-2 py-0.5 bg-surface-container border border-outline-variant text-on-surface">
+        ID: WS-CHK-8902
+      </div>
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-container border border-outline-variant text-primary font-code-provenance text-code-provenance">
+<span class="w-1.5 h-1.5 rounded-full bg-[#9b8354]"></span>
+<span>Offline rehearsal Active</span>
+</div>
+</div>
+<!-- Right Controls: Persona & Quick Actions -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 border-r border-outline-variant pr-4">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="person_outline">person_outline</span>
+<span class="font-label-md text-label-md text-primary font-medium border-b border-secondary pb-0.5">Viewing as: Product Manager</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" title="System Notifications">
+<span class="material-symbols-outlined text-base" data-icon="notifications">notifications</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Institutional Charter Support">
+<span class="material-symbols-outlined text-base" data-icon="help_outline">help_outline</span>
+</button>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-lowest border border-outline-variant font-code-provenance text-code-provenance text-primary">
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="shield">shield</span>
+<span>System Operational</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas Container -->
+<main class="ml-72 min-h-[calc(100vh-3.5rem)] p-8 bg-surface space-y-6">
+<!-- Page Header Dossier Anchor -->
+<div class="flex flex-col md:flex-row md:items-end justify-between border-b border-outline-variant pb-6 gap-4">
+<div>
+<div class="font-code-provenance text-code-provenance text-secondary uppercase tracking-widest font-semibold flex items-center gap-1.5 mb-1">
+<span class="material-symbols-outlined text-xs" data-icon="balance">balance</span>
+          EFFICIENCY &amp; GOVERNANCE TELEMETRY
+        </div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-medium">Institutional Context Insights</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-2xl">
+          Real-time auditing of memory utilization, token conservation, and cross-team knowledge convergence within sovereign context partitions.
+        </p>
+</div>
+<!-- Top Right Header Actions -->
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-surface-container-low border border-outline-variant text-primary font-label-lg text-label-lg hover:bg-surface-container transition-colors duration-150 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="description">description</span>
+<span>Generate Telemetry Report</span>
+</button>
+<button class="px-4 py-2 bg-primary border border-primary text-on-primary font-label-lg text-label-lg hover:bg-[#1b232e] transition-colors duration-150 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary-fixed" data-icon="download">download</span>
+<span>Export Audit CSV</span>
+</button>
+</div>
+</div>
+<!-- KPI Summary Row: 4 Warm Cream Archival Cards -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Card 1: Governed Topics -->
+<div class="p-5 bg-surface-container-lowest border border-outline-variant flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 left-0 right-0 h-0.5 bg-secondary"></div>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Governed Topics</span>
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="library_books">library_books</span>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">32</span>
+<span class="font-code-metrics text-code-metrics text-on-surface-variant">Active</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex flex-col gap-1">
+<div class="inline-flex items-center gap-1 text-xs text-secondary font-code-provenance">
+<span class="material-symbols-outlined text-xs" data-icon="add_circle">add_circle</span>
+<span>+4 pending review</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">100% synchronized across nodes</span>
+</div>
+</div>
+<!-- Card 2: Cumulative Token Savings -->
+<div class="p-5 bg-surface-container-lowest border border-outline-variant flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 left-0 right-0 h-0.5 bg-primary"></div>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Cumulative Savings</span>
+<span class="material-symbols-outlined text-primary text-lg" data-icon="savings">savings</span>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">1.42M</span>
+<span class="font-code-metrics text-code-metrics text-on-surface-variant">Tokens</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex flex-col gap-1">
+<div class="inline-flex items-center gap-1 text-xs text-primary font-code-provenance font-bold">
+<span class="material-symbols-outlined text-xs" data-icon="trending_down">trending_down</span>
+<span>81.4% reduction</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">vs unmanaged context windows</span>
+</div>
+</div>
+<!-- Card 3: Est. Cost Avoidance -->
+<div class="p-5 bg-surface-container-lowest border border-outline-variant flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 left-0 right-0 h-0.5 bg-secondary"></div>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Est. Cost Avoidance</span>
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="payments">payments</span>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">$2,840.00</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex flex-col gap-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Calculated on institutional baseline model inference</span>
+<span class="font-code-provenance text-code-provenance text-xs text-secondary-fixed-variant">$0.002 / 1k prompt pack</span>
+</div>
+</div>
+<!-- Card 4: Context Freshness -->
+<div class="p-5 bg-surface-container-lowest border border-outline-variant flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 left-0 right-0 h-0.5 bg-primary"></div>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Context Freshness</span>
+<span class="material-symbols-outlined text-primary text-lg" data-icon="verified">verified</span>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">98.2%</span>
+<span class="font-code-provenance text-code-provenance text-xs px-1.5 py-0.5 bg-[#fcdfa8]/50 border border-[#9b8354]/40 text-[#57441b] font-bold">OPTIMAL</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex flex-col gap-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Last audit cycle: 2h ago</span>
+<div class="font-code-provenance text-code-provenance text-xs text-on-surface-variant truncate">
+            Merkle: 0x8f2c...419a
+          </div>
+</div>
+</div>
+</section>
+<!-- Main Content Asymmetric Grid: 55% Left / 45% Right -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Left Column (55% / 7 cols) -->
+<section class="lg:col-span-7 space-y-6">
+<!-- Knowledge Domain Distribution Card -->
+<div class="p-6 bg-surface-container-lowest border border-outline-variant">
+<div class="flex items-center justify-between border-b border-surface-container pb-4">
+<div>
+<div class="font-code-provenance text-code-provenance text-secondary uppercase font-semibold">TAXONOMY ALLOCATION</div>
+<h2 class="font-headline-md text-headline-md text-primary font-medium">Knowledge Domain Distribution &amp; Token Density</h2>
+</div>
+<div class="text-right">
+<span class="font-code-provenance text-code-provenance text-xs text-on-surface-variant">Partition Spec: v4.2</span>
+</div>
+</div>
+<div class="mt-5 space-y-5">
+<!-- Domain 1: Architecture -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-baseline font-body-sm text-body-sm">
+<span class="font-semibold text-primary">Architecture</span>
+<div class="flex items-center gap-3">
+<span class="font-code-provenance text-code-provenance text-xs text-on-surface-variant">8 topics</span>
+<span class="font-code-metrics text-code-metrics text-xs text-primary">412k tokens avg</span>
+<span class="font-code-provenance text-code-provenance text-xs text-[#9b8354] font-bold">99.4% fresh</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container border border-outline-variant p-0.5">
+<div class="h-full bg-[#161d26]" style="width: 82%;"></div>
+</div>
+</div>
+<!-- Domain 2: Product Spec -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-baseline font-body-sm text-body-sm">
+<span class="font-semibold text-primary">Product Spec</span>
+<div class="flex items-center gap-3">
+<span class="font-code-provenance text-code-provenance text-xs text-on-surface-variant">10 topics</span>
+<span class="font-code-metrics text-code-metrics text-xs text-primary">280k tokens avg</span>
+<span class="font-code-provenance text-code-provenance text-xs text-[#9b8354] font-bold">98.1% fresh</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container border border-outline-variant p-0.5">
+<div class="h-full bg-[#9b8354]" style="width: 65%;"></div>
+</div>
+</div>
+<!-- Domain 3: Security & Compliance -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-baseline font-body-sm text-body-sm">
+<div class="flex items-center gap-1.5">
+<span class="font-semibold text-primary">Security &amp; Compliance</span>
+<span class="font-code-provenance text-code-provenance text-[10px] px-1 bg-surface-container-high border border-outline-variant text-secondary">RING-0 LOCKED</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-code-provenance text-code-provenance text-xs text-on-surface-variant">5 topics</span>
+<span class="font-code-metrics text-code-metrics text-xs text-primary">195k tokens avg</span>
+<span class="font-code-provenance text-code-provenance text-xs text-[#9b8354] font-bold">100% fresh</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container border border-outline-variant p-0.5">
+<div class="h-full bg-[#161d26]" style="width: 90%;"></div>
+</div>
+</div>
+<!-- Domain 4: Quality Assurance -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-baseline font-body-sm text-body-sm">
+<span class="font-semibold text-primary">Quality Assurance</span>
+<div class="flex items-center gap-3">
+<span class="font-code-provenance text-code-provenance text-xs text-on-surface-variant">4 topics</span>
+<span class="font-code-metrics text-code-metrics text-xs text-primary">145k tokens avg</span>
+<span class="font-code-provenance text-code-provenance text-xs text-[#9b8354] font-bold">96.8% fresh</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container border border-outline-variant p-0.5">
+<div class="h-full bg-[#dfc38f]" style="width: 48%;"></div>
+</div>
+</div>
+<!-- Domain 5: Infrastructure & SRE -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-baseline font-body-sm text-body-sm">
+<span class="font-semibold text-primary">Infrastructure &amp; SRE</span>
+<div class="flex items-center gap-3">
+<span class="font-code-provenance text-code-provenance text-xs text-on-surface-variant">5 topics</span>
+<span class="font-code-metrics text-code-metrics text-xs text-primary">388k tokens avg</span>
+<span class="font-code-provenance text-code-provenance text-xs text-[#9b8354] font-bold">97.5% fresh</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container border border-outline-variant p-0.5">
+<div class="h-full bg-[#2a3647]" style="width: 74%;"></div>
+</div>
+</div>
+</div>
+<!-- Token Compression Efficiency Breakdown -->
+<div class="mt-6 pt-5 border-t border-surface-container grid grid-cols-3 gap-3">
+<div class="p-3 bg-surface border border-outline-variant">
+<div class="font-label-md text-label-md text-on-surface-variant uppercase">Pruning Rule</div>
+<div class="font-code-metrics text-code-metrics text-primary font-bold mt-1">Deterministic AST</div>
+<div class="font-code-provenance text-code-provenance text-xs text-[#9b8354] mt-0.5">+44.2% yield</div>
+</div>
+<div class="p-3 bg-surface border border-outline-variant">
+<div class="font-label-md text-label-md text-on-surface-variant uppercase">Dedup Vector</div>
+<div class="font-code-metrics text-code-metrics text-primary font-bold mt-1">Semantic Cross-Ref</div>
+<div class="font-code-provenance text-code-provenance text-xs text-[#9b8354] mt-0.5">-310k redundancy</div>
+</div>
+<div class="p-3 bg-surface border border-outline-variant">
+<div class="font-label-md text-label-md text-on-surface-variant uppercase">Latency Delta</div>
+<div class="font-code-metrics text-code-metrics text-primary font-bold mt-1">-380 ms</div>
+<div class="font-code-provenance text-code-provenance text-xs text-[#9b8354] mt-0.5">per prompt pack</div>
+</div>
+</div>
+</div>
+<!-- Archival Context Health Ledger Note -->
+<div class="p-4 bg-surface-container-low border border-outline-variant flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary text-2xl mt-0.5" data-icon="policy">policy</span>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary font-medium">Fiduciary Stewardship Protocol</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Partition memory boundaries are mathematically isolated under ISO-27001 intelligence vault guidelines. Injected context items cannot bleed outside WS-CHK-8902 without an authorized multisig charter elevation.
+            </p>
+</div>
+</div>
+</section>
+<!-- Right Column (45% / 5 cols) -->
+<section class="lg:col-span-5 space-y-6">
+<!-- Context Optimization Ledger Table -->
+<div class="bg-surface-container-lowest border border-outline-variant flex flex-col justify-between">
+<div class="p-5 border-b border-surface-container">
+<div class="flex items-center justify-between">
+<div>
+<div class="font-code-provenance text-code-provenance text-secondary uppercase font-semibold">EXECUTION TELEMETRY</div>
+<h2 class="font-headline-md text-headline-md text-primary font-medium">Context Optimization Ledger</h2>
+</div>
+<span class="font-code-provenance text-code-provenance text-xs px-2 py-0.5 bg-surface-container border border-outline-variant">LIVE INGESTION</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+              Monospace cryptographic logs recording real-time autonomous model memory synthesis runs.
+            </p>
+</div>
+<!-- Tabular Stream -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant font-label-md text-label-md text-on-surface uppercase tracking-wider">
+<th class="py-2.5 px-4 font-medium">Run ID &amp; Agent</th>
+<th class="py-2.5 px-3 font-medium text-right">Packed / Saved</th>
+<th class="py-2.5 px-4 font-medium text-right">Verification</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-code-provenance text-code-provenance text-xs">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container/40 transition-colors">
+<td class="py-3 px-4">
+<div class="font-bold text-primary">RUN-9041-A</div>
+<div class="text-on-surface-variant text-[11px]">Hermes-4 (Autonomous)</div>
+</td>
+<td class="py-3 px-3 text-right">
+<div class="font-code-metrics text-code-metrics text-xs text-primary font-bold">1,840 tkns</div>
+<div class="text-secondary text-[11px]">87% conserved</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="inline-flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs text-[#9b8354]" data-icon="check_circle">check_circle</span>
+<span class="font-bold">Passed</span>
+</div>
+<div class="text-[11px] text-on-surface-variant truncate max-w-[110px] ml-auto">7f4a...e10d</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container/40 transition-colors bg-surface-container-low/20">
+<td class="py-3 px-4">
+<div class="font-bold text-primary">RUN-9038-B</div>
+<div class="text-on-surface-variant text-[11px]">Athena-2 (Verification)</div>
+</td>
+<td class="py-3 px-3 text-right">
+<div class="font-code-metrics text-code-metrics text-xs text-primary font-bold">2,410 tkns</div>
+<div class="text-secondary text-[11px]">82% conserved</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="inline-flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs text-[#9b8354]" data-icon="check_circle">check_circle</span>
+<span class="font-bold">Passed</span>
+</div>
+<div class="text-[11px] text-on-surface-variant truncate max-w-[110px] ml-auto">3b19...57ab</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container/40 transition-colors">
+<td class="py-3 px-4">
+<div class="font-bold text-primary">RUN-9022-C</div>
+<div class="text-on-surface-variant text-[11px]">Solon-1 (Compliance)</div>
+</td>
+<td class="py-3 px-3 text-right">
+<div class="font-code-metrics text-code-metrics text-xs text-primary font-bold">1,120 tkns</div>
+<div class="text-secondary text-[11px]">89% conserved</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="inline-flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs text-[#9b8354]" data-icon="check_circle">check_circle</span>
+<span class="font-bold">Passed</span>
+</div>
+<div class="text-[11px] text-on-surface-variant truncate max-w-[110px] ml-auto">9e41...42c1</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container/40 transition-colors bg-surface-container-low/20">
+<td class="py-3 px-4">
+<div class="font-bold text-primary">RUN-9015-D</div>
+<div class="text-on-surface-variant text-[11px]">Hermes-4 (Autonomous)</div>
+</td>
+<td class="py-3 px-3 text-right">
+<div class="font-code-metrics text-code-metrics text-xs text-primary font-bold">3,200 tkns</div>
+<div class="text-secondary text-[11px]">76% conserved</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="inline-flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs text-[#9b8354]" data-icon="check_circle">check_circle</span>
+<span class="font-bold">Passed</span>
+</div>
+<div class="text-[11px] text-on-surface-variant truncate max-w-[110px] ml-auto">c83d...18bf</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bottom Ledger Status Frame -->
+<div class="p-3.5 bg-surface-container-low border-t border-outline-variant flex items-center justify-between text-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-code-provenance text-code-provenance text-primary font-medium">Merkle Tree Consensus node active</span>
+</div>
+<a class="font-label-md text-label-md text-secondary hover:underline flex items-center gap-0.5" href="#">
+<span>Inspect Raw Tree</span>
+<span class="material-symbols-outlined text-xs" data-icon="arrow_outward">arrow_outward</span>
+</a>
+</div>
+</div>
+<!-- Archival Cryptographic Stamp -->
+<div class="p-4 bg-[#161d26] text-inverse-on-surface border border-[#202936] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 border border-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-fixed" data-icon="fingerprint">fingerprint</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm font-medium">Ledger Consensus Seal</div>
+<div class="font-code-provenance text-code-provenance text-xs text-secondary-fixed-dim">Block Height #942,109 — Tier-1 Validated</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary-fixed" data-icon="verified_user">verified_user</span>
+</div>
+</section>
+</div>
+<!-- Bottom Full-Width Card: Governance & Review Velocity -->
+<section class="p-6 bg-surface-container-lowest border border-outline-variant space-y-5">
+<div class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-container pb-4 gap-2">
+<div>
+<div class="font-code-provenance text-code-provenance text-secondary uppercase font-semibold">INSTITUTIONAL RIGOUR</div>
+<h2 class="font-headline-md text-headline-md text-primary font-medium">Governance &amp; Review Velocity</h2>
+</div>
+<div class="font-code-provenance text-code-provenance text-xs text-on-surface-variant flex items-center gap-2">
+<span>Continuous Fiduciary Watch</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Cycle: Sprint 44-Q1</span>
+</div>
+</div>
+<!-- 3 Metric Columns -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+<!-- Metric 1: Review Turnaround -->
+<div class="p-4 bg-surface border border-outline-variant">
+<div class="font-label-md text-label-md text-on-surface-variant uppercase">Proposal Review Turnaround</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">Avg 4.2 hrs</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 font-code-provenance text-code-provenance text-xs text-primary font-bold">
+<span class="material-symbols-outlined text-xs" data-icon="arrow_downward">arrow_downward</span>
+<span>-1.8 hrs from previous sprint</span>
+</div>
+</div>
+<!-- Metric 2: Independent Approval Rate -->
+<div class="p-4 bg-surface border border-outline-variant">
+<div class="font-label-md text-label-md text-on-surface-variant uppercase">Independent Approval Rate</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">89.4%</span>
+</div>
+<div class="mt-2 font-code-provenance text-code-provenance text-xs text-on-surface-variant">
+<span>28 approved / 32 proposals submitted</span>
+</div>
+</div>
+<!-- Metric 3: Zero Regression Policy -->
+<div class="p-4 bg-surface border border-outline-variant">
+<div class="font-label-md text-label-md text-on-surface-variant uppercase">Zero Regression Policy</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">Active</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 font-code-provenance text-code-provenance text-xs text-secondary font-bold">
+<span class="material-symbols-outlined text-xs" data-icon="lock">lock</span>
+<span>Tier-1 Ring Lock Enforced</span>
+</div>
+</div>
+</div>
+<!-- Narrative Archival Banner -->
+<div class="p-3.5 bg-surface-container border-l-4 border-secondary text-on-surface flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="verified">verified</span>
+<span class="font-body-sm text-body-sm">
+            All approved context revisions are cryptographically signed with reviewer identity and Merkle root timestamps. Tamper-evident ledger synchronization is immutable.
+          </span>
+</div>
+<span class="font-code-provenance text-code-provenance text-xs text-on-surface-variant whitespace-nowrap ml-4">
+          Charter Ref: CR-2024-OXF
+        </span>
+</div>
+</section>
+</main>
+</body></html>

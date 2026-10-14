@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ContextOS — Agent Tasks &amp; Context Assembly</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#fef9ee",
+            "surface-bright": "#fef9ee",
+            "surface-dim": "#dedacf",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f8f3e8",
+            "surface-container": "#f2ede2",
+            "surface-container-high": "#ede8dd",
+            "surface-container-highest": "#e7e2d7",
+            "background": "#fef9ee",
+            "on-background": "#1d1c15",
+            "on-surface": "#1d1c15",
+            "on-surface-variant": "#45474b",
+            "outline": "#75777c",
+            "outline-variant": "#dedacf",
+            "stone-border": "#dedacf",
+
+            /* Old Money Heritage Midnight / Charcoal Suite */
+            "heritage-navy": {
+              DEFAULT: "#161d26",
+              "deep": "#10161e",
+              "sidebar": "#161d26",
+              "card": "#1b232e",
+              "hover": "#212b38",
+              "border": "#283444",
+              "subtle": "#111720"
+            },
+            /* Burnished Antique Brass & Gold */
+            "brass": {
+              DEFAULT: "#9b8354",
+              "light": "#bda878",
+              "tint": "#fcf8ee",
+              "subtle": "#f4ecdc",
+              "border": "#dfc38f",
+              "dark": "#715b30"
+            },
+            "ink": {
+              DEFAULT: "#1d1c15",
+              "muted": "#6b6960",
+              "light": "#8e8a7f"
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-xl": "2rem",
+            "space-md": "1rem",
+            "margin": "1.5rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem"
+          },
+          fontFamily: {
+            "body-md": ["'Source Sans 3'", "sans-serif"],
+            "body-lg": ["'Source Sans 3'", "sans-serif"],
+            "label-sm": ["'Source Sans 3'", "sans-serif"],
+            "headline-xl": ["'EB Garamond'", "Georgia", "serif"],
+            "body-sm": ["'Source Sans 3'", "sans-serif"],
+            "headline-sm": ["'EB Garamond'", "Georgia", "serif"],
+            "label-md": ["'Source Sans 3'", "sans-serif"],
+            "headline-lg": ["'EB Garamond'", "Georgia", "serif"],
+            "headline-md": ["'EB Garamond'", "Georgia", "serif"],
+            "serif": ["'EB Garamond'", "Georgia", "serif"],
+            "mono": ["'JetBrains Mono'", "'Courier Prime'", "monospace"]
+          },
+          fontSize: {
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 20;
+      font-size: 19px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f8f3e8;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #dedacf;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="bg-[#fef9ee] text-ink font-body-md min-h-screen flex selection:bg-brass/20 selection:text-ink">
+<!-- ======================================================== -->
+<!-- 1. LEFT INSTITUTIONAL SIDEBAR (Old Money Midnight Navy)  -->
+<!-- ======================================================== -->
+<aside class="fixed top-0 left-0 h-screen w-60 bg-heritage-navy text-[#fef9ee] z-40 flex flex-col justify-between border-r border-[#242f3e] shadow-sm select-none">
+<!-- Top Branding & Institutional Header -->
+<div class="p-4 flex flex-col gap-4">
+<!-- Monogram ContextOS Crest -->
+<div class="flex items-center justify-between border-b border-[#283444] pb-4">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded border border-brass/50 bg-[#111720] flex items-center justify-center font-serif text-lg font-bold text-brass tracking-tight">
+            C
+          </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-serif text-base font-bold text-[#fef9ee] tracking-wide leading-none">ContextOS</span>
+<span class="text-[10px] font-mono px-1.5 py-0.2 bg-brass/20 text-brass border border-brass/40 rounded font-semibold">v4.2</span>
+</div>
+<span class="text-[10px] text-[#dedacf]/80 tracking-wider font-label-sm uppercase mt-0.5">Institutional Intelligence</span>
+</div>
+</div>
+</div>
+<!-- Institutional Workspace Dropdown Selector -->
+<div class="bg-[#1b232e] hover:bg-[#212b38] border border-[#283444] rounded px-2.5 py-2 cursor-pointer transition-colors duration-150">
+<div class="flex items-center justify-between">
+<div class="flex flex-col text-left truncate">
+<span class="text-[9px] uppercase font-mono tracking-widest text-[#dedacf]/70">Active Workspace</span>
+<span class="text-xs font-medium text-[#fef9ee] truncate">Checkout reliability</span>
+</div>
+<span class="material-symbols-outlined text-[#dedacf]/80 text-sm">unfold_more</span>
+</div>
+</div>
+<!-- Navigation Hierarchy (Anchor Component Alignment) -->
+<nav class="flex flex-col gap-1 mt-1">
+<div class="text-[10px] uppercase font-mono tracking-widest text-[#dedacf]/60 px-2 py-1">Primary Nodes</div>
+<!-- Overview -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-[#dedacf]/80 hover:bg-[#1b232e] hover:text-[#fef9ee] font-label-md text-xs transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Knowledge Repository -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-[#dedacf]/80 hover:bg-[#1b232e] hover:text-[#fef9ee] font-label-md text-xs transition-colors" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span>Knowledge Repository</span>
+</a>
+<!-- Agent Tasks [ACTIVE STATE] -->
+<a class="flex items-center justify-between px-3 py-2 rounded bg-[#1b232e] text-[#fef9ee] border-l-2 border-brass font-label-md text-xs transition-all shadow-sm" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-brass">assignment</span>
+<span class="font-medium text-[#fef9ee]">Agent Tasks</span>
+</div>
+<span class="w-1.5 h-1.5 rounded-full bg-brass"></span>
+</a>
+<!-- Change Reviews -->
+<a class="flex items-center justify-between px-3 py-2 rounded text-[#dedacf]/80 hover:bg-[#1b232e] hover:text-[#fef9ee] font-label-md text-xs transition-colors" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">rule</span>
+<span>Change Reviews</span>
+</div>
+<span class="px-1.5 py-0.2 bg-brass text-heritage-navy font-mono text-[10px] font-bold rounded">2</span>
+</a>
+<!-- Context Insights / Analytics -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-[#dedacf]/80 hover:bg-[#1b232e] hover:text-[#fef9ee] font-label-md text-xs transition-colors" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span>Context Insights</span>
+</a>
+<!-- System Records / Audit -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-[#dedacf]/80 hover:bg-[#1b232e] hover:text-[#fef9ee] font-label-md text-xs transition-colors" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span>System Records</span>
+</a>
+<!-- Governance -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-[#dedacf]/80 hover:bg-[#1b232e] hover:text-[#fef9ee] font-label-md text-xs transition-colors" href="#">
+<span class="material-symbols-outlined">policy</span>
+<span>Governance</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Sidebar Section & Profile Capsule -->
+<div class="p-3 border-t border-[#283444] flex flex-col gap-3">
+<!-- Status Pill -->
+<div class="px-2.5 py-1.5 rounded bg-[#111720] border border-[#283444] flex items-center justify-between text-[11px] font-mono text-[#dedacf]">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-brass"></span>
+<span>Institutional Sync</span>
+</span>
+<span class="text-brass font-mono text-[10px]">L-17</span>
+</div>
+<!-- Action Button -->
+<button class="w-full py-2 px-3 border border-brass/50 rounded text-brass hover:bg-brass/10 font-label-md text-xs flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-sm">archive</span>
+<span>Export Workspace</span>
+</button>
+<!-- User Profile Capsule -->
+<div class="pt-2 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-brass/25 border border-brass/50 flex items-center justify-center font-serif text-xs font-semibold text-[#fef9ee]">
+            MR
+          </div>
+<div class="flex flex-col text-left">
+<span class="text-xs font-medium text-[#fef9ee]">Marcus Reid</span>
+<span class="text-[10px] text-[#dedacf]/80">Lead Architect</span>
+</div>
+</div>
+<button class="text-[#dedacf]/80 hover:text-[#fef9ee] p-1 rounded hover:bg-[#1b232e]">
+<span class="material-symbols-outlined text-sm">settings</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- ======================================================== -->
+<!-- MAIN WORKSPACE CANVAS                                     -->
+<!-- ======================================================== -->
+<div class="ml-60 flex-1 flex flex-col min-h-screen">
+<!-- TOP NAVIGATION BAR (ContextOS Anchor Spec) -->
+<header class="h-14 bg-[#f8f3e8] border-b border-[#dedacf] flex items-center justify-between px-6 sticky top-0 z-30">
+<!-- Breadcrumb Hierarchy -->
+<div class="flex items-center gap-2 text-xs">
+<span class="text-ink-muted">Workspaces</span>
+<span class="text-[#dedacf]">/</span>
+<span class="text-ink-muted">Checkout reliability</span>
+<span class="text-[#dedacf]">/</span>
+<span class="text-ink font-medium">Agent Tasks</span>
+<span class="text-[#dedacf]">/</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-[#f2ede2] text-ink-muted border border-[#dedacf]">ID: WS-CHK-8902</span>
+</div>
+<!-- Trailing Status & Persona Switcher -->
+<div class="flex items-center gap-4">
+<!-- Rehearsal State Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-brass/40 bg-[#f4ecdc] text-[#715b30] text-xs font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-brass"></span>
+<span>Offline rehearsal Active</span>
+</div>
+<div class="h-4 w-px bg-[#dedacf]"></div>
+<!-- Persona Switcher -->
+<button class="flex items-center gap-2 px-2.5 py-1 text-xs border border-[#dedacf] rounded hover:bg-[#f2ede2] bg-[#f8f3e8] text-ink transition-colors">
+<span class="text-ink-muted text-[11px]">Viewing as:</span>
+<span class="font-semibold text-heritage-navy">Architect</span>
+<span class="material-symbols-outlined text-sm text-ink-muted">expand_more</span>
+</button>
+<!-- Utility Action Icons -->
+<div class="flex items-center gap-1">
+<button class="p-1.5 rounded text-ink-muted hover:text-ink hover:bg-[#f2ede2] transition-colors" title="Audit Notifications">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-1.5 rounded text-ink-muted hover:text-ink hover:bg-[#f2ede2] transition-colors" title="Engine Diagnostics">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</div>
+</header>
+<!-- EDITORIAL PAGE CONTENT -->
+<main class="p-8 max-w-7xl w-full mx-auto flex flex-col gap-6">
+<!-- Editorial Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between border-b border-[#dedacf] pb-6 gap-4">
+<div>
+<div class="text-[11px] uppercase tracking-[0.2em] font-mono font-semibold text-brass mb-1">
+            Precision Prompt Packing &amp; Provenance
+          </div>
+<h1 class="text-3xl lg:text-4xl font-serif font-bold text-ink tracking-tight">
+            Task Context Assembler
+          </h1>
+<p class="text-sm text-ink-muted mt-1 max-w-2xl font-serif italic">
+            Deterministically assemble, prune, and seal institutional knowledge packs bounded by agent token limits and cryptographic consensus.
+          </p>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-2.5 self-start md:self-auto">
+<div class="px-2.5 py-1.5 rounded border border-[#dedacf] bg-[#f8f3e8] font-mono text-xs text-ink-muted flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-brass text-sm">verified_user</span>
+<span>Context Spec v4.2</span>
+</div>
+<button class="px-3 py-1.5 rounded border border-[#dedacf] text-ink bg-[#f8f3e8] hover:bg-[#f2ede2] text-xs font-medium flex items-center gap-1.5 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">receipt_long</span>
+<span>Audit Ledger</span>
+</button>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- TWO-COLUMN WORKSPACE: Configuration & Pack Inspector    -->
+<!-- ======================================================== -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- LEFT COLUMN: Task Configuration & Parameter Packing (7 Cols) -->
+<div class="lg:col-span-7 bg-[#f8f3e8] border border-[#dedacf] rounded-lg p-5 shadow-sm flex flex-col gap-5">
+<div class="flex items-center justify-between pb-3 border-b border-[#dedacf]">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-brass/15 text-brass flex items-center justify-center font-mono text-xs font-bold border border-brass/30">P</span>
+<h2 class="text-base font-serif font-bold text-ink">Task Execution &amp; Assembly Parameters</h2>
+</div>
+<span class="text-[11px] font-mono text-ink-muted">AST Synthesizer: READY</span>
+</div>
+<!-- Prompt Description Input Area -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-ink uppercase tracking-wider font-mono">
+              Task Prompt Specification
+            </label>
+<div class="relative">
+<textarea class="w-full text-xs font-mono bg-[#fef9ee] border border-[#dedacf] rounded p-3 text-ink focus:bg-[#ffffff] focus:border-brass focus:ring-1 focus:ring-brass outline-none resize-none transition-all leading-relaxed" rows="4">Implement resilient payment webhook retry mechanism under degraded Stripe SLA conditions with exponential backoff &amp; idempotency locks.</textarea>
+<span class="absolute bottom-2.5 right-3 text-[10px] font-mono text-ink-muted bg-[#f8f3e8] px-1 rounded border border-[#dedacf]">138 chars • 24 tokens</span>
+</div>
+</div>
+<!-- Target Persona and Strictness Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Persona Filter -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-ink uppercase tracking-wider font-mono">
+                Target Persona / Domain Filter
+              </label>
+<div class="relative">
+<select class="w-full text-xs bg-[#fef9ee] border border-[#dedacf] rounded px-3 py-2 text-ink appearance-none focus:border-brass focus:ring-1 focus:ring-brass outline-none cursor-pointer">
+<option selected="">Principal Infrastructure Architect</option>
+<option>Payment Security Auditor (Tier-1)</option>
+<option>Staff Reliability Engineer</option>
+<option>Compliance Risk Officer</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-ink-muted text-sm">unfold_more</span>
+</div>
+</div>
+<!-- Retrieval Strictness -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-ink uppercase tracking-wider font-mono">
+                Context Horizon Strictness
+              </label>
+<div class="relative">
+<select class="w-full text-xs bg-[#fef9ee] border border-[#dedacf] rounded px-3 py-2 text-ink appearance-none focus:border-brass focus:ring-1 focus:ring-brass outline-none cursor-pointer">
+<option selected="">Deterministic Bound (p99 exact)</option>
+<option>Strict Semantic Neighbor (k=5)</option>
+<option>Exhaustive Graph Traversals (Deep)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-ink-muted text-sm">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Token Budget Allocation -->
+<div class="flex flex-col gap-2 pt-1">
+<div class="flex justify-between items-center text-xs">
+<span class="font-semibold text-ink uppercase tracking-wider font-mono">Context Window Budget</span>
+<span class="font-mono text-brass font-bold">8,192 Tokens <span class="text-ink-muted font-normal">(Bounded Target)</span></span>
+</div>
+<!-- Token Budget Selector Chips -->
+<div class="grid grid-cols-4 gap-2">
+<button class="py-1.5 px-2 rounded border border-heritage-navy bg-heritage-navy text-[#fef9ee] text-xs font-mono font-medium flex flex-col items-center shadow-sm">
+<span>8k Tokens</span>
+<span class="text-[9px] text-brass/90">Deterministic</span>
+</button>
+<button class="py-1.5 px-2 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] text-ink-muted text-xs font-mono flex flex-col items-center transition-colors">
+<span>16k Tokens</span>
+<span class="text-[9px] text-ink-muted/70">Standard</span>
+</button>
+<button class="py-1.5 px-2 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] text-ink-muted text-xs font-mono flex flex-col items-center transition-colors">
+<span>32k Tokens</span>
+<span class="text-[9px] text-ink-muted/70">Extended</span>
+</button>
+<button class="py-1.5 px-2 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] text-ink-muted text-xs font-mono flex flex-col items-center transition-colors">
+<span>64k Tokens</span>
+<span class="text-[9px] text-ink-muted/70">Comprehensive</span>
+</button>
+</div>
+<!-- Progress Budget Visual Line (crisp hairline bar, no gradients) -->
+<div class="w-full bg-[#ede8dd] border border-[#dedacf] rounded-full h-2 mt-1 overflow-hidden p-0.5">
+<div class="bg-brass h-full rounded-full w-[23%]"></div>
+</div>
+<div class="flex justify-between text-[10px] font-mono text-ink-muted">
+<span>0 Tokens</span>
+<span>Packed: 1,840 Tokens (23%)</span>
+<span>Limit: 8,192</span>
+</div>
+</div>
+<!-- System Governance Guardrails -->
+<div class="border-t border-[#dedacf] pt-4 flex flex-col gap-2.5">
+<span class="text-xs font-semibold text-ink uppercase tracking-wider font-mono">Institutional Governance Guardrails</span>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+<label class="flex items-start gap-2 p-2 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] cursor-pointer transition-colors">
+<input checked="" class="mt-0.5 rounded border-[#dedacf] text-heritage-navy focus:ring-heritage-navy" type="checkbox"/>
+<div class="flex flex-col text-[11px] leading-tight">
+<span class="font-medium text-ink">Cryptographic Hash</span>
+<span class="text-ink-muted text-[10px]">SHA-256 seal</span>
+</div>
+</label>
+<label class="flex items-start gap-2 p-2 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] cursor-pointer transition-colors">
+<input checked="" class="mt-0.5 rounded border-[#dedacf] text-heritage-navy focus:ring-heritage-navy" type="checkbox"/>
+<div class="flex flex-col text-[11px] leading-tight">
+<span class="font-medium text-ink">Prune Diff Logs</span>
+<span class="text-ink-muted text-[10px]">Culls noisy commits</span>
+</div>
+</label>
+<label class="flex items-start gap-2 p-2 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] cursor-pointer transition-colors">
+<input checked="" class="mt-0.5 rounded border-[#dedacf] text-heritage-navy focus:ring-heritage-navy" type="checkbox"/>
+<div class="flex flex-col text-[11px] leading-tight">
+<span class="font-medium text-ink">Tier-1 Ring Lock</span>
+<span class="text-ink-muted text-[10px]">PCI isolation gate</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Primary Execution Button -->
+<div class="pt-2">
+<button class="w-full py-3 px-4 rounded bg-heritage-navy hover:bg-heritage-navy-hover text-[#fef9ee] font-serif text-sm font-semibold flex items-center justify-between transition-colors shadow-sm border border-brass/30 group">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-brass">lock</span>
+<span>Assemble &amp; Seal Context Pack</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] tracking-widest uppercase bg-brass/20 text-brass border border-brass/40 px-2 py-0.5 rounded font-bold">
+                  Compile AST
+                </span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</div>
+</button>
+</div>
+</div>
+<!-- RIGHT COLUMN: Context Pack Inspector & Bounded Retrieval (5 Cols) -->
+<div class="lg:col-span-5 bg-[#f8f3e8] border border-[#dedacf] rounded-lg p-5 shadow-sm flex flex-col justify-between gap-5">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between pb-3 border-b border-[#dedacf]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-brass text-base">verified</span>
+<h2 class="text-base font-serif font-bold text-ink">Context Pack Inspector</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-[#f4ecdc] text-[#715b30] border border-brass/40 font-mono text-[10px] font-semibold tracking-wider">
+                SEALED &amp; READY
+              </span>
+</div>
+<!-- Pack Classification Pill -->
+<div class="flex items-center justify-between px-3 py-1.5 rounded bg-[#fef9ee] border border-[#dedacf] text-xs">
+<span class="text-ink-muted font-mono text-[11px]">Security Ring</span>
+<span class="font-mono text-[11px] font-medium text-heritage-navy">Classification: Internal / Confidential</span>
+</div>
+<!-- Key Compression & Provenance Bar -->
+<div class="grid grid-cols-2 gap-2.5">
+<div class="p-2.5 rounded bg-[#fef9ee] border border-[#dedacf] flex flex-col">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ink-muted">Token Consumption</span>
+<span class="text-base font-mono font-bold text-heritage-navy mt-0.5">1,840 <span class="text-xs font-normal text-ink-muted">/ 8,000</span></span>
+<span class="text-[10px] text-brass font-medium">23% Budget Consumed</span>
+</div>
+<div class="p-2.5 rounded bg-[#fef9ee] border border-[#dedacf] flex flex-col">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ink-muted">Compression Ratio</span>
+<span class="text-base font-mono font-bold text-brass mt-0.5">64.2%</span>
+<span class="text-[10px] text-ink-muted">14.2k → 1.84k tokens</span>
+</div>
+</div>
+<!-- SHA-256 Provenance Fingerprint -->
+<div class="p-2.5 rounded bg-[#f2ede2] border border-[#dedacf] flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[9px] uppercase font-mono tracking-wider text-ink-muted">SHA-256 Provenance Fingerprint</span>
+<span class="text-[11px] font-mono text-ink font-semibold">sha256:7f4a810b4c89e10d</span>
+</div>
+<button class="p-1 rounded hover:bg-[#ede8dd] text-ink-muted hover:text-ink transition-colors" title="Copy Provenance Hash">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+<!-- Bounded Retrieval Items Included in AST Pack -->
+<div class="flex flex-col gap-2 pt-1">
+<div class="flex items-center justify-between text-xs">
+<span class="font-semibold text-ink font-mono uppercase tracking-wider">Packed Retrieval Nodes (4)</span>
+<span class="text-[11px] font-mono text-ink-muted">Sorted by Affinity</span>
+</div>
+<!-- Retrieval List Item 1 -->
+<div class="p-2.5 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] transition-colors flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-ink">Payment Gateway Fallback Sequence</span>
+<span class="px-1.5 py-0.5 rounded bg-brass/15 text-[#715b30] border border-brass/30 text-[10px] font-mono font-bold">640 tkns</span>
+</div>
+<div class="flex items-center justify-between text-[10px] text-ink-muted font-mono">
+<span>Domain: Architecture • v3.4</span>
+<span>Hash: b94f...91a2</span>
+</div>
+</div>
+<!-- Retrieval List Item 2 -->
+<div class="p-2.5 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] transition-colors flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-ink">Redis Cluster Circuit Breaking Policies</span>
+<span class="px-1.5 py-0.5 rounded bg-brass/15 text-[#715b30] border border-brass/30 text-[10px] font-mono font-bold">510 tkns</span>
+</div>
+<div class="flex items-center justify-between text-[10px] text-ink-muted font-mono">
+<span>Domain: Infrastructure • v1.8</span>
+<span>Hash: a17c...44e8</span>
+</div>
+</div>
+<!-- Retrieval List Item 3 -->
+<div class="p-2.5 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] transition-colors flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-ink">Stripe Webhook Latency Telemetry Profile</span>
+<span class="px-1.5 py-0.5 rounded bg-brass/15 text-[#715b30] border border-brass/30 text-[10px] font-mono font-bold">390 tkns</span>
+</div>
+<div class="flex items-center justify-between text-[10px] text-ink-muted font-mono">
+<span>Domain: Telemetry • v2.1</span>
+<span>Hash: c83d...1102</span>
+</div>
+</div>
+<!-- Retrieval List Item 4 -->
+<div class="p-2.5 rounded border border-[#dedacf] bg-[#fef9ee] hover:bg-[#f2ede2] transition-colors flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-ink">PCI DSS Tokenization Policy Gate</span>
+<span class="px-1.5 py-0.5 rounded bg-brass/15 text-[#715b30] border border-brass/30 text-[10px] font-mono font-bold">300 tkns</span>
+</div>
+<div class="flex items-center justify-between text-[10px] text-ink-muted font-mono">
+<span>Domain: Security • v2.0</span>
+<span>Hash: f42b...893e</span>
+</div>
+</div>
+</div>
+<!-- Pruned Elements Drawer Summary -->
+<div class="p-2.5 rounded border border-[#dedacf] bg-[#f2ede2]/60 flex items-center justify-between text-xs">
+<div class="flex items-center gap-2 text-ink-muted text-[11px]">
+<span class="material-symbols-outlined text-sm text-brass">filter_alt</span>
+<span>6 historical changelogs pruned to preserve fidelity.</span>
+</div>
+<button class="text-[11px] font-mono text-brass hover:underline font-medium">Inspect Diff</button>
+</div>
+</div>
+<!-- Bottom Footer Micro Action -->
+<div class="pt-2 border-t border-[#dedacf] flex items-center justify-between text-xs text-ink-muted">
+<span class="font-mono text-[10px]">Verification node: consensus-us-east-1</span>
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-brass"></span>
+<span class="font-mono text-[10px]">Merkle Tree Bound</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- BOTTOM SECTION: Recent Context Executions & Audit Ledger -->
+<!-- ======================================================== -->
+<div class="bg-[#f8f3e8] border border-[#dedacf] rounded-lg p-5 shadow-sm flex flex-col gap-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#dedacf] gap-2">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-brass">menu_book</span>
+<div>
+<h2 class="text-base font-serif font-bold text-ink">Historical Context Executions &amp; Audit Ledger</h2>
+<p class="text-xs text-ink-muted font-serif italic">Immutable cryptographically signed records of automated prompt packing.</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-mono text-ink-muted px-2 py-1 rounded bg-[#fef9ee] border border-[#dedacf]">
+              142 runs verified
+            </span>
+<button class="px-2.5 py-1 text-xs border border-[#dedacf] rounded hover:bg-[#f2ede2] bg-[#f8f3e8] text-ink flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+<span>Filter Agents</span>
+</button>
+</div>
+</div>
+<!-- Tabular Audit Ledger Table -->
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="border-b border-[#dedacf] text-[10px] font-mono uppercase tracking-wider text-ink-muted bg-[#f2ede2]/60">
+<th class="py-2.5 px-3 font-semibold">Run ID</th>
+<th class="py-2.5 px-3 font-semibold">Target Agent</th>
+<th class="py-2.5 px-3 font-semibold">Task Description</th>
+<th class="py-2.5 px-3 font-semibold">Packed Size</th>
+<th class="py-2.5 px-3 font-semibold">Token Savings</th>
+<th class="py-2.5 px-3 font-semibold">Provenance Hash</th>
+<th class="py-2.5 px-3 font-semibold">Timestamp</th>
+<th class="py-2.5 px-3 font-semibold text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#dedacf] font-body-md">
+<!-- Ledger Row 1 -->
+<tr class="hover:bg-[#f2ede2]/50 transition-colors">
+<td class="py-3 px-3 font-mono font-bold text-heritage-navy">RUN-8902-A</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-brass"></span>
+<span class="font-medium text-ink">Hermes-4</span>
+<span class="text-[10px] text-ink-muted">(Autonomous)</span>
+</div>
+</td>
+<td class="py-3 px-3 text-ink max-w-xs truncate">Webhook latency retry backoff with idempotency locks</td>
+<td class="py-3 px-3 font-mono font-medium text-ink">1,840 tkns</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1 font-mono text-[11px] text-[#715b30]">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>87% (14.2k → 1.8k)</span>
+</div>
+</td>
+<td class="py-3 px-3 font-mono text-[11px] text-ink-muted">sha256:7f4a...e10d</td>
+<td class="py-3 px-3 text-ink-muted font-mono text-[11px]">4 mins ago</td>
+<td class="py-3 px-3 text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#f4ecdc] border border-brass/40 text-[#715b30] text-[10px] font-mono font-semibold">
+<span class="w-1 h-1 rounded-full bg-brass"></span>
+                    Sealed
+                  </span>
+</td>
+</tr>
+<!-- Ledger Row 2 -->
+<tr class="hover:bg-[#f2ede2]/50 transition-colors">
+<td class="py-3 px-3 font-mono font-bold text-heritage-navy">RUN-8894-C</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-heritage-navy"></span>
+<span class="font-medium text-ink">Athena-2</span>
+<span class="text-[10px] text-ink-muted">(Verification)</span>
+</div>
+</td>
+<td class="py-3 px-3 text-ink max-w-xs truncate">Idempotency key TTL reconciliation on Redis replica switch</td>
+<td class="py-3 px-3 font-mono font-medium text-ink">2,410 tkns</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1 font-mono text-[11px] text-[#715b30]">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>87% (18.9k → 2.4k)</span>
+</div>
+</td>
+<td class="py-3 px-3 font-mono text-[11px] text-ink-muted">sha256:3b19...57ab</td>
+<td class="py-3 px-3 text-ink-muted font-mono text-[11px]">1 hour ago</td>
+<td class="py-3 px-3 text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#fef9ee] border border-[#dedacf] text-ink text-[10px] font-mono font-medium">
+                    Completed
+                  </span>
+</td>
+</tr>
+<!-- Ledger Row 3 -->
+<tr class="hover:bg-[#f2ede2]/50 transition-colors">
+<td class="py-3 px-3 font-mono font-bold text-heritage-navy">RUN-8871-F</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-brass/70"></span>
+<span class="font-medium text-ink">Solon-1</span>
+<span class="text-[10px] text-ink-muted">(Compliance)</span>
+</div>
+</td>
+<td class="py-3 px-3 text-ink max-w-xs truncate">PCI DSS audit scope verification &amp; perimeter boundary test</td>
+<td class="py-3 px-3 font-mono font-medium text-ink">1,120 tkns</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1 font-mono text-[11px] text-[#715b30]">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>88% (9.8k → 1.1k)</span>
+</div>
+</td>
+<td class="py-3 px-3 font-mono text-[11px] text-ink-muted">sha256:9e41...42c1</td>
+<td class="py-3 px-3 text-ink-muted font-mono text-[11px]">3 hours ago</td>
+<td class="py-3 px-3 text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#fef9ee] border border-[#dedacf] text-ink text-[10px] font-mono font-medium">
+                    Completed
+                  </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Ledger Footer Summary -->
+<div class="flex items-center justify-between text-xs text-ink-muted pt-2 border-t border-[#dedacf]">
+<span class="font-mono text-[11px]">Showing 3 most recent cryptographically sealed runs</span>
+<button class="text-heritage-navy hover:text-brass font-semibold flex items-center gap-1 text-xs transition-colors">
+<span>View Complete Institutional Archive</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ContextOS - Change Reviews</title>
+<!-- Fonts: EB Garamond, Inter, Newsreader, Source Sans 3, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,400&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed": "#f5dfca",
+            "on-tertiary": "#ffffff",
+            "error": "#ba1a1a",
+            "on-surface": "#1d1c15",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#93816f",
+            "surface-bright": "#fef9ee",
+            "primary-container": "#161d26",
+            "secondary-container": "#fcdfa8",
+            "on-tertiary-fixed-variant": "#534435",
+            "surface-dim": "#dedacf",
+            "on-surface-variant": "#45474b",
+            "on-primary-fixed-variant": "#404751",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#261900",
+            "tertiary": "#020100",
+            "primary-fixed": "#dce3f0",
+            "surface-tint": "#585f6a",
+            "outline-variant": "#c5c6cb",
+            "inverse-surface": "#323029",
+            "inverse-primary": "#c0c7d3",
+            "tertiary-container": "#251a0d",
+            "on-primary-fixed": "#151c25",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#776136",
+            "surface-container-low": "#f8f3e8",
+            "inverse-on-surface": "#f5f0e5",
+            "secondary": "#715b30",
+            "surface-variant": "#e7e2d7",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#fef9ee",
+            "secondary-fixed-dim": "#dfc38f",
+            "on-secondary-fixed-variant": "#57441b",
+            "secondary-fixed": "#fcdfa8",
+            "surface-container-highest": "#e7e2d7",
+            "on-background": "#1d1c15",
+            "outline": "#75777c",
+            "primary-fixed-dim": "#c0c7d3",
+            "background": "#fef9ee",
+            "tertiary-fixed-dim": "#d8c3af",
+            "on-primary-container": "#7e8590",
+            "on-primary": "#ffffff",
+            "primary": "#000206",
+            "surface-container": "#f2ede2",
+            "surface-container-high": "#ede8dd",
+            "on-tertiary-fixed": "#24190d"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem",
+            "space-xl": "2rem",
+            "margin": "1.5rem"
+          },
+          fontFamily: {
+            "headline-sm": ["'EB Garamond'", "serif"],
+            "headline-md": ["'EB Garamond'", "serif"],
+            "headline-xl": ["'EB Garamond'", "serif"],
+            "label-sm": ["'Source Sans 3'", "sans-serif"],
+            "body-sm": ["Newsreader", "serif"],
+            "body-md": ["Newsreader", "serif"],
+            "body-lg": ["Newsreader", "serif"],
+            "label-md": ["'Source Sans 3'", "sans-serif"],
+            "headline-lg": ["'EB Garamond'", "serif"],
+            "serif": ["'EB Garamond'", "serif"],
+            "mono": ["'JetBrains Mono'", "monospace"],
+            "sans": ["'Source Sans 3'", "Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-block;
+    }
+    body {
+      background-color: #fef9ee;
+      color: #1d1c15;
+      font-family: 'Source Sans 3', Inter, sans-serif;
+    }
+    ::selection {
+      background: #ede8dd;
+      color: #1d1c15;
+    }
+  </style>
+</head>
+<body class="bg-[#fef9ee] text-[#1d1c15] antialiased overflow-x-hidden selection:bg-[#ede8dd]">
+<!-- FIXED LEFT SIDEBAR (ContextOS Institutional Intelligence Anchor - Deep Heritage Midnight Navy) -->
+<aside class="fixed top-0 left-0 h-screen w-[238px] bg-[#161d26] text-[#fef9ee] border-r border-[#263140] flex flex-col justify-between py-6 px-3 z-30 select-none">
+<!-- Top Brand & Hierarchy Group -->
+<div class="flex flex-col gap-5">
+<!-- Monogram Mark / Brand Header -->
+<div class="px-2 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded bg-[#212b38] border border-[#324053] flex items-center justify-center text-[#fef9ee] font-serif text-base font-semibold shadow-inner">
+            C
+          </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-serif text-lg font-semibold tracking-tight text-[#fef9ee]">ContextOS</span>
+<span class="text-[10px] font-mono tracking-tight text-[#9b8354] bg-[#10161d] px-1 py-0.5 rounded border border-[#263140]">v4.2</span>
+</div>
+<span class="text-[11px] text-[#c0c7d3] font-sans font-medium tracking-wide">Institutional Intelligence</span>
+</div>
+</div>
+</div>
+<!-- Workspace Context Selector -->
+<div class="px-1">
+<div class="bg-[#111720] border border-[#263140] rounded px-3 py-2 flex items-center justify-between cursor-pointer hover:border-[#3a495d] transition-none">
+<div class="flex flex-col overflow-hidden">
+<span class="text-[11px] text-[#dce3f0] truncate font-medium">Checkout reliability</span>
+<span class="text-[10px] text-[#9b8354] truncate">Product &amp; engineering</span>
+</div>
+<span class="material-symbols-outlined text-[#7e8590]" style="font-size: 16px;">unfold_more</span>
+</div>
+</div>
+<!-- Main Navigation Menu -->
+<nav class="flex flex-col gap-1 mt-1">
+<!-- Overview -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-sm text-[#c0c7d3] hover:bg-[#212b38] hover:text-[#fef9ee] transition-none font-medium" href="#">
+<span class="material-symbols-outlined text-[#7e8590]">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Intelligence Base / Shared Knowledge -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-sm text-[#c0c7d3] hover:bg-[#212b38] hover:text-[#fef9ee] transition-none font-medium" href="#">
+<span class="material-symbols-outlined text-[#7e8590]">menu_book</span>
+<span>Shared knowledge</span>
+</a>
+<!-- Agent workspace / Projects -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-sm text-[#c0c7d3] hover:bg-[#212b38] hover:text-[#fef9ee] transition-none font-medium" href="#">
+<span class="material-symbols-outlined text-[#7e8590]">folder_open</span>
+<span>Agent workspace</span>
+</a>
+<!-- Change reviews (ACTIVE DESTINATION) -->
+<a class="flex items-center justify-between px-3 py-2 rounded text-sm border-l-[3px] border-[#9b8354] bg-[#212b38] text-[#fef9ee] font-medium" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[#fef9ee]" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<span>Change reviews</span>
+</div>
+<span class="text-[11px] font-mono font-medium px-1.5 py-0.2 bg-[#111720] text-[#fef9ee] border border-[#324053] rounded">2</span>
+</a>
+<!-- Context insights / Discussions -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-sm text-[#c0c7d3] hover:bg-[#212b38] hover:text-[#fef9ee] transition-none font-medium" href="#">
+<span class="material-symbols-outlined text-[#7e8590]">forum</span>
+<span>Context insights</span>
+</a>
+<!-- System Records -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-sm text-[#c0c7d3] hover:bg-[#212b38] hover:text-[#fef9ee] transition-none font-medium" href="#">
+<span class="material-symbols-outlined text-[#7e8590]">history_edu</span>
+<span>System Records</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Institutional Utilities & Persona -->
+<div class="flex flex-col gap-3 pt-3 border-t border-[#263140]">
+<!-- Rehearsal Node / State -->
+<div class="px-2 flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-[#9b8354]"></span>
+<span class="text-[11px] text-[#c0c7d3] font-mono tracking-tight">One shared understanding</span>
+</div>
+<!-- Action: Export workspace -->
+<button class="w-full flex items-center justify-center gap-2 py-1.5 px-3 rounded bg-[#1b232e] hover:bg-[#212b38] text-[#dce3f0] hover:text-[#fef9ee] border border-[#263140] text-xs font-medium transition-none">
+<span class="material-symbols-outlined" style="font-size: 15px;">cloud_sync</span>
+<span>Export workspace</span>
+</button>
+<!-- Developer Persona Profile Card -->
+<div class="flex items-center justify-between px-2 py-1 rounded hover:bg-[#212b38] cursor-pointer">
+<div class="flex items-center gap-2.5">
+<div class="w-6 h-6 rounded-full bg-[#212b38] border border-[#324053] flex items-center justify-center text-[10px] text-[#fef9ee] font-medium">
+            DEV
+          </div>
+<div class="flex flex-col">
+<span class="text-xs text-[#fef9ee] font-medium leading-none">Developer Persona</span>
+<span class="text-[10px] text-[#c0c7d3] leading-tight">Lead Governance</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#7e8590]" style="font-size: 16px;">settings</span>
+</div>
+</div>
+</aside>
+<!-- TOP NAVIGATION BAR (Shared ContextOS Header) -->
+<header class="fixed top-0 right-0 left-[238px] h-14 bg-[#fef9ee] border-b border-[#e7e2d7] z-20 flex justify-between items-center px-8">
+<!-- Breadcrumb Path -->
+<div class="flex items-center gap-2 text-sm text-[#75777c] font-medium">
+<span class="text-[#75777c] hover:text-[#1d1c15] cursor-pointer">Workspace</span>
+<span class="text-[#c5c6cb]">/</span>
+<span class="text-[#1d1c15] font-semibold">Change reviews</span>
+<span class="text-[#c5c6cb]">/</span>
+<span class="font-mono text-xs bg-[#f2ede2] text-[#45474b] px-1.5 py-0.5 rounded border border-[#e7e2d7]">WS-CHK-8902</span>
+</div>
+<!-- Right Controls Cluster -->
+<div class="flex items-center gap-4">
+<!-- Status Badge -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#f8f3e8] border border-[#e7e2d7] text-xs font-mono text-[#45474b]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#3a5a40]"></span>
+<span>Offline Rehearsal Active</span>
+</div>
+<!-- Viewing as dropdown -->
+<div class="flex items-center gap-1.5 px-3 py-1 rounded border border-[#e7e2d7] bg-[#ffffff] text-xs font-medium text-[#1d1c15] cursor-pointer hover:bg-[#f8f3e8] transition-none">
+<span class="text-[#75777c]">Viewing as:</span>
+<span class="font-semibold">Developer</span>
+<span class="material-symbols-outlined text-[#75777c]" style="font-size: 16px;">arrow_drop_down</span>
+</div>
+<!-- Action Icons -->
+<div class="flex items-center gap-1 border-l border-[#e7e2d7] pl-4">
+<button class="w-8 h-8 rounded flex items-center justify-center text-[#75777c] hover:text-[#1d1c15] hover:bg-[#f2ede2] transition-none" title="Notifications">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-[#75777c] hover:text-[#1d1c15] hover:bg-[#f2ede2] transition-none" title="Settings">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="ml-[238px] pt-14 min-h-screen bg-[#fef9ee] px-10 py-8">
+<div class="max-w-5xl mx-auto flex flex-col gap-8">
+<!-- Page Header Banner -->
+<div class="flex flex-col gap-2 pt-2 border-b border-[#e7e2d7] pb-6">
+<div class="flex items-center gap-2">
+<span class="font-sans text-[11px] font-semibold tracking-widest text-[#9b8354] uppercase">CHANGE REVIEWS</span>
+<span class="text-xs text-[#c5c6cb]">•</span>
+<span class="font-mono text-xs text-[#75777c]">GOVERNANCE GATEWAY</span>
+</div>
+<div class="flex items-baseline justify-between">
+<h1 class="font-serif text-[32px] leading-tight text-[#1d1c15] font-normal tracking-tight">
+            Independent review queue
+          </h1>
+</div>
+<p class="font-sans text-sm text-[#45474b] max-w-2xl leading-relaxed">
+          2 proposals awaiting review. All changes are governed and immutable once approved.
+        </p>
+<!-- Filter Pills Bar -->
+<div class="flex items-center gap-2 mt-4">
+<button class="px-3.5 py-1.5 text-xs font-semibold rounded bg-[#ffffff] border-b-2 border-[#9b8354] text-[#161d26] shadow-sm border border-t-[#e7e2d7] border-l-[#e7e2d7] border-r-[#e7e2d7]">
+            Pending (2)
+          </button>
+<button class="px-3.5 py-1.5 text-xs font-medium rounded bg-[#f8f3e8] text-[#75777c] border border-[#e7e2d7] hover:text-[#1d1c15] hover:bg-white transition-none">
+            Approved
+          </button>
+<button class="px-3.5 py-1.5 text-xs font-medium rounded bg-[#f8f3e8] text-[#75777c] border border-[#e7e2d7] hover:text-[#1d1c15] hover:bg-white transition-none">
+            Rejected
+          </button>
+</div>
+</div>
+<!-- REVIEW PROPOSALS LIST -->
+<div class="flex flex-col gap-6">
+<!-- CARD 1: Payment Gateway Fallback Sequence -->
+<article class="bg-[#ffffff] border border-[#e7e2d7] rounded p-6 shadow-[0_1px_2px_rgba(22,29,38,0.04)] flex flex-col gap-5">
+<!-- Card Header & Metadata -->
+<div class="flex items-center justify-between pb-1 border-b border-[#f8f3e8]">
+<div class="flex items-center gap-2.5">
+<span class="bg-[#f8f3e8] text-[#9b8354] border border-[#e7e2d7] font-mono text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded">
+                PENDING REVIEW
+              </span>
+<span class="font-mono text-xs text-[#9b8354]">CR-2026-8902-A</span>
+</div>
+<time class="font-sans text-xs text-[#75777c]">Submitted 14 Oct 2026, 18:42</time>
+</div>
+<!-- Proposal Heading -->
+<div>
+<h2 class="font-serif text-[22px] font-medium text-[#1d1c15] tracking-tight">
+              Update: Payment Gateway Fallback Sequence v3.4 → v3.5
+            </h2>
+<!-- Proposer Attribution Row -->
+<div class="flex items-center gap-2 mt-2 text-xs text-[#75777c]">
+<div class="w-5 h-5 rounded-full bg-[#f2ede2] text-[#161d26] font-mono font-medium flex items-center justify-center text-[10px] border border-[#dedacf]">
+                SL
+              </div>
+<span class="font-medium text-[#1d1c15]">Sarah Lin, Staff Product Manager</span>
+<span class="text-[#c5c6cb]">•</span>
+<span class="italic text-[#45474b]">via AI extraction from sprint notes</span>
+</div>
+</div>
+<!-- Proposal Description -->
+<p class="font-sans text-sm text-[#45474b] leading-relaxed">
+            Adds a third-party PSP fallback tier with 250ms SLA gate and updates retry budget from 3 to 5 attempts under degraded vendor response codes.
+          </p>
+<!-- Code Diff Block -->
+<div class="bg-[#f8f3e8] border border-dashed border-[#dedacf] rounded p-4 font-mono text-xs leading-relaxed overflow-x-auto">
+<div class="text-[#75777c] select-none mb-1 pb-1 border-b border-[#e7e2d7] flex justify-between">
+<span>@@ -48,4 +48,6 @@ spec/checkout/gateway_rules.yaml</span>
+<span class="text-[10px]">Unified YAML AST Diff</span>
+</div>
+<div class="text-[#842a2a] bg-[#faebea] px-1 py-0.5 rounded-sm">
+              - retry_budget: 3
+            </div>
+<div class="text-[#2b5832] bg-[#edf4ec] px-1 py-0.5 rounded-sm">
+              + retry_budget: 5
+            </div>
+<div class="text-[#2b5832] bg-[#edf4ec] px-1 py-0.5 rounded-sm">
+              + fallback_tier: stripe_secondary
+            </div>
+</div>
+<!-- Bottom Actions Bar -->
+<div class="flex items-center justify-between pt-2 border-t border-[#f8f3e8]">
+<div class="flex items-center gap-3">
+<button class="bg-[#161d26] hover:bg-[#1b232e] text-white text-xs font-medium px-5 py-2 rounded border border-[#000206] transition-none cursor-pointer">
+                Approve
+              </button>
+<button class="bg-[#fef9ee] hover:bg-white text-[#1d1c15] text-xs font-medium px-5 py-2 rounded border border-[#dedacf] transition-none cursor-pointer">
+                Reject
+              </button>
+<a class="text-xs font-medium text-[#9b8354] hover:underline hover:text-[#776136] ml-2 flex items-center gap-1 transition-none" href="#">
+<span>View full diff</span>
+<span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+</a>
+</div>
+<span class="text-xs font-mono text-[#75777c]">Hash: SHA256-b94f...91a2</span>
+</div>
+</article>
+<!-- CARD 2: Redis Cluster Health Check Protocol -->
+<article class="bg-[#ffffff] border border-[#e7e2d7] rounded p-6 shadow-[0_1px_2px_rgba(22,29,38,0.04)] flex flex-col gap-5">
+<!-- Card Header & Metadata -->
+<div class="flex items-center justify-between pb-1 border-b border-[#f8f3e8]">
+<div class="flex items-center gap-2.5">
+<span class="bg-[#f8f3e8] text-[#9b8354] border border-[#e7e2d7] font-mono text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded">
+                PENDING REVIEW
+              </span>
+<span class="font-mono text-xs text-[#9b8354]">CR-2026-8902-B</span>
+</div>
+<time class="font-sans text-xs text-[#75777c]">Submitted 14 Oct 2026, 14:15</time>
+</div>
+<!-- Proposal Heading -->
+<div>
+<h2 class="font-serif text-[22px] font-medium text-[#1d1c15] tracking-tight">
+              New topic: Redis Cluster Health Check Protocol
+            </h2>
+<!-- Proposer Attribution Row -->
+<div class="flex items-center gap-2 mt-2 text-xs text-[#75777c]">
+<div class="w-5 h-5 rounded-full bg-[#f2ede2] text-[#161d26] font-mono font-medium flex items-center justify-center text-[10px] border border-[#dedacf]">
+                MR
+              </div>
+<span class="font-medium text-[#1d1c15]">Marcus Reid, Principal Architect</span>
+<span class="text-[#c5c6cb]">•</span>
+<span class="italic text-[#45474b]">Manual proposal</span>
+</div>
+</div>
+<!-- Proposal Description -->
+<p class="font-sans text-sm text-[#45474b] leading-relaxed">
+            Defines health probe frequency, circuit open thresholds, and automated escalation paths for Redis cache tier outages during peak checkout windows.
+          </p>
+<!-- Bottom Actions Bar (Newly proposed topic - no diff box) -->
+<div class="flex items-center justify-between pt-2 border-t border-[#f8f3e8]">
+<div class="flex items-center gap-3">
+<button class="bg-[#161d26] hover:bg-[#1b232e] text-white text-xs font-medium px-5 py-2 rounded border border-[#000206] transition-none cursor-pointer">
+                Approve
+              </button>
+<button class="bg-[#fef9ee] hover:bg-white text-[#1d1c15] text-xs font-medium px-5 py-2 rounded border border-[#dedacf] transition-none cursor-pointer">
+                Reject
+              </button>
+<a class="text-xs font-medium text-[#9b8354] hover:underline hover:text-[#776136] ml-2 flex items-center gap-1 transition-none" href="#">
+<span>View full specification</span>
+<span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+</a>
+</div>
+<span class="text-xs font-mono text-[#75777c]">Hash: SHA256-a17c...44e8</span>
+</div>
+</article>
+</div>
+<!-- FOOTER GOVERNANCE STATEMENT -->
+<footer class="pt-2 pb-12 border-t border-[#e7e2d7]">
+<div class="flex items-start gap-3 bg-[#f8f3e8]/70 p-4 rounded border border-[#dedacf]">
+<span class="material-symbols-outlined text-[#9b8354] mt-0.5" style="font-size: 18px;">shield</span>
+<p class="font-sans italic text-[13px] text-[#45474b] leading-relaxed">
+            All approved revisions are immutable. Approvals are recorded with proposer identity, reviewer identity, timestamp, and cryptographic hash of the accepted content.
+          </p>
+</div>
+</footer>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ContextOS — Workspace Overview</title>
+<!-- Google Fonts: EB Garamond (Editorial Serif) & Inter (Precision Sans) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300;400;500;600;700&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              charcoal: "#161d26",
+              charcoalDark: "#10161e",
+              charcoalHover: "#222c3a",
+              charcoalBorder: "#273444",
+              brass: "#9b8354",
+              brassMuted: "#bca678",
+              brassSoft: "#f5dfca",
+              brassText: "#8b7348",
+              alabaster: "#fef9ee",
+              parchmentLow: "#f8f3e8",
+              parchmentDim: "#f1ebd9",
+              ink: "#1d1c15",
+              muted: "#75777c",
+              mutedDark: "#45474b",
+              rule: "#dedacf",
+              ruleDark: "#d2cdbe",
+              badgeBg: "#ede8dd",
+              badgeText: "#251a0d"
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            headline: ["EB Garamond", "serif"],
+            display: ["EB Garamond", "serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"],
+            mono: ["Courier Prime", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Material Symbols base refinement */
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+      font-size: 19px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f8f3e8;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #dedacf;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #d2cdbe;
+    }
+  </style>
+</head>
+<body class="bg-[#f8f3e8] text-[#1d1c15] font-body antialiased selection:bg-[#9b8354]/20 selection:text-[#1d1c15] min-h-screen">
+<!-- ============================================================== -->
+<!-- LEFT SIDEBAR SHELL (238px Fixed Width, Heritage Midnight Charcoal) -->
+<!-- ============================================================== -->
+<aside class="fixed top-0 left-0 h-screen w-[238px] bg-[#161d26] border-r border-[#273444] flex flex-col justify-between select-none z-30">
+<!-- Top Area: Brand & Workspace Navigation -->
+<div class="flex flex-col pt-5">
+<!-- Monogram + Wordmark -->
+<div class="px-5 pb-5 flex items-center justify-between border-b border-[#273444]/70">
+<div class="flex items-center space-x-2.5">
+<span class="font-headline text-2xl font-semibold text-[#9b8354] tracking-tight leading-none">c•</span>
+<span class="font-headline text-xl font-medium tracking-tight text-[#fef9ee]">ContextOS</span>
+</div>
+<span class="text-[10px] tracking-widest uppercase font-mono px-1.5 py-0.5 rounded-sm bg-[#222c3a] text-[#bca678]">v4.2</span>
+</div>
+<!-- Project Switcher Module -->
+<div class="px-3 pt-4 pb-2">
+<p class="px-2 pb-1.5 text-[10px] tracking-widest uppercase font-semibold text-[#c0c7d3]">Workspace</p>
+<button class="w-full flex items-center justify-between p-2 rounded-sm bg-[#1e2733] hover:bg-[#25303f] transition-none border border-[#2f3e52] text-left group">
+<div class="flex items-center space-x-2.5 overflow-hidden">
+<div class="w-6 h-6 rounded-full bg-[#161d26] border border-[#9b8354] flex items-center justify-center text-[11px] font-headline font-semibold text-[#bca678] flex-shrink-0">
+              C
+            </div>
+<div class="truncate">
+<div class="text-[12px] font-medium text-[#fef9ee] truncate leading-tight">Checkout reliability</div>
+<div class="text-[10px] text-[#c0c7d3]/70 truncate leading-tight">Product &amp; engineering</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#c0c7d3]/60 text-sm ml-1 flex-shrink-0">unfold_more</span>
+</button>
+</div>
+<!-- Main Navigation Links -->
+<nav class="mt-4 flex flex-col">
+<p class="px-5 pb-1 text-[10px] tracking-widest uppercase font-semibold text-[#c0c7d3]/50">Platform</p>
+<!-- 1. Overview (Active Match) -->
+<a class="border-l-[3px] border-[#9b8354] bg-[#222c3a] text-[#fef9ee] font-medium flex items-center px-4 py-2 text-sm" href="#">
+<span class="material-symbols-outlined text-[#fef9ee] mr-3">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- 2. Shared Knowledge -->
+<a class="text-[#c0c7d3] hover:bg-[#222c3a] hover:text-[#fef9ee] transition-none flex items-center px-4 py-2 text-sm border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[#c0c7d3] mr-3">menu_book</span>
+<span>Shared knowledge</span>
+</a>
+<!-- 3. Agent Workspace -->
+<a class="text-[#c0c7d3] hover:bg-[#222c3a] hover:text-[#fef9ee] transition-none flex items-center px-4 py-2 text-sm border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[#c0c7d3] mr-3">smart_toy</span>
+<span>Agent workspace</span>
+</a>
+<!-- 4. Change Reviews -->
+<a class="text-[#c0c7d3] hover:bg-[#222c3a] hover:text-[#fef9ee] transition-none flex items-center px-4 py-2 text-sm border-l-[3px] border-transparent justify-between" href="#">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[#c0c7d3] mr-3">rate_review</span>
+<span>Change reviews</span>
+</div>
+<span class="text-[10px] font-mono px-1.5 py-0.2 rounded-sm bg-[#25303f] text-[#bca678]">2</span>
+</a>
+<!-- 5. Context Insights -->
+<a class="text-[#c0c7d3] hover:bg-[#222c3a] hover:text-[#fef9ee] transition-none flex items-center px-4 py-2 text-sm border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[#c0c7d3] mr-3">insights</span>
+<span>Context insights</span>
+</a>
+<!-- Supplementary Nav Divider -->
+<div class="my-3 mx-4 border-t border-[#273444]"></div>
+<a class="text-[#c0c7d3]/80 hover:bg-[#222c3a] hover:text-[#fef9ee] transition-none flex items-center px-4 py-1.5 text-xs border-l-[3px] border-transparent" href="#">
+<span class="material-symbols-outlined text-[#c0c7d3]/80 mr-3 text-base">history_edu</span>
+<span>System Records</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Sidebar Section -->
+<div class="p-3 border-t border-[#273444] space-y-3">
+<!-- Tagline / Synced indicator -->
+<div class="px-2 py-1 flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-[#9b8354] ring-2 ring-[#9b8354]/20"></span>
+<span class="font-headline italic text-[13px] text-[#c0c7d3]/90">One shared understanding</span>
+</div>
+<!-- Export Workspace Button -->
+<button class="w-full flex items-center justify-center space-x-2 px-3 py-1.5 rounded-sm bg-[#1e2733] hover:bg-[#25303f] border border-[#2f3e52] text-[#c0c7d3] text-xs font-medium transition-none">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>Export workspace</span>
+</button>
+<!-- User Profile Row -->
+<div class="flex items-center justify-between pt-1 px-1">
+<div class="flex items-center space-x-2.5 overflow-hidden">
+<div class="w-7 h-7 rounded-full bg-[#10161e] border border-[#9b8354]/60 flex items-center justify-center text-xs font-semibold text-[#fef9ee] flex-shrink-0">
+            D
+          </div>
+<div class="truncate">
+<div class="text-xs font-medium text-[#fef9ee] truncate">Developer</div>
+<div class="text-[10px] text-[#c0c7d3]/60 truncate">Demo persona</div>
+</div>
+</div>
+<button class="text-[#c0c7d3]/60 hover:text-[#fef9ee] p-1" title="Node settings">
+<span class="material-symbols-outlined text-base">settings</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- ============================================================== -->
+<!-- TOP NAVIGATION BAR (Fixed top, left aligned to sidebar)         -->
+<!-- ============================================================== -->
+<header class="fixed top-0 right-0 left-[238px] h-14 bg-[#fef9ee] border-b border-[#dedacf] flex items-center justify-between px-8 z-20">
+<!-- Breadcrumbs -->
+<div class="flex items-center space-x-2 text-xs font-medium">
+<span class="text-[#75777c]">Workspace</span>
+<span class="text-[#dedacf]">/</span>
+<span class="text-[#1d1c15] font-semibold">Overview</span>
+<span class="text-[#dedacf]">/</span>
+<span class="font-mono text-[11px] text-[#8b7348] bg-[#f1ebd9] px-2 py-0.5 border border-[#dedacf] rounded-sm">ID: WS-CHK-8902</span>
+</div>
+<!-- Right Controls: Status & Persona -->
+<div class="flex items-center space-x-4">
+<!-- Status pill: Offline rehearsal -->
+<div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-sm bg-[#ede8dd] border border-[#d2cdbe] text-xs font-medium text-[#161d26]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#161d26]"></span>
+<span class="text-[11px] tracking-tight">Offline rehearsal</span>
+</div>
+<!-- Persona Switcher -->
+<div class="flex items-center space-x-2">
+<span class="text-xs text-[#75777c]">Viewing as</span>
+<div class="relative inline-block">
+<button class="inline-flex items-center space-x-2 px-3 py-1 rounded-sm bg-[#fef9ee] hover:bg-[#f1ebd9] border border-[#dedacf] text-xs font-medium text-[#1d1c15] transition-none">
+<span class="w-2 h-2 rounded-full bg-[#9b8354]"></span>
+<span>Developer</span>
+<span class="material-symbols-outlined text-sm text-[#75777c]">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Quick Action Icons -->
+<div class="flex items-center pl-2 border-l border-[#dedacf] space-x-1">
+<button class="p-1.5 rounded hover:bg-[#f1ebd9] text-[#75777c] hover:text-[#1d1c15]" title="Institutional notifications">
+<span class="material-symbols-outlined text-[18px]">notifications</span>
+</button>
+<button class="p-1.5 rounded hover:bg-[#f1ebd9] text-[#75777c] hover:text-[#1d1c15]" title="Workspace fine-tuning">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ============================================================== -->
+<!-- MAIN WORKSPACE CANVAS                                           -->
+<!-- ============================================================== -->
+<main class="ml-[238px] pt-14 pb-16 min-h-screen">
+<div class="px-10 py-8 max-w-[1400px] mx-auto">
+<!-- 1. Page Heading Section -->
+<div class="flex items-start justify-between pb-7 border-b border-[#dedacf]">
+<div>
+<div class="text-[11px] font-semibold tracking-widest uppercase text-[#8b7348] mb-1">
+            OVERVIEW
+          </div>
+<h1 class="font-headline text-[32px] font-normal tracking-tight text-[#1d1c15] leading-tight">
+            Checkout reliability
+          </h1>
+<p class="text-sm text-[#45474b] mt-1 font-body">
+            Shared intelligence across product, engineering, and architecture.
+          </p>
+</div>
+<div class="flex items-center space-x-3 pt-1">
+<button class="inline-flex items-center space-x-1.5 px-3 py-2 text-xs font-medium text-[#1d1c15] bg-[#fef9ee] hover:bg-[#f1ebd9] border border-[#dedacf] rounded-sm transition-none">
+<span class="material-symbols-outlined text-sm">history</span>
+<span>Audit trail</span>
+</button>
+<!-- Primary CTA: Add Knowledge -->
+<button class="inline-flex items-center space-x-2 px-4 py-2 text-xs font-medium text-[#fef9ee] bg-[#161d26] hover:bg-[#222c3a] border border-[#161d26] rounded-sm transition-none shadow-none">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>Add knowledge</span>
+</button>
+</div>
+</div>
+<!-- 2. Stat Cards Row (4-column ledger style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-7">
+<!-- Stat 1 -->
+<div class="bg-[#fef9ee] border border-[#dedacf] p-5 rounded-sm relative">
+<div class="text-[11px] uppercase tracking-wider text-[#75777c] font-medium">Repository Nodes</div>
+<div class="font-headline text-3xl font-normal text-[#8b7348] mt-1.5">12</div>
+<div class="text-xs text-[#75777c] mt-1 font-body flex items-center justify-between">
+<span>Knowledge topics</span>
+<span class="font-mono text-[10px] text-[#161d26] bg-[#ede8dd] px-1 rounded">100% synced</span>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="bg-[#fef9ee] border border-[#dedacf] p-5 rounded-sm relative">
+<div class="text-[11px] uppercase tracking-wider text-[#75777c] font-medium">Autonomous Execution</div>
+<div class="font-headline text-3xl font-normal text-[#8b7348] mt-1.5">3</div>
+<div class="text-xs text-[#75777c] mt-1 font-body flex items-center justify-between">
+<span>Active tasks</span>
+<span class="font-mono text-[10px] text-[#8b7348] bg-[#f5dfca]/60 px-1 rounded">1 queue</span>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="bg-[#fef9ee] border border-[#dedacf] p-5 rounded-sm relative">
+<div class="text-[11px] uppercase tracking-wider text-[#75777c] font-medium">Governance Checkpoint</div>
+<div class="font-headline text-3xl font-normal text-[#8b7348] mt-1.5">2</div>
+<div class="text-xs text-[#75777c] mt-1 font-body flex items-center justify-between">
+<span>Pending reviews</span>
+<span class="font-mono text-[10px] text-[#93000a] bg-[#ffdad6] px-1 rounded">Action req.</span>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="bg-[#fef9ee] border border-[#dedacf] p-5 rounded-sm relative">
+<div class="text-[11px] uppercase tracking-wider text-[#75777c] font-medium">Inference Ledger</div>
+<div class="font-headline text-3xl font-normal text-[#8b7348] mt-1.5">$0.18</div>
+<div class="text-xs text-[#75777c] mt-1 font-body flex items-center justify-between">
+<span>Estimated token cost</span>
+<span class="font-mono text-[10px] text-[#75777c]">Today</span>
+</div>
+</div>
+</div>
+<!-- 3. Two-Column Workspace Layout (2/3 Left Ledger, 1/3 Right Tasks) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-7">
+<!-- ============================================== -->
+<!-- LEFT COLUMN: Recent Knowledge (8 cols)         -->
+<!-- ============================================== -->
+<section class="lg:col-span-8 space-y-4">
+<div class="flex items-center justify-between pb-1">
+<div>
+<span class="text-[10px] font-semibold tracking-widest uppercase text-[#8b7348]">INTELLIGENCE LEDGER</span>
+<h2 class="font-headline text-2xl font-normal text-[#1d1c15] mt-0.5">Recent knowledge</h2>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-xs text-[#75777c]">Filter:</span>
+<button class="text-xs font-mono px-2 py-0.5 bg-[#fef9ee] border border-[#dedacf] rounded-sm text-[#1d1c15] hover:bg-[#f1ebd9]">All Domains</button>
+</div>
+</div>
+<!-- Knowledge Card 1: ARCHITECTURE -->
+<article class="bg-[#fef9ee] border border-[#dedacf] p-5 rounded-sm hover:border-[#9b8354]/60 transition-none group">
+<div class="flex items-center justify-between mb-2.5">
+<span class="px-2 py-0.5 rounded-sm bg-[#ede8dd] text-[#161d26] font-mono text-[10px] font-semibold tracking-wider uppercase border border-[#d2cdbe]">
+                ARCHITECTURE
+              </span>
+<span class="font-mono text-xs text-[#75777c] flex items-center space-x-1">
+<span class="material-symbols-outlined text-sm text-[#9b8354]">verified</span>
+<span>Idempotent Node</span>
+</span>
+</div>
+<h3 class="font-headline text-xl font-medium text-[#1d1c15] group-hover:text-[#161d26] transition-none leading-snug">
+              Payment Gateway Fallback Sequence &amp; Idempotency
+            </h3>
+<p class="text-xs text-[#45474b] font-body mt-2 leading-relaxed">
+              Defines secondary PSP routing logic, distributed retry budgets, and atomic idempotency keys under degraded vendor SLAs. Includes circuit-breaker timeout tolerances.
+            </p>
+<div class="mt-4 pt-3 border-t border-[#dedacf]/70 flex items-center justify-between text-xs text-[#75777c]">
+<div class="flex items-center space-x-2.5">
+<div class="w-5 h-5 rounded-full bg-[#161d26] text-[#fef9ee] font-mono text-[10px] flex items-center justify-center font-medium">
+                  MR
+                </div>
+<span class="font-medium text-[#1d1c15]">Marcus Reid</span>
+<span class="text-[#75777c]/60">• Principal Architect</span>
+</div>
+<div class="font-mono text-[11px] text-[#75777c]">
+                Updated 2h ago • <span class="text-[#161d26] font-semibold">v3.4</span>
+</div>
+</div>
+</article>
+<!-- Knowledge Card 2: PRODUCT SPEC -->
+<article class="bg-[#fef9ee] border border-[#dedacf] p-5 rounded-sm hover:border-[#9b8354]/60 transition-none group">
+<div class="flex items-center justify-between mb-2.5">
+<span class="px-2 py-0.5 rounded-sm bg-[#f1ebd9] text-[#45474b] font-mono text-[10px] font-semibold tracking-wider uppercase border border-[#dedacf]">
+                PRODUCT SPEC
+              </span>
+<span class="font-mono text-xs text-[#75777c]">
+                Compliance Ring-0
+              </span>
+</div>
+<h3 class="font-headline text-xl font-medium text-[#1d1c15] group-hover:text-[#161d26] transition-none leading-snug">
+              Guest Checkout Friction Constraints &amp; SLA Targets
+            </h3>
+<p class="text-xs text-[#45474b] font-body mt-2 leading-relaxed">
+              Establishes drop-off tolerances and mandatory compliance verification gates before routing to one-click tokenized authorization across guest sessions.
+            </p>
+<div class="mt-4 pt-3 border-t border-[#dedacf]/70 flex items-center justify-between text-xs text-[#75777c]">
+<div class="flex items-center space-x-2.5">
+<div class="w-5 h-5 rounded-full bg-[#9b8354] text-[#fef9ee] font-mono text-[10px] flex items-center justify-center font-medium">
+                  SL
+                </div>
+<span class="font-medium text-[#1d1c15]">Sarah Lin</span>
+<span class="text-[#75777c]/60">• Staff PM</span>
+</div>
+<div class="font-mono text-[11px] text-[#75777c]">
+                Updated 5h ago • <span class="text-[#161d26] font-semibold">v2.1</span>
+</div>
+</div>
+</article>
+<!-- Knowledge Card 3: INFRASTRUCTURE -->
+<article class="bg-[#fef9ee] border border-[#dedacf] p-5 rounded-sm hover:border-[#9b8354]/60 transition-none group">
+<div class="flex items-center justify-between mb-2.5">
+<span class="px-2 py-0.5 rounded-sm bg-[#ede8dd] text-[#161d26] font-mono text-[10px] font-semibold tracking-wider uppercase border border-[#d2cdbe]">
+                INFRASTRUCTURE
+              </span>
+<span class="font-mono text-xs text-[#75777c]">
+                Multi-Region Sync
+              </span>
+</div>
+<h3 class="font-headline text-xl font-medium text-[#1d1c15] group-hover:text-[#161d26] transition-none leading-snug">
+              Redis Cluster Circuit Breaking &amp; Failover Policies
+            </h3>
+<p class="text-xs text-[#45474b] font-body mt-2 leading-relaxed">
+              Governs distributed lock shedding during peak cart volume and read-replica degrade behavior across multi-region VPC nodes without state contamination.
+            </p>
+<div class="mt-4 pt-3 border-t border-[#dedacf]/70 flex items-center justify-between text-xs text-[#75777c]">
+<div class="flex items-center space-x-2.5">
+<div class="w-5 h-5 rounded-full bg-[#273444] text-[#fef9ee] font-mono text-[10px] flex items-center justify-center font-medium">
+                  ET
+                </div>
+<span class="font-medium text-[#1d1c15]">Elena Thorne</span>
+<span class="text-[#75777c]/60">• Reliability Lead</span>
+</div>
+<div class="font-mono text-[11px] text-[#75777c]">
+                Yesterday • <span class="text-[#161d26] font-semibold">v1.8</span>
+</div>
+</div>
+</article>
+<!-- Archive Link Bar -->
+<div class="text-center pt-2">
+<a class="inline-flex items-center space-x-1.5 text-xs text-[#75777c] hover:text-[#1d1c15] font-medium" href="#">
+<span>View full knowledge registry in Intelligence Base</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- ============================================== -->
+<!-- RIGHT COLUMN: Active Tasks & Governance (4 cols)-->
+<!-- ============================================== -->
+<section class="lg:col-span-4 space-y-4">
+<div class="pb-1">
+<span class="text-[10px] font-semibold tracking-widest uppercase text-[#8b7348]">AGENT PIPELINE</span>
+<h2 class="font-headline text-2xl font-normal text-[#1d1c15] mt-0.5">Active tasks</h2>
+</div>
+<!-- Task Card 1: RUNNING -->
+<div class="bg-[#fef9ee] border border-[#dedacf] p-4 rounded-sm relative">
+<div class="flex items-center justify-between mb-2">
+<span class="px-2 py-0.5 rounded-sm bg-[#f5dfca]/70 text-[#8b7348] font-mono text-[10px] font-semibold tracking-wider uppercase border border-[#d8c3af]">
+                RUNNING
+              </span>
+<span class="flex items-center text-[11px] text-[#8b7348] font-mono">
+<span class="w-1.5 h-1.5 rounded-full bg-[#9b8354] animate-pulse mr-1.5"></span>
+                In Flight
+              </span>
+</div>
+<p class="font-body text-xs font-semibold text-[#1d1c15] leading-snug">
+              Synthesizing Stripe webhook latency telemetry
+            </p>
+<div class="mt-3 pt-2.5 border-t border-[#dedacf]/70 flex items-center justify-between text-[11px] text-[#75777c]">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-sm text-[#75777c]">smart_toy</span>
+<span class="font-medium text-[#45474b]">Hermes-4</span>
+</div>
+<span class="font-mono text-[10px] text-[#75777c]">Autonomous Agent</span>
+</div>
+</div>
+<!-- Task Card 2: COMPLETE -->
+<div class="bg-[#fef9ee] border border-[#dedacf] p-4 rounded-sm relative">
+<div class="flex items-center justify-between mb-2">
+<span class="px-2 py-0.5 rounded-sm bg-[#ede8dd] text-[#161d26] font-mono text-[10px] font-semibold tracking-wider uppercase border border-[#d2cdbe]">
+                COMPLETE
+              </span>
+<span class="font-mono text-[11px] text-[#75777c]">
+                12m ago
+              </span>
+</div>
+<p class="font-body text-xs font-semibold text-[#1d1c15] leading-snug">
+              PR #1429 architectural compliance validation
+            </p>
+<div class="mt-3 pt-2.5 border-t border-[#dedacf]/70 flex items-center justify-between text-[11px] text-[#75777c]">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-sm text-[#161d26]">verified_user</span>
+<span class="font-medium text-[#45474b]">Athena-2</span>
+</div>
+<span class="font-mono text-[10px] text-[#75777c]">Verification Agent</span>
+</div>
+</div>
+<!-- System Governance Status Memorial Card -->
+<div class="bg-[#f1ebd9] border border-dashed border-[#d2cdbe] p-4 rounded-sm mt-5">
+<div class="flex items-start space-x-3">
+<div class="p-1 rounded bg-[#ede8dd] text-[#161d26] flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-base">shield</span>
+</div>
+<div>
+<h4 class="text-xs font-semibold text-[#1d1c15]">System Governance Status</h4>
+<p class="text-[11px] text-[#45474b] mt-1 leading-relaxed">
+                  All agent activities anchored to <span class="font-mono font-medium text-[#1d1c15]">ContextOS Master Policy v4.2</span>. Memory reconciliation runs deterministically every 30 minutes.
+                </p>
+<div class="mt-2.5 flex items-center space-x-2">
+<span class="inline-block w-2 h-2 rounded-full bg-[#9b8354]"></span>
+<span class="font-mono text-[10px] text-[#161d26] font-medium">Rehearsal sandbox active</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Context Diagnostic Callout -->
+<div class="p-4 bg-[#fef9ee] border border-[#dedacf] rounded-sm">
+<div class="flex justify-between items-center text-xs pb-2 border-b border-[#dedacf]/70 font-medium">
+<span class="text-[#75777c]">Context Sync Hash</span>
+<span class="font-mono text-[11px] text-[#8b7348]">sha256:7f4a...e10d</span>
+</div>
+<div class="flex justify-between items-center text-xs pt-2 text-[#75777c]">
+<span>Vector Consistency</span>
+<span class="font-medium text-[#161d26]">99.98% Converged</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Minor interaction handler for aesthetic realism -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Gentle toast placeholder trigger if action clicked
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          // Keep clicks fluid without jarring jumps
+          if (btn.innerText.includes('Export workspace')) {
+            alert('Context snapshot exported: checkout-reliability-manifest-v4.2.json');
+          }
+        });
+      });
+    });
+  </script>
+</body></html>

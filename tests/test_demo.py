@@ -32,3 +32,17 @@ def test_unknown_scenario_does_not_succeed():
     with pytest.raises(Problem) as e:
         run_scenario('imaginary')
     assert e.value.status == 404
+
+
+def test_walkthrough_checkpoints_preserve_earlier_state_and_role_boundaries():
+    review = run_scenario('review')['steps']
+    assert review[0]['checkpoint']['proposals'][0]['status'] == 'pending'
+    assert review[-1]['checkpoint']['proposals'][0]['status'] == 'published'
+    assert next(c for c in review[0]['checkpoint']['accepted_context'] if c['id']=='ARC-001')['revision'] == 1
+    assert next(c for c in review[-1]['checkpoint']['accepted_context'] if c['id']=='ARC-001')['revision'] == 2
+    restricted = run_scenario('restricted')['steps']
+    assert restricted[0]['role'] == 'security'
+    assert any(c['id']=='RES-001' for c in restricted[0]['checkpoint']['accepted_context'])
+    for step in restricted[1:]:
+        assert step['role'] == 'developer'
+        assert all(c['id']!='RES-001' for c in step['checkpoint']['accepted_context'])

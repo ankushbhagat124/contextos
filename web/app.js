@@ -23,6 +23,7 @@ const navItems = [['overview','Overview'],['knowledge','Shared knowledge'],['tas
 let state, activeRun, selectedContext, toastTimer, queryFilter = '', domainFilter = 'All domains';
 let currentView = location.hash.slice(1) || 'overview';
 let busy = false;
+let demoPositions = {}, demoCompleted = {};
 let demoCatalog = [], demoRole = 'all', demoCategory = 'All cases', demoSelected = 'handoff', demoReports = {}, demoRunning = null;
 let firebaseToken = ''; // Kept in memory only, never in browser storage.
 
@@ -121,15 +122,40 @@ function demo() {
   const failed = results.length - passed;
   const personas = Object.entries(demoPersonas).map(([role,p]) => `<button class="demo-persona ${demoRole===role?'selected':''}" data-action="demo-persona" data-role="${role}" aria-pressed="${demoRole===role}"><span class="demo-avatar">${p.initial}</span><strong>${p.title}</strong><span>${p.focus}</span><small>${p.authority}</small></button>`).join('');
   const report = selected && demoReports[selected.id];
-  return heading('INTERACTIVE DEMO','One project. Five perspectives.','Explore every implemented core workflow, then try it with your own decisions.',btn(demoRunning ? 'Running scenarios…' : `${icon('check')} Run all ${demoCatalog.length} cases`,'demo-all',true,demoRunning?'disabled':'')) +
-    `<section class="demo-intro"><div><span class="tag green">Isolated, repeatable rehearsal</span><h2>See the rules working, not just the screens.</h2><p>Each scenario runs real application rules against fresh synthetic data. Your workspace stays intact. No model calls are made.</p></div><div class="demo-score"><strong>${passed}<span> / ${demoCatalog.length}</span></strong><small>scenarios passed this session</small>${failed ? `<span class="tag amber">${failed} needs attention</span>` : ''}</div></section>`+
+  return heading('INTERACTIVE DEMO','One project. Five perspectives.','Explore every implemented core workflow, then try it with your own decisions.',btn(demoRunning ? 'Checking scenarios…' : `${icon('check')} Verify all ${demoCatalog.length} cases`,'demo-all',true,demoRunning?'disabled':'')) +
+    `<section class="demo-intro"><div><span class="tag green">Isolated, repeatable rehearsal</span><h2>See the rules working, not just the screens.</h2><p>Each scenario runs real application rules against fresh synthetic data. Your workspace stays intact. No model calls are made. Walkthroughs replay captured checkpoints one at a time.</p></div><div class="demo-score"><strong>${passed}<span> / ${demoCatalog.length}</span></strong><small>scenarios verified · explore steps below</small>${failed ? `<span class="tag amber">${failed} needs attention</span>` : ''}</div></section>`+
     `<div class="demo-section-head"><h2>Choose a perspective</h2><button class="text-btn" data-action="demo-persona" data-role="all" aria-pressed="${demoRole==='all'}">Show all personas</button></div><div class="demo-personas">${personas}</div>`+
     `<div class="demo-section-head"><div><h2>Explore the solution</h2><p class="muted">${list.length} cases${demoRole==='all'?' across the team':` involving ${demoPersonas[demoRole].title}`}</p></div><select id="demo-category" aria-label="Demo case category">${['All cases',...new Set(demoCatalog.map(s=>s.category))].map(category=>`<option${category===demoCategory?' selected':''}>${category}</option>`).join('')}</select></div>`+
-    `<div class="demo-workbench"><section class="panel demo-case-list" aria-label="Demo scenarios">${list.length?list.map(s=>`<button class="demo-case ${s.id===demoSelected?'selected':''}" data-action="demo-select" data-id="${s.id}" aria-pressed="${s.id===demoSelected}"><span class="demo-case-label"><span class="tag">${s.category}</span><span class="demo-case-status">${demoReports[s.id] ? (demoReports[s.id].passed?'✓ Passed':'! Needs attention') : 'Not run'}</span></span><strong>${s.title}</strong><span>${s.summary}</span></button>`).join(''):empty('No cases in this combination','Choose All cases or show all personas.')}</section><section class="panel demo-detail">${selected ? `<div class="form-panel"><div class="eyebrow">${selected.category.toUpperCase()} WALKTHROUGH</div><h2 class="demo-detail-title">${selected.title}</h2><p class="subtitle">${selected.summary}</p><div class="demo-cast">${selected.roles.map(role=>`<span class="tag green">${demoPersonas[role].title}</span>`).join('<span class="muted">→</span>')}</div><div class="button-group">${btn(demoRunning ? 'Running…' : report ? 'Run again' : 'Run this scenario','demo-run',true,`data-id="${selected.id}" ${demoRunning?'disabled':''}`)}${btn('Try in workspace ↗','demo-try',false,`data-id="${selected.id}" ${demoRunning?'disabled':''}`)}</div>${report ? `<div class="note ${report.passed?'':'amber'}">${report.passed ? 'All checks passed.' : 'This scenario needs attention.'} ${report.steps.filter(s=>s.passed).length} of ${report.steps.length} checks verified against fresh synthetic state.</div><ol class="demo-steps">${report.steps.map((step,index)=>`<li><span class="demo-step-number ${step.passed?'':'failed'}">${step.passed?'✓':index+1}</span><div><strong>${esc(step.title)}</strong><p>${esc(step.detail)}</p></div></li>`).join('')}</ol><details class="history"><summary>Inspect scenario evidence</summary><pre class="demo-evidence">${esc(JSON.stringify(report.evidence,null,2))}</pre></details>` : `<div class="demo-ready">${icon('branch')}<h3>Follow the decision, step by step.</h3><p>Run this case to see each action, the policy result, and the source evidence. Results are computed by the application, not pre-filled success labels.</p></div>`}<p class="form-help">Try in workspace changes your demo persona to ${demoPersonas[selected.role].title} and opens ${selected.view}. Any edits there follow the normal review process.</p></div>` : empty('Choose a case','Select another category to continue.')}</section></div>`+
+    `<div class="demo-workbench"><section class="panel demo-case-list" aria-label="Demo scenarios">${list.length?list.map(s=>`<button class="demo-case ${s.id===demoSelected?'selected':''}" data-action="demo-select" data-id="${s.id}" aria-pressed="${s.id===demoSelected}"><span class="demo-case-label"><span class="tag">${s.category}</span><span class="demo-case-status">${demoReports[s.id] ? (demoReports[s.id].passed?'✓ Passed':'! Needs attention') : 'Not run'}</span></span><strong>${s.title}</strong><span>${s.summary}</span></button>`).join(''):empty('No cases in this combination','Choose All cases or show all personas.')}</section><section class="panel demo-detail">${selected ? `<div class="form-panel"><div class="eyebrow">${selected.category.toUpperCase()} WALKTHROUGH</div><h2 class="demo-detail-title">${selected.title}</h2><p class="subtitle">${selected.summary}</p><div class="demo-cast">${selected.roles.map(role=>`<span class="tag green">${demoPersonas[role].title}</span>`).join('<span class="muted">→</span>')}</div><div class="button-group">${btn(demoRunning ? 'Running…' : report ? 'Restart walkthrough' : 'Start walkthrough','demo-run',true,`data-id="${selected.id}" ${demoRunning?'disabled':''}`)}${btn('Try in workspace ↗','demo-try',false,`data-id="${selected.id}" ${demoRunning?'disabled':''}`)}</div>${report ? demoStep(selected,report) : `<div class="demo-ready">${icon('branch')}<h3>Follow the decision, step by step.</h3><p>Start the walkthrough, then advance at your own pace. Each step shows the acting persona, the outcome, and accepted knowledge at that moment.</p></div>`}<p class="form-help">Try in workspace changes your demo persona to ${demoPersonas[selected.role].title} and opens ${selected.view}. Any edits there follow the normal review process.</p></div>` : empty('Choose a case','Select another category to continue.')}</section></div>`+
     `<section class="panel gap-top"><div class="panel-head"><div><h2>What this demo proves—and what comes next</h2><p>Local behavior and cloud readiness are tracked separately.</p></div></div><div class="demo-coverage"><div><span class="tag green">Available locally</span><p>Shared knowledge, note candidates, manual authoring, independent review, exact snapshots, restricted access, conflicts, rollback, dependency alerts and usage transparency.</p></div><div><span class="tag amber">Awaiting cloud setup</span><p>Live Gemini reasoning and extraction, real Firebase accounts, Firestore persistence across instances, and Google Cloud deployment.</p></div><div><span class="tag">Future roadmap</span><p>Semantic search, MCP and IDE access, repository synchronization, automatic knowledge consolidation, and enterprise administration.</p></div></div></section>`;
 }
+function demoStep(scenario, report) {
+  const index = demoPositions[scenario.id] || 0, step = report.steps[index];
+  const persona = demoPersonas[step.role] || demoPersonas[scenario.role];
+  const checkpoint = step.checkpoint;
+  const previous = index > 0 ? report.steps[index-1].checkpoint : null;
+  const done = demoCompleted[scenario.id];
+  return `<section class="demo-stage" aria-label="Current walkthrough step" tabindex="-1">
+    <div class="demo-progress"><span>Step ${index+1} of ${report.steps.length}</span><span>${persona.title}</span></div>
+    <progress max="${report.steps.length}" value="${index+1}" aria-label="Walkthrough progress"></progress>
+    <div class="demo-stage-heading"><span class="demo-avatar">${persona.initial}</span><div><small>ACTING PERSONA · ${persona.title}</small><h3>${esc(step.title)}</h3></div></div>
+    <p class="demo-step-detail">${esc(step.detail)}</p>
+    <div class="note ${step.passed?'':'amber'}">${step.passed?'✓ Expected outcome verified':'! Check needs attention'}</div>
+    ${checkpoint ? `<div class="demo-checkpoint"><h3>Shared knowledge at this step</h3><p class="muted">Accepted revisions visible to ${persona.title}. Highlighted rows changed since the previous step.</p><div class="demo-ledger">${checkpoint.accepted_context.map(item=>{
+      const prior = previous?.accepted_context.find(c=>c.id===item.id);
+      const changed = previous && (!prior || prior.revision!==item.revision);
+      return `<details class="demo-ledger-row ${changed?'changed':''}"><summary><span>${esc(item.title)}</span><span class="version">${changed && prior ? `v${prior.revision} → ` : ''}v${item.revision}</span></summary><p>${esc(item.body)}</p><small>${esc(item.id)}</small></details>`;
+    }).join('')}</div>${checkpoint.proposals.length ? `<div class="demo-proposal-state"><strong>Review queue</strong>${checkpoint.proposals.map(p=>`<p>${esc(p.title)} <span class="tag ${p.status==='pending'?'amber':'green'}">${esc(p.status)}</span></p>`).join('')}</div>`:''}${checkpoint.stale_runs?`<div class="note amber">${checkpoint.stale_runs} prior run needs review.</div>`:''}</div>`:''}
+    <div class="demo-step-controls">${btn('← Back','demo-back',false,`data-id="${scenario.id}" ${index===0?'disabled':''}`)}<span class="muted">${done?'Walkthrough complete':index===report.steps.length-1?'Final step':'Continue when you’re ready'}</span>${btn(index===report.steps.length-1?'Finish walkthrough':'Next step →',index===report.steps.length-1?'demo-finish':'demo-next',true,`data-id="${scenario.id}" ${done?'disabled':''}`)}</div>
+    ${done?`<div class="note" role="status">${report.passed?'Walkthrough complete. Every checkpoint passed.':'Walkthrough complete. Review the failed checks.'}</div><details class="history"><summary>Inspect complete scenario evidence</summary><pre class="demo-evidence">${esc(JSON.stringify(report.evidence,null,2))}</pre></details>`:''}
+  </section>`;
+}
+function focusDemoStep() {
+  const stage = document.querySelector('.demo-stage');
+  if (stage) {stage.focus({preventScroll:true}); stage.scrollIntoView({block:'start',behavior:'instant'});}
+}
 async function runDemoCase(id) {
-  try {demoReports[id] = await api(`demo/scenarios/${id}`,{});}
+  try {demoReports[id] = await api(`demo/scenarios/${id}`,{}); demoPositions[id] = 0; demoCompleted[id] = false;}
   catch(error) {demoReports[id] = {passed:false,steps:[{title:'Scenario could not complete',passed:false,detail:error.message}],evidence:{}};}
 }
 
@@ -193,6 +219,13 @@ function addKnowledge() {
 }
 async function action(el) {
   const a = el.dataset.action, id = el.dataset.id;
+  if (['demo-next','demo-back','demo-finish'].includes(a)) {
+    const report = demoReports[id];
+    if (!report || demoRunning) return;
+    if (a === 'demo-finish') demoCompleted[id] = true;
+    else {demoPositions[id] = Math.max(0,Math.min(report.steps.length-1,(demoPositions[id]||0)+(a==='demo-next'?1:-1))); demoCompleted[id] = false;}
+    render(); focusDemoStep(); return;
+  }
   if (a === 'demo-persona') {demoRole = el.dataset.role; render(); return;}
   if (a === 'demo-select') {demoSelected = id; render(); return;}
   if (a === 'demo-run' || a === 'demo-all') {
@@ -201,7 +234,8 @@ async function action(el) {
     try {
       for (const scenarioId of (a === 'demo-all' ? demoCatalog.map(s=>s.id) : [id])) {await runDemoCase(scenarioId); render();}
     } finally {demoRunning = null; render();}
-    toast('Scenario results are ready. Your workspace was not changed.');
+    if (a === 'demo-run') focusDemoStep();
+    toast(a === 'demo-all' ? 'Verification finished. Select a case to walk through its steps.' : 'Walkthrough ready. Use Next step to continue.');
     return;
   }
   if (a === 'demo-try') {

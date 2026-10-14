@@ -28,8 +28,37 @@ def run_scenario(scenario_id):
     evidence = {}
     offline = AI(mode='offline')
 
+    step_roles = {
+        'handoff': ['pm', 'architect', 'developer', 'qa'],
+        'ingestion': ['architect', 'architect', 'pm'],
+        'manual': ['developer', 'architect'],
+        'review': ['developer', 'developer', 'architect', 'architect'],
+        'impact': ['qa', 'architect', 'qa'],
+        'restricted': ['security', 'developer', 'developer', 'developer'],
+        'conflict': ['developer', 'architect', 'architect'],
+        'rollback': ['architect', 'architect', 'architect'],
+        'budget': ['developer', 'developer', 'developer'],
+        'rejection': ['architect', 'architect', 'architect'],
+        'audit': ['architect', 'architect', 'developer'],
+        'usage': ['developer', 'developer'],
+    }
+
     def check(title, condition, detail):
-        steps.append({'title': title, 'passed': bool(condition), 'detail': detail})
+        role = step_roles[scenario_id][len(steps)]
+        # Capture each checkpoint immediately, before later mutations occur.
+        checkpoint = {
+            'accepted_context': [
+                {'id': item['id'], 'title': item['title'], 'revision': item['revision'], 'body': item['body']}
+                for item in state['contexts'].values() if d.visible(item, role)
+            ],
+            'proposals': [
+                {'title': item['title'], 'status': item['status'], 'hash': item['hash']}
+                for item in state['proposals'].values()
+            ],
+            'stale_runs': sum(bool(task.get('stale')) for task in state['tasks'].values()),
+        }
+        steps.append({'title': title, 'passed': bool(condition), 'detail': detail,
+                      'role': role, 'checkpoint': deepcopy(checkpoint)})
 
     def expect_block(title, operation, status):
         try:
