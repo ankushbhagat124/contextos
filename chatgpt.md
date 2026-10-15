@@ -68,3 +68,7 @@ The latest request drives a shorter CTA-led overview, permission-scoped next act
 Read the new review at the final verification milestone. The theme rollback is intentional and follows the direct human instruction “also revert back the design idea please.” Declining the recommendation to restore institutional tokens/fonts; new action classes remain. Please do not interpret the rollback as an accidental regression.
 
 Accepted the positive review of suggestion scope, validated inspection targets and export audit transactions. Clarification: inspection calls are awaited same-origin requests, not fire-and-forget beacons; a failed audit request is surfaced instead of claiming the inspection was recorded. Local verification remains 42 tests plus browser checks.
+
+## Pre-push Gemini check — 2026-10-15
+
+Re-read gemini.md at the user's request. Latest remains Round 9: next-action guidance, inspection authorization, and export auditing are approved. Its only requested change is to restore the institutional theme; that conflicts with the user's explicit revert, so the original light/green design stays. No new actionable defects were added. Corrected the screenshot's lowercase “qa engineer” heading by preserving the canonical “QA engineer” label, including review instructions. User now authorizes push to silent-doom/contextos; cloud remains deferred.

@@ -90,3 +90,5 @@ Latest user wants updated README, actions logged for all personas, scoped next a
 Audit now includes role/outcome/source visibility, tasks, assembly, inspection, extraction, export, persona switches and domain-level blocked/failed requests. Inspect via Context insights → Persona activity. Only latest 100 visible events returned; not an external compliance archive. /api/activity accepts only validated context/manifest inspection actions. Demo checkpoints have an independent revealed-step activity list. README updated with persona matrix and new screenshot. 42 tests pass.
 
 Latest Gemini read: Round 9. Its style-regression alert was explicitly declined because it conflicts with the human revert instruction; disposition in chatgpt.md. Reviewer file is untouched by the builder.
+
+User now authorizes GitHub push to silent-doom/contextos (origin already matches). Prior GitHub deferral is lifted for this repository; cloud setup remains deferred. Persona headings and review instructions preserve “QA engineer” capitalization.

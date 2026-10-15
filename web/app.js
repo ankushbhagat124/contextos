@@ -88,7 +88,7 @@ function nextActionPanel() {
 function overview() {
   const pending = state.proposals.filter(p=>p.status==='pending');
   const stale = state.tasks.filter(t=>t.stale);
-  return heading('WORKSPACE',`Ready, ${roleNames[state.role].toLowerCase()}?`,'Pick your next move.',btn('Watch a walkthrough','navigate',false,'data-view="demo"'))+
+  return heading('WORKSPACE',`Ready, ${roleNames[state.role]}?`,'Pick your next move.',btn('Watch a walkthrough','navigate',false,'data-view="demo"'))+
     nextActionPanel()+
     `<section class="stats" aria-label="Workspace statistics">${stat('Accepted topics',state.contexts.length,'Current knowledge','knowledge')}${stat('Task runs',state.tasks.length,'Inspect sources','tasks')}${stat('Pending reviews',pending.length,'Owner decisions','reviews')}${stat('Stale runs',stale.length,'Refresh needed','branch')}</section>`+
     `<div class="grid-2"><section class="panel"><div class="panel-head"><h2>Shared knowledge</h2>${btn('Browse topics','navigate',false,'data-view="knowledge"')}</div>${state.contexts.slice(0,4).map(contextRow).join('')}</section><section class="panel"><div class="panel-head"><h2>Recent actions</h2>${btn('View activity','navigate',false,'data-view="insights"')}</div><div class="panel-body">${eventRows(state.events.slice(0,4))}</div></section></div>`;
@@ -204,7 +204,7 @@ async function openContext(id) {
 function editContext(body, reason = '') {
   const c = selectedContext;
   modal(`Propose a change`,`${esc(c.title)} · Based on accepted v${c.revision}`,
-  `<form id="proposal-form"><label class="field">Proposed content<textarea class="tall" name="body" required maxlength="10000">${esc(body ?? c.body)}</textarea></label><label class="field">Why should this change?<textarea name="reason" required maxlength="1500" placeholder="Explain the discovery, tradeoff, or requirement behind this revision…">${esc(reason)}</textarea></label><div class="note">This leaves v${c.revision} accepted until an independent ${roleNames[c.owner].toLowerCase()} approves your exact proposal.</div><button class="btn primary" type="submit">Send for review ${icon('arrow')}</button></form>`);
+  `<form id="proposal-form"><label class="field">Proposed content<textarea class="tall" name="body" required maxlength="10000">${esc(body ?? c.body)}</textarea></label><label class="field">Why should this change?<textarea name="reason" required maxlength="1500" placeholder="Explain the discovery, tradeoff, or requirement behind this revision…">${esc(reason)}</textarea></label><div class="note">This leaves v${c.revision} accepted until an independent ${roleNames[c.owner]} approves your exact proposal.</div><button class="btn primary" type="submit">Send for review ${icon('arrow')}</button></form>`);
 }
 async function manifest(id) {
   await api('activity',{action:'manifest_inspected',target_id:id});

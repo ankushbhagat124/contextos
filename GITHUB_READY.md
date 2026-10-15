@@ -1,6 +1,6 @@
 # GitHub readiness
 
-The local repository is prepared for publication, but **no remote, push or public repository has been created**. Git author is Faizan Choudhary <choudharyfaizan15@gmail.com>. The owner has deferred GitHub setup.
+The owner authorized pushing the local project to `silent-doom/contextos` on 15 October 2026. The configured origin is https://github.com/silent-doom/contextos.git. Git author is Faizan Choudhary <choudharyfaizan15@gmail.com>. Cloud setup remains deferred.
 
 ## Included
 
@@ -18,7 +18,7 @@ The local repository is prepared for publication, but **no remote, push or publi
 - [ ] Choose a license and add LICENSE; none has been assigned automatically.
 - [ ] Review source, screenshots, review logs and complete Git history for intended public disclosure.
 - [ ] Confirm the author email is the desired public Git identity (it was explicitly supplied for commits).
-- [ ] Add a GitHub remote and push when authorized.
+- [x] GitHub target selected and push authorized by the owner.
 
 ## Repository settings after publication
 

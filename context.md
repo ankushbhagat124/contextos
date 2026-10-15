@@ -84,3 +84,9 @@ Append an entry in every implementation commit: change, reason, verification, li
 - Added actor/role/outcome/source visibility to audit events. Log tasks, extraction, assembly, inspection, exports, switches and domain-level failures in addition to existing governance actions. Validation/auth failures and simple navigation are not workspace action events.
 - Added tests for all five personas, owner-scoped recommendations, blocked attempts and restricted audit visibility. Updated README workflow, action matrix, logging scope and screenshot.
 - Read Gemini Round 8; its theme adoption is superseded by the user's explicit revert request.
+
+## 2026-10-15 — GitHub push and persona capitalization
+
+- User authorized pushing to https://github.com/silent-doom/contextos. Existing origin matches that repository.
+- Preserved canonical persona capitalization in overview headings and review instructions, including “QA engineer”.
+- Rechecked Gemini Round 9; style disposition remains unchanged per human direction.
