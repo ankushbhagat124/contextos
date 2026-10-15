@@ -107,7 +107,7 @@ def create_app(store=None, ai=None):
             response.set_cookie('contextos_session', request.state.new_session, httponly=True, samesite='strict', secure=bool(os.getenv('K_SERVICE')), max_age=604800)
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'same-origin'
-        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         if request.url.path.startswith('/api/') or request.url.path == '/' or request.url.path.startswith('/assets/'):
             response.headers['Cache-Control'] = 'no-store'
         return response

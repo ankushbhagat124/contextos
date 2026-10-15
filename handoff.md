@@ -92,3 +92,5 @@ Audit now includes role/outcome/source visibility, tasks, assembly, inspection, 
 Latest Gemini read: Round 9. Its style-regression alert was explicitly declined because it conflicts with the human revert instruction; disposition in chatgpt.md. Reviewer file is untouched by the builder.
 
 User now authorizes GitHub push to silent-doom/contextos (origin already matches). Prior GitHub deferral is lifted for this repository; cloud setup remains deferred. Persona headings and review instructions preserve “QA engineer” capitalization.
+
+Latest design direction supersedes the earlier revert: user explicitly selected the palette and idea from 4e1bd51. That theme is restored while keeping the newer shorter CTA layout, guided steps, persona audit and QA capitalization. Do not restore the old overview copy or roll back current behavior.

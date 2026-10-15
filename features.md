@@ -34,3 +34,5 @@ Demo coverage: cross-role handoff; note candidates; manual authoring; owner auth
 | F13 | Next-action guidance for all five personas, direct CTAs and attributed action ledger | Implemented locally; ownership and privacy tests pass |
 
 F11 now reveals a single checkpoint at a time with Next/Back, actor attribution and an expandable activity record. Original light/green theme restored per user direction.
+
+Visual refinement: restored palette/typography from 4e1bd51 per clarified user direction; current F11/F13 workflows remain intact.

@@ -70,7 +70,7 @@ Overview leads with a permission-scoped next action. Pending proposals owned by 
 
 The activity view/export returns the latest 100 visible events. It is a prototype workspace ledger, not a tamper-proof compliance archive. Unauthenticated requests, schema-validation errors, and ordinary navigation are outside its scope; at workspace capacity an additional failure log may be unavailable. Demo walkthroughs keep their own captured step activity and do not write to the persistent workspace.
 
-The UI keeps the original light/green visual style. The institutional designs in `design_revamp/` remain reference material, per the owner's request to revert that theme.
+The UI uses the institutional palette and typography from commit `4e1bd51`, alongside the newer CTA-focused layout and guided walkthroughs. Fonts load from Google Fonts, with system fallbacks when offline. Design references remain in `design_revamp/`.
 
 ## Development checks
 

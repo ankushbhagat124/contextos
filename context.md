@@ -90,3 +90,7 @@ Append an entry in every implementation commit: change, reason, verification, li
 - User authorized pushing to https://github.com/silent-doom/contextos. Existing origin matches that repository.
 - Preserved canonical persona capitalization in overview headings and review instructions, including “QA engineer”.
 - Rechecked Gemini Round 9; style disposition remains unchanged per human direction.
+
+## 2026-10-15 — Restore the chosen heritage theme
+
+User clarified that palette/idea from 4e1bd51 should be restored. Restored that stylesheet and font families, preserving the current action-first extension rules with matching theme tokens. Retained all current JS flows, QA capitalization, persona suggestions and activity logging. CSP permits only the named Google stylesheet/font origins; no inline-style relaxation.

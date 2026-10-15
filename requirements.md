@@ -43,3 +43,5 @@ Show all five implemented personas and their responsibilities, and provide repea
 - Record meaningful workspace actions with actor, persona, timestamp and outcome. Filter activity derived from restricted sources before returning it.
 - Reveal demo steps individually; retain Back/Next, checkpoint evidence and a step activity trail.
 - Reduce introductory copy and show prominent CTAs; keep optional explanation expandable. Restore original styling per user request.
+
+Design clarification (15 October): use the palette and typography from 4e1bd51 with the current shorter CTA-focused interface and persona workflows. This supersedes the original-style rollback requirement above.
