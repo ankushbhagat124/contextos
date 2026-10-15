@@ -150,3 +150,41 @@ def test_static_assets_security_headers_and_missing_client_header(client):
     assert client.get('/api/workspace').headers['cache-control'] == 'no-store'
     client.headers.pop('x-contextos-client')
     assert client.post('/api/persona', json={'role':'security'}).status_code == 403
+
+
+def test_persona_actions_are_attributed_and_recommendations_obey_ownership(client):
+    for role in ('pm','architect','developer','qa','security'):
+        client.post('/api/persona', json={'role':role})
+        state = client.get('/api/workspace').json()
+        task = next(a for a in state['next_actions'] if a['kind']=='task')
+        assert task['query']
+        assert not any(a['kind']=='review' for a in state['next_actions'])
+        run = client.post('/api/tasks',json={'query':task['query'],'budget':6000}).json()
+        assert client.post('/api/activity',json={'action':'manifest_inspected','target_id':run['id']}).status_code == 200
+        state = client.get('/api/workspace').json()
+        event = next(e for e in state['events'] if e['action']=='Task completed' and e['role']==role)
+        assert event['actor']==f'demo-{role}' and event['outcome']=='completed'
+    client.post('/api/persona',json={'role':'developer'})
+    proposal = client.post('/api/proposals',json={'context_id':'ARC-001','base_revision':1,'body':'Use idempotency for safe retries.','reason':'Clarify the contract'}).json()
+    assert not any(a['kind']=='review' for a in client.get('/api/workspace').json()['next_actions'])
+    client.post('/api/proposals/'+proposal['id']+'/review',json={'hash':proposal['hash'],'decision':'approve'})
+    blocked = next(e for e in client.get('/api/workspace').json()['events'] if e['outcome']=='blocked')
+    assert blocked['actor']=='demo-developer' and blocked['role']=='developer'
+    client.post('/api/persona',json={'role':'architect'})
+    action = client.get('/api/workspace').json()['next_actions'][0]
+    assert action['kind']=='review' and action['id']==proposal['id']
+
+
+def test_inspection_logs_enforce_visibility_and_do_not_leak_restricted_work(client):
+    client.post('/api/persona',json={'role':'security'})
+    assert client.post('/api/activity',json={'action':'context_viewed','target_id':'RES-001'}).status_code==200
+    run = client.post('/api/tasks',json={'query':'Internal security finding','budget':10000}).json()
+    client.post('/api/persona',json={'role':'developer'})
+    assert client.post('/api/activity',json={'action':'manifest_inspected','target_id':run['id']}).status_code==404
+    assert client.post('/api/activity',json={'action':'context_viewed','target_id':'RES-001'}).status_code==404
+    view = client.get('/api/workspace').json()
+    assert 'Internal security finding' not in str(view['events'])
+    assert not any(e['action']=='Task completed' for e in view['events'])
+    assert client.post('/api/activity',json={'action':'approved_anything','target_id':'ARC-001'}).status_code==422
+    exported = client.get('/api/export').json()
+    assert exported['events'][0]['action']=='Evidence exported'

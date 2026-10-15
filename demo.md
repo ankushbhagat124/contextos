@@ -38,3 +38,5 @@ Open `http://127.0.0.1:8000/#demo` or select Demo in navigation. Choose Product 
 The cases cover shared-intent handoffs, note extraction rehearsal, manual proposals, review permissions, changed-source impact, restricted retrieval and derived views, stale competing proposals, rollback, budget overflow, rejection, audit provenance and usage transparency. “Try in workspace” switches to the appropriate demo persona and opens the relevant screen with a prepared task prompt when applicable. This mode uses your normal persistent demo workspace; the isolated scenario runner does not.
 
 Live AI/cloud capabilities and deferred roadmap items are separately labeled. Use the interactive tab for local walkthroughs; live Gemini verification is still necessary for the final competition submission.
+
+Guided Demo: choose a case → Start walkthrough → Next step → Finish walkthrough. Back revisits captured checkpoints. Expand Step activity for the revealed persona actions, or Inspect knowledge for source revisions at that step. Overview next-action CTAs use the active persona’s domain ownership and stale work; task submission and publication remain explicit actions.

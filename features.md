@@ -28,3 +28,9 @@ Demo coverage: cross-role handoff; note candidates; manual authoring; owner auth
 | ID | Feature | Status |
 |---|---|---|
 | F12 | GitHub-ready documentation, ignore rules, contribution/security guidance, templates, CI and dependency updates | Prepared locally; hosted CI and publication pending |
+
+| ID | Feature | Status |
+|---|---|---|
+| F13 | Next-action guidance for all five personas, direct CTAs and attributed action ledger | Implemented locally; ownership and privacy tests pass |
+
+F11 now reveals a single checkpoint at a time with Next/Back, actor attribution and an expandable activity record. Original light/green theme restored per user direction.

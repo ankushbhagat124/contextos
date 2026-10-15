@@ -75,3 +75,12 @@ Append an entry in every implementation commit: change, reason, verification, li
 - Added GitHub Actions for offline tests, JavaScript validation, rehearsal, repository hygiene and a container build without publishing; added weekly Dependabot updates. Hosted CI and container build remain unverified.
 - Added scripts/check_repo.py to check candidate Git paths, required documentation and README links. It is explicitly not a content/history secret scanner.
 - No remote, push, deployment or license grant created. Owner chooses repository visibility and license before publication. Gemini Round 6 file unchanged at this milestone.
+
+## 2026-10-15 — Persona actions and a shorter UI
+
+- Followed the user's revert direction: restored the original light/green CSS and system typography while retaining walkthrough controls. Removed external font dependencies and restored self-only CSP styles. Reference prototypes remain untouched.
+- Replaced the overview hero/explanatory panels with a permission-scoped next-action card and direct CTAs. Added role-specific task goals and review/stale-run priority; suggestions never auto-publish or impersonate another role.
+- Collapsed completed review diffs and optional demo persona, knowledge, and scope details. Retained one-step Next/Back walkthroughs with a revealed-step activity log and next persona hint.
+- Added actor/role/outcome/source visibility to audit events. Log tasks, extraction, assembly, inspection, exports, switches and domain-level failures in addition to existing governance actions. Validation/auth failures and simple navigation are not workspace action events.
+- Added tests for all five personas, owner-scoped recommendations, blocked attempts and restricted audit visibility. Updated README workflow, action matrix, logging scope and screenshot.
+- Read Gemini Round 8; its theme adoption is superseded by the user's explicit revert request.

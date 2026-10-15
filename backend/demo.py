@@ -58,7 +58,7 @@ def run_scenario(scenario_id):
             'stale_runs': sum(bool(task.get('stale')) for task in state['tasks'].values()),
         }
         steps.append({'title': title, 'passed': bool(condition), 'detail': detail,
-                      'role': role, 'checkpoint': deepcopy(checkpoint)})
+                      'role': role, 'actor': f'demo-{role}', 'at': d.now(), 'checkpoint': deepcopy(checkpoint)})
 
     def expect_block(title, operation, status):
         try:

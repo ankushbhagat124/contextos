@@ -44,6 +44,11 @@ class IngestInput(Input):
     source: str = Field(min_length=1, max_length=200)
 
 
+class ActivityInput(Input):
+    action: Literal['context_viewed', 'manifest_inspected']
+    target_id: str = Field(min_length=1, max_length=80)
+
+
 class RoleInput(Input):
     role: Literal['pm', 'architect', 'developer', 'qa', 'security']
 
@@ -62,6 +67,21 @@ def create_app(store=None, ai=None):
 
     @app.exception_handler(d.Problem)
     async def problem_handler(request, exc):
+        identity_info = getattr(request.state, 'identity_info', None)
+        # Rejected domain operations roll back their business transaction. Persist
+        # the attributed failure separately, without request content or hidden IDs.
+        if identity_info and request.method == 'POST' and not request.url.path.startswith('/api/demo/'):
+            wid, actor, role = identity_info
+            operation = request.url.path.split('/')[2]
+            outcome = 'blocked' if exc.status in (403, 404, 409, 422, 429) else 'failed'
+            try:
+                app.state.store.mutate(wid, lambda s: d.audit(
+                    s, actor, f'{operation.title()} {outcome}', None,
+                    f'HTTP {exc.status}. No requested change was committed.',
+                    role=role, outcome=outcome, private_role=role))
+            except d.Problem:
+                import logging
+                logging.getLogger(__name__).warning('Audit append unavailable at workspace capacity.')
         return JSONResponse({'detail': exc.message}, status_code=exc.status)
 
     @app.middleware('http')
@@ -87,8 +107,8 @@ def create_app(store=None, ai=None):
             response.set_cookie('contextos_session', request.state.new_session, httponly=True, samesite='strict', secure=bool(os.getenv('K_SERVICE')), max_age=604800)
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'same-origin'
-        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
-        if request.url.path.startswith('/api/'):
+        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        if request.url.path.startswith('/api/') or request.url.path == '/' or request.url.path.startswith('/assets/'):
             response.headers['Cache-Control'] = 'no-store'
         return response
 
@@ -101,7 +121,8 @@ def create_app(store=None, ai=None):
                 role, workspace = claims['contextos_role'], claims['contextos_workspace']
                 if role not in d.ROLES or not isinstance(workspace, str) or not re.fullmatch(r'[a-zA-Z0-9_-]{1,80}', workspace):
                     raise ValueError()
-                return workspace, claims['uid'], role
+                request.state.identity_info = (workspace, claims['uid'], role)
+                return request.state.identity_info
             except Exception as exc:
                 raise d.Problem('Sign in with a provisioned Firebase workspace account.', 401) from exc
         workspace = request.cookies.get('contextos_session', '')
@@ -110,7 +131,8 @@ def create_app(store=None, ai=None):
             request.state.new_session = workspace
         state = app.state.store.read(workspace)
         role = state['role']
-        return workspace, f'demo-{role}', role
+        request.state.identity_info = (workspace, f'demo-{role}', role)
+        return request.state.identity_info
 
     def reserve(workspace, role, sources, kind):
         run_id = d.uid('CALL')
@@ -155,16 +177,21 @@ def create_app(store=None, ai=None):
     @app.get('/api/workspace')
     def workspace(request: Request, response: Response):
         wid, actor, role = identity(request, response)
-        result = d.snapshot(app.state.store.read(wid), role)
-        result.update(actor=actor, ai_mode=app.state.ai.mode, auth_mode=auth_mode)
+        current = app.state.store.read(wid)
+        result = d.snapshot(current, role)
+        result.update(actor=actor, ai_mode=app.state.ai.mode, auth_mode=auth_mode,
+                      next_actions=d.next_actions(current, role, actor))
         return result
 
     @app.post('/api/persona')
     def persona(data: RoleInput, request: Request, response: Response):
-        wid, _, _ = identity(request, response)
+        wid, actor, previous_role = identity(request, response)
         if auth_mode != 'demo':
             raise d.Problem('Persona switching is only available in the synthetic demo.', 403)
-        app.state.store.mutate(wid, lambda s: s.update(role=data.role))
+        def switch(s):
+            s.update(role=data.role)
+            d.audit(s, actor, 'Persona switched', None, f'{previous_role} → {data.role}', role=previous_role)
+        app.state.store.mutate(wid, switch)
         return {'role': data.role}
 
     @app.post('/api/proposals')
@@ -181,8 +208,13 @@ def create_app(store=None, ai=None):
 
     @app.post('/api/assemble')
     def assemble(data: TaskInput, request: Request, response: Response):
-        wid, _, role = identity(request, response)
-        return d.assemble(app.state.store.read(wid), role, data.query, data.budget)
+        wid, actor, role = identity(request, response)
+        def assemble_context(s):
+            result = d.assemble(s, role, data.query, data.budget)
+            d.audit(s, actor, 'Context assembled', None, f"{len(result['sources'])} accepted sources selected.",
+                    role=role, source_ids=[x['id'] for x in result['sources']])
+            return result
+        return app.state.store.mutate(wid, assemble_context)
 
     @app.post('/api/tasks')
     def task(data: TaskInput, request: Request, response: Response):
@@ -197,10 +229,16 @@ def create_app(store=None, ai=None):
                 run['stale'] = any(s['contexts'][x['id']]['revision'] != x['revision'] for x in manifest['sources'])
                 s['tasks'][run['id']] = deepcopy(run)
                 finish_usage(s, call_id, usage)
+                d.audit(s, actor, 'Task completed', None, f"Run {run['id']} · {len(manifest['sources'])} sources",
+                        role=role, source_ids=[x['id'] for x in manifest['sources']])
             app.state.store.mutate(wid, save)
             return run
         except Exception as exc:
-            app.state.store.mutate(wid, lambda s: finish_usage(s, call_id, usage or getattr(exc, 'usage', None), failed=True))
+            def failed(s):
+                finish_usage(s, call_id, usage or getattr(exc, 'usage', None), failed=True)
+                d.audit(s, actor, 'Model processing failed', None, 'Inspect usage and retry when available.',
+                        role=role, outcome='failed', private_role=role)
+            app.state.store.mutate(wid, failed)
             raise
 
     @app.post('/api/ingest')
@@ -215,16 +253,41 @@ def create_app(store=None, ai=None):
             def save(s):
                 result = d.propose(s, actor, role, validated.model_dump())
                 finish_usage(s, call_id, usage)
+                d.audit(s, actor, 'Notes extracted', result.get('context_id'), 'Candidate sent for independent review.',
+                        role=role, private_role=role)
                 return result
             return app.state.store.mutate(wid, save)
         except Exception as exc:
-            app.state.store.mutate(wid, lambda s: finish_usage(s, call_id, usage or getattr(exc, 'usage', None), failed=True))
+            def failed(s):
+                finish_usage(s, call_id, usage or getattr(exc, 'usage', None), failed=True)
+                d.audit(s, actor, 'Model processing failed', None, 'Inspect usage and retry when available.',
+                        role=role, outcome='failed', private_role=role)
+            app.state.store.mutate(wid, failed)
             raise
 
     @app.get('/api/export')
     def export(request: Request, response: Response):
-        wid, _, role = identity(request, response)
-        return d.snapshot(app.state.store.read(wid), role)
+        wid, actor, role = identity(request, response)
+        def export_visible(s):
+            d.audit(s, actor, 'Evidence exported', None, 'Exported the persona-visible workspace.', role=role, private_role=role)
+            return d.snapshot(s, role)
+        return app.state.store.mutate(wid, export_visible)
+
+    @app.post('/api/activity')
+    def activity(data: ActivityInput, request: Request, response: Response):
+        wid, actor, role = identity(request, response)
+        def record(s):
+            if data.action == 'context_viewed':
+                item = d.context(s, data.target_id, role)
+                d.audit(s, actor, 'Context inspected', item['id'], f"{item['title']} · v{item['revision']}", role=role)
+            else:
+                task = s['tasks'].get(data.target_id)
+                if not task or not d.task_visible(s, task, role):
+                    raise d.Problem('Run not found or unavailable.', 404)
+                d.audit(s, actor, 'Manifest inspected', None, f"Run {data.target_id}", role=role,
+                        source_ids=[x['id'] for x in task['manifest']['sources']])
+            return {'recorded': True}
+        return app.state.store.mutate(wid, record)
 
     @app.get('/favicon.ico', include_in_schema=False)
     def favicon():

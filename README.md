@@ -6,7 +6,7 @@ ContextOS is a shared, governed memory workspace for software teams and their AI
 
 > **Status:** Working local hackathon prototype. Offline rehearsal is the default. Live Gemini, Firebase, Firestore, and Google Cloud deployment require separate verification. This repository does not claim production readiness or measured productivity savings.
 
-![ContextOS workspace](artifacts/contextos-desktop.jpg)
+![ContextOS workspace](artifacts/contextos-actions.jpg)
 
 ## Why ContextOS?
 
@@ -16,7 +16,7 @@ A requirement should survive the handoff from a product conversation to implemen
 - **Bounded retrieval:** Permission filtering, mandatory constraints, explicit context budgets, and exact source manifests.
 - **Change awareness:** Dependency-based stale-run alerts, fresh reruns, and rollback through new revisions.
 - **Inspectable behavior:** Review comparisons, history, attributable audit events, and separate estimates/provider usage.
-- **Interactive demo:** Five personas and twelve executable scenarios with computed checks and evidence.
+- **Interactive demo:** Five personas and twelve step-by-step walkthroughs with Next/Back, captured checkpoints, and a step activity log.
 
 ## Quick start
 
@@ -46,13 +46,31 @@ Offline answers are explicitly labeled deterministic source briefings. To config
 
 ## Try the complete workflow
 
-1. Open **Demo** and choose a persona, or select **Run all 12 cases**. These scenarios are isolated, make no model calls, and leave your workspace unchanged.
+1. Open **Overview** and use your persona’s **Next action** card, or open **Demo → Start walkthrough**. Advance one step at a time with **Next step**, revisit with **Back**, then finish. **Verify all 12 cases** runs the checks in bulk.
 2. Choose **Try in workspace** to explore the corresponding persistent workflow.
 3. As **Developer**, run a payment-retry task and inspect its source manifest.
 4. Propose an architecture revision; switch to **Architect** to review and publish it.
 5. Inspect the previous task's stale warning, then rerun with the updated source.
 
 The Demo tab also covers note ingestion, manual authoring, restricted access, stale competing proposals, rejection, rollback, mandatory budget constraints, audit history, and truthful usage reporting. [Demo guide →](demo.md)
+
+## Persona actions and next steps
+
+Overview leads with a permission-scoped next action. Pending proposals owned by your persona come first, followed by your stale runs and a relevant task. CTAs open a review or prepare a task; publication still requires an explicit independent owner decision.
+
+| Persona | Work to do | Review authority |
+|---|---|---|
+| Product manager | Define acceptance criteria; propose product decisions | Requirements |
+| Architect | Assess design tradeoffs; propose architecture | Architecture |
+| Developer | Prepare implementation work from accepted contracts | Implementation |
+| QA engineer | Plan tests; refresh work after source changes | Quality |
+| Security | Inspect guardrails and restricted findings | Security |
+
+**Context insights → Persona activity** records actor, persona, action, timestamp, and outcome. Proposals, publication, rejection, tasks, context assembly, topic/manifest inspections, extraction, exports, and demo persona switches are logged. Domain-level blocked attempts and model-processing failures are recorded too. Restricted sources and derived activity remain permission-filtered.
+
+The activity view/export returns the latest 100 visible events. It is a prototype workspace ledger, not a tamper-proof compliance archive. Unauthenticated requests, schema-validation errors, and ordinary navigation are outside its scope; at workspace capacity an additional failure log may be unavailable. Demo walkthroughs keep their own captured step activity and do not write to the persistent workspace.
+
+The UI keeps the original light/green visual style. The institutional designs in `design_revamp/` remain reference material, per the owner's request to revert that theme.
 
 ## Development checks
 
@@ -67,7 +85,7 @@ node --check web/app.js
 
 Windows: use `.\.venv\Scripts\python.exe -m pytest -q` and the same Python executable for the helper scripts.
 
-**39 automated tests passed locally**, plus browser walkthroughs at mobile and desktop widths. Google service calls are mocked in adapter tests. [Verification details and limits →](TESTING.md)
+**42 automated tests passed locally**, plus browser walkthroughs at mobile and desktop widths. Google service calls are mocked in adapter tests. [Verification details and limits →](TESTING.md)
 
 GitHub Actions is configured to run tests, repository checks, JavaScript syntax validation, and a Linux container build after the repository is pushed. The hosted workflow has **not yet run**; its presence is not evidence of a successful Linux/cloud deployment.
 

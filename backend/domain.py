@@ -39,8 +39,11 @@ def context(state, cid, role):
     return item
 
 
-def audit(state, actor, action, cid, detail):
-    state['events'].append({'id': uid('EVT'), 'at': now(), 'actor': actor, 'action': action, 'context_id': cid, 'detail': detail})
+def audit(state, actor, action, cid, detail, *, role=None, outcome='completed', source_ids=None, private_role=None):
+    state['events'].append({'id': uid('EVT'), 'at': now(), 'actor': actor,
+                            'role': role, 'action': action, 'context_id': cid,
+                            'detail': detail, 'outcome': outcome,
+                            'source_ids': list(source_ids or []), 'private_role': private_role})
 
 
 def seed():
@@ -85,7 +88,7 @@ def propose(state, actor, role, data):
     proposal = {'id': uid('PRP'), 'context_id': cid, 'base_revision': data.get('base_revision', 0), 'title': title, 'domain': domain, 'body': body, 'reason': data['reason'], 'sources': data.get('sources', []), 'author': actor, 'author_role': role, 'status': 'pending', 'created_at': now()}
     proposal['hash'] = digest(proposal)
     state['proposals'][proposal['id']] = proposal
-    audit(state, actor, 'Change proposed', cid, title)
+    audit(state, actor, 'Change proposed', cid, title, role=role)
     return deepcopy(proposal)
 
 
@@ -114,7 +117,7 @@ def review(state, actor, role, pid, expected_hash, decision):
         raise Problem('This proposal has already been reviewed.', 409)
     if decision == 'reject':
         p.update(status='rejected', reviewer=actor, reviewed_at=now())
-        audit(state, actor, 'Change rejected', p['context_id'], p['title'])
+        audit(state, actor, 'Change rejected', p['context_id'], p['title'], role=role)
         return deepcopy(p)
     cid = p['context_id']
     if cid:
@@ -135,7 +138,7 @@ def review(state, actor, role, pid, expected_hash, decision):
     for task in state['tasks'].values():
         if any(s['id'] in affected for s in task['manifest']['sources']):
             task['stale'] = True
-    audit(state, actor, 'Revision published', cid, f"{item['title']} → v{item['revision']}")
+    audit(state, actor, 'Revision published', cid, f"{item['title']} → v{item['revision']}", role=role)
     return deepcopy(p)
 
 
@@ -182,6 +185,42 @@ def snapshot(state, role):
         item = allowed.get(p['context_id'])
         p['before'] = next((h['body'] for h in item['history'] if h['revision'] == p['base_revision']), '') if item else ''
     tasks = [deepcopy(t) for t in state['tasks'].values() if task_visible(state, t, role)]
-    events = [deepcopy(e) for e in state['events'] if not e['context_id'] or e['context_id'] in allowed]
+    events = [deepcopy(e) for e in state['events']
+              if (not e['context_id'] or e['context_id'] in allowed)
+              and all(cid in allowed for cid in e.get('source_ids', []))
+              and (not e.get('private_role') or e['private_role'] == role)]
+    for event in events:
+        legacy_role = event['actor'].removeprefix('demo-')
+        if not event.get('role') and legacy_role in ROLES:
+            event['role'] = legacy_role
     usage = [u for u in state['usage'] if all(cid in allowed for cid in u.get('source_ids', [])) and (not u.get('private_role') or u['private_role'] == role)]
     return {'project': state['project'], 'role': role, 'contexts': list(allowed.values()), 'proposals': proposals, 'tasks': tasks, 'events': events[-100:][::-1], 'usage': usage}
+
+
+TASK_GOALS = {
+    'pm': 'Define acceptance criteria for safe payment retries and declined-card messages',
+    'architect': 'Review payment retry architecture and idempotency tradeoffs',
+    'developer': 'Implement payment retries using the accepted API contract',
+    'qa': 'Create tests for payment retries, duplicate requests and declined cards',
+    'security': 'Review payment data guardrails and internal security findings',
+}
+
+
+def next_actions(state, role, actor):
+    """Permission-scoped suggestions only; every execution keeps its normal gate."""
+    view = snapshot(state, role)
+    actions = []
+    owned = [p for p in view['proposals'] if p['status'] == 'pending'
+             and OWNERS[p['domain']] == role and p['author'] != actor]
+    if owned:
+        actions.append({'kind': 'review', 'id': owned[0]['id'], 'label': 'Review proposal',
+                        'title': owned[0]['title'], 'reason': 'You own this domain and can independently review it.'})
+    stale = [t for t in view['tasks'] if t['role'] == role and t['stale']]
+    if stale:
+        actions.append({'kind': 'rerun', 'id': stale[-1]['id'], 'label': 'Review & refresh run',
+                        'title': stale[-1]['query'], 'reason': 'Accepted sources changed. Inspect the old run before refreshing it.'})
+    actions.append({'kind': 'task', 'label': 'Start task', 'title': TASK_GOALS[role],
+                    'query': TASK_GOALS[role], 'reason': 'Use the latest accepted knowledge available to your persona.'})
+    actions.append({'kind': 'create', 'label': 'Propose knowledge', 'title': 'Capture a decision',
+                    'reason': 'Create a candidate for independent owner review.'})
+    return actions

@@ -82,3 +82,11 @@ User requested a complete local demo center. Open /#demo: all five implemented p
 ## GitHub preparation (latest task)
 
 Local repository now includes README, expanded .gitignore, .editorconfig, .gitattributes, CONTRIBUTING.md, SECURITY.md, GITHUB_READY.md, issue/PR templates, CI and Dependabot. Run `python scripts/check_repo.py` for path/link hygiene. CI is configured but has not run on GitHub; Docker build remains unverified locally. No license was selected and no remote was created. See GITHUB_READY.md for publication decisions and checks. Local commits use the user's requested author.
+
+## Latest: action-focused UI and persona ledger — 15 October
+
+Latest user wants updated README, actions logged for all personas, scoped next actions, and fewer words/more CTAs. Restored the original light/green design because the user explicitly rejected the institutional theme; do not reapply it from Gemini Round 8. Overview now has server-derived next_actions (owner review → own stale run → role task → proposal). Buttons open explicit work and retain all authorization checks.
+
+Audit now includes role/outcome/source visibility, tasks, assembly, inspection, extraction, export, persona switches and domain-level blocked/failed requests. Inspect via Context insights → Persona activity. Only latest 100 visible events returned; not an external compliance archive. /api/activity accepts only validated context/manifest inspection actions. Demo checkpoints have an independent revealed-step activity list. README updated with persona matrix and new screenshot. 42 tests pass.
+
+Latest Gemini read: Round 9. Its style-regression alert was explicitly declined because it conflicts with the human revert instruction; disposition in chatgpt.md. Reviewer file is untouched by the builder.

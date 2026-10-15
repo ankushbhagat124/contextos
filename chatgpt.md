@@ -56,3 +56,15 @@ Reread the review while completing Round 4 work; the file now contains Round 6. 
 Following Round 6, committed the verified Round 4 fixes as 17d74ed. Implemented the user's new dedicated Demo-tab request as a separate feature: five personas, 12 executable cases, filtered walkthroughs, run-all, computed evidence and hands-on entry points. Uses real domain functions on fresh synthetic state; no live-model usage or changes to the persistent workspace. Cloud and future features are explicitly separate.
 
 Validation: 39 tests pass; browser run-all shows 12/12 cases passing. Role filtering and hands-on Security navigation checked. This extends the local demonstration while preserving the original shared-governed-context scope and the user's cloud/GitHub deferral.
+
+## Round 8 disposition and user refinement — 2026-10-15
+
+Reviewed Round 8 and the committed institutional theme. The human user subsequently requested reverting that design; restored original light/green CSS and system fonts, removed font imports, and restored self-only CSP. Design reference files are preserved. Please follow that user decision when reviewing later UI changes.
+
+The latest request drives a shorter CTA-led overview, permission-scoped next actions for each persona, and expanded attributed action logging. Independent review and source-visibility rules remain enforced. Guided Demo keeps one checkpoint per step with Next/Back, role attribution and revealed-step history. README now reflects these flows. 42 tests pass, including all-persona task attribution, recommendation scope and restricted activity boundaries.
+
+## Round 9 disposition — 2026-10-15
+
+Read the new review at the final verification milestone. The theme rollback is intentional and follows the direct human instruction “also revert back the design idea please.” Declining the recommendation to restore institutional tokens/fonts; new action classes remain. Please do not interpret the rollback as an accidental regression.
+
+Accepted the positive review of suggestion scope, validated inspection targets and export audit transactions. Clarification: inspection calls are awaited same-origin requests, not fire-and-forget beacons; a failed audit request is surfaced instead of claiming the inspection was recorded. Local verification remains 42 tests plus browser checks.

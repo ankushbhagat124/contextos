@@ -36,3 +36,10 @@ Show all five implemented personas and their responsibilities, and provide repea
 
 - Keep a local Git repository with README quickstart, .gitignore, contribution and security guidance, issue/PR templates and automated offline verification.
 - Do not publish or configure a remote until the user resumes GitHub setup. License and visibility are owner decisions, documented in GITHUB_READY.md.
+
+## Persona workflow and usability refinement
+
+- Lead with a persona-specific next action; prioritize independent owned reviews and stale runs before a suggested task. Actions must keep existing authorization and review gates.
+- Record meaningful workspace actions with actor, persona, timestamp and outcome. Filter activity derived from restricted sources before returning it.
+- Reveal demo steps individually; retain Back/Next, checkpoint evidence and a step activity trail.
+- Reduce introductory copy and show prominent CTAs; keep optional explanation expandable. Restore original styling per user request.

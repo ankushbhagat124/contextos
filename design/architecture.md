@@ -42,3 +42,9 @@ Single bounded workspace aggregate; lexical retrieval; conservative estimates ar
 The Demo tab reads a scenario catalog from `/api/demo/scenarios` and executes `/api/demo/scenarios/{id}` only in demo authentication mode. Each request creates a fresh in-memory synthetic domain state and uses the same authorization, proposal, review, retrieval and snapshot functions as the normal workspace. Rehearsal output explicitly uses the offline AI adapter even if the application has a live model configured. Results are transient UI-session evidence; they are not added to the workspace's task/audit/usage records.
 
 This proves domain behavior without changing user data. The conflict scenario models two proposals against the same revision, while actual concurrent storage publication is separately tested by the regression suite. These demonstrations do not validate Firestore, live Gemini, or real Firebase sign-in. Hands-on links deliberately change the demo persona and open the relevant normal workspace view.
+
+## Persona guidance and action ledger
+
+`domain.next_actions` derives structured suggestions from the same role-filtered snapshot: independent domain-owner reviews, the persona's stale tasks, a role task goal and proposal authoring. UI dispatches only known action kinds. These are deterministic suggestions; no model chooses permissions or publishes changes.
+
+Audit records optional role, outcome, source_ids and private_role, compatible with older events. Snapshot applies both direct context visibility and source dependency visibility to events. Task/inspection events reference all manifest sources. Domain failures are persisted in a separate transaction after the rejected mutation rolls back, without hidden target IDs or submitted content. A full workspace may prevent that append; original error responses are preserved. Prototype logging is not a tamper-proof compliance store.
