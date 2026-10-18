@@ -1,11 +1,11 @@
 # Person 3 task backlog
 
-Proposed tasks; select provider-specific files/contracts after module-map review. Acceptance criteria are in PERSON3_DELIVERY.md.
+Selected stack: Firebase Auth + Firestore + Cloud Run. Provider contract: design/specs/identity.md. Acceptance criteria are in PERSON3_DELIVERY.md.
 
 - [x] P3-S00: Review module map and choose persistence/auth stack. Verify: owner decision recorded.
 - [x] P3-S01: Specify provider config + identity/session contracts. Verify: trusted membership and logout/expiry cases enumerated; no client role authority.
-- [ ] P3-S02: Implement login/logout vertical slice. Verify: mock rejection suite + provider test-account browser flow (P3-01/02).
-- [ ] P3-S03: Add selected store contract tests and fail-closed configuration. Verify: transaction rollback and one-winner concurrency (P3-03).
+- [ ] P3-S02: Login/logout code and mocked checks complete; live account/browser verification pending. Verify: mock rejection suite + provider test-account browser flow (P3-01/02).
+- [ ] P3-S03: Fail-closed config and clean initialization complete; live Firestore contract/concurrency run pending. Verify: transaction rollback and one-winner concurrency (P3-03).
 - [ ] P3-S04: Integrate/provision staging store. Verify: redeploy, two-instance visibility, separate-workspace restore; no real data migration without a plan.
 - [ ] P3-S05: Finish context/editor and review recovery UX. Verify: draft preservation and owner CTA scope (P3-04/06).
 - [ ] P3-S06: Add dedicated relationship screen with accessible list. Verify: restricted-node and keyboard fixtures (P3-05).

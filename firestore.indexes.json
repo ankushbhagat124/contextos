@@ -1,0 +1,10 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "contextos_workspaces",
+      "fieldPath": "payload",
+      "indexes": []
+    }
+  ]
+}

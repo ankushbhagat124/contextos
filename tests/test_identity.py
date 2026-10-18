@@ -100,3 +100,15 @@ def test_demo_never_exposes_firebase_login(tmp_path,monkeypatch):
     assert config['auth_mode']=='demo' and not config['login_ready']
     assert config['firebase_api_key'] is None
     assert c.post('/api/auth/session',json={'id_token':'recent-valid'}).status_code==403
+
+
+def test_logout_clears_browser_cookie_even_if_audit_storage_fails(firebase_client,monkeypatch):
+    c=firebase_client;csrf(c)
+    c.post('/api/auth/session',json={'id_token':'recent-valid'})
+    def unavailable(*args):
+        raise RuntimeError('Storage temporarily unavailable')
+    monkeypatch.setattr(c.app.state.store,'mutate',unavailable)
+    response=c.post('/api/auth/logout',json={})
+    assert response.status_code==200
+    assert 'Max-Age=0' in response.headers['set-cookie']
+    assert c.get('/api/workspace').status_code==401

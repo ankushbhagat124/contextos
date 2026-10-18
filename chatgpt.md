@@ -86,3 +86,7 @@ Rechecked the latest skills audit while scoping UI/auth/deployment ownership. Th
 ## Selected Firebase stack / first identity slices — 2026-10-18
 
 Owner selected Firebase Auth + Firestore + Cloud Run. Implemented and tested protected-session backend and normal sign-in/logout UI without changing persona authority. 50 Python tests + 4 Node auth contract tests pass. Local browser verified missing-config entry screen and preserved offline Demo flow. Real Firebase accounts, ADC/project configuration and live Firestore/deployment evidence remain open; no cloud setup is claimed.
+
+Persistence checkpoint: selected Firestore path now validates configuration and initializes new real workspaces without synthetic data. Existing data is preserved. Prepared client-deny rules/index exclusions and separate verification script; no live project credentials or datastore access were used. Five configuration tests added, for 55 Python + 4 Node checks.
+
+Final local verification: 56 Python + 4 Node tests pass, including logout with unavailable audit storage. Latest Gemini audit unchanged; theme/CSP retained, live cloud gate not claimed complete.

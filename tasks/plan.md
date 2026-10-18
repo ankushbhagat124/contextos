@@ -1,7 +1,7 @@
 # Person 3 delivery sequence — proposed
 
 Source: [capability map and acceptance backlog](../PERSON3_DELIVERY.md).
-Status: map awaiting human review; no production auth, schema or infrastructure changes authorized by this draft.
+Status: owner selected Firebase Auth + Firestore + Cloud Run. Session backend/UI implemented locally; live auth, persistence and infrastructure verification pending target project.
 
 1. Confirm module map and persistence choice. Draft provider-specific identity and store contracts.
 2. Ship real login/session/logout as one verified slice, retaining offline demo access as a separate mode.

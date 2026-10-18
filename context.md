@@ -109,3 +109,7 @@ Owner selected Firebase Auth + Firestore + Cloud Run. Added identity contract an
 ## 2026-10-18 — P3 sign-in UI slice
 
 Replaced the developer token-entry bridge with an email/password sign-in screen, protected-cookie exchange and sign-out. Firebase mode hides demo persona selection. Logout/401/page-cache restoration clears protected content, dialogs and drafts. Added web/auth.js with no persisted credentials, four Node contract tests and CI coverage. Browser verified Firebase missing-config entry screen and demo-mode regression; no real login claimed.
+
+## 2026-10-18 — Selected persistence configuration slice
+
+Added clean authenticated-workspace initialization without synthetic knowledge, preserved existing data, made unknown backend/missing Firestore project settings fail explicitly, and retained the Cloud Run SQLite guard. Added five config/init tests. Prepared Firestore client-deny rules, payload index exclusions and a separate live/emulator verification script; only its CLI help was exercised, no cloud writes occurred. 55 Python + 4 Node tests pass.

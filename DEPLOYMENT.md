@@ -33,7 +33,8 @@ Prerequisites: a user-selected billing-enabled Google Cloud project, Firestore N
 The Dockerfile listens on `$PORT` and runs as a non-root user. Cloud Run startup refuses SQLite because its filesystem is ephemeral. Configure:
 
 ```text
-AUTH_MODE=demo
+AUTH_MODE=firebase
+FIREBASE_WEB_API_KEY=<public Firebase web key>
 AI_MODE=vertex
 STORE_BACKEND=firestore
 GOOGLE_CLOUD_PROJECT=<selected project>
@@ -49,7 +50,7 @@ gcloud run deploy contextos \
   --project YOUR_PROJECT_ID \
   --region asia-south1 \
   --service-account contextos-runtime@YOUR_PROJECT_ID.iam.gserviceaccount.com \
-  --set-env-vars AUTH_MODE=demo,AI_MODE=vertex,STORE_BACKEND=firestore,GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID,GOOGLE_CLOUD_LOCATION=global,GEMINI_MODEL=gemini-2.5-flash \
+  --set-env-vars AUTH_MODE=firebase,AI_MODE=vertex,STORE_BACKEND=firestore,GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID,GOOGLE_CLOUD_LOCATION=global,GEMINI_MODEL=gemini-2.5-flash \
   --memory 512Mi --cpu 1 --max-instances 2 --timeout 120 \
   --no-allow-unauthenticated
 ```
@@ -88,3 +89,23 @@ A live provider test account, correct project ID and working ADC are still neede
 - [ ] Prototype remains available during evaluation.
 
 References: [Google Gen AI SDK](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/sdks/overview), [Cloud Run](https://cloud.google.com/run/docs), [Firestore](https://firebase.google.com/docs/firestore). Confirm current deployment prerequisites against official documentation when configuring the project.
+
+## Selected Firestore integration
+
+New authenticated workspaces start empty; only demo workspaces seed synthetic checkout data. Changing modes never deletes or replaces existing workspace records. Use separate Firestore projects/collections or fresh workspace IDs when transitioning from synthetic demos to real members.
+
+`firebase.json`, `firestore.rules` and `firestore.indexes.json` prepare client access rules and exclude the aggregate payload from indexing. Deploy them explicitly to the selected project with Firebase CLI after reviewing the target:
+
+```sh
+firebase deploy --only firestore:rules,firestore:indexes --project YOUR_PROJECT_ID
+```
+
+Client rules deny direct browser reads/writes. The FastAPI server SDK uses its runtime service account and IAM; these rules do not replace backend membership/role checks. Do not deploy this deny-all rule set into an unrelated shared project. No .firebaserc default project is committed.
+
+After Firestore Native mode, ADC and IAM are configured, run:
+
+```sh
+.venv/bin/python scripts/verify_firestore.py --project YOUR_PROJECT_ID
+```
+
+This explicitly creates and retains a separately named synthetic verification workspace. It checks two clients/recreated client visibility, competing approvals and preserved stale snapshots. It is also usable with a configured Firestore emulator. The script has not been run against a live project here; it does not prove deployed multi-instance behavior or backups/restoration. Record its workspace ID and clean up according to the selected environment's retention policy.

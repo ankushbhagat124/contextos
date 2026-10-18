@@ -1,6 +1,6 @@
 # Person 3 — UI, identity, persistence and reliable operation
 
-Date: 18 October 2026 · Status: proposed capability map and acceptance backlog, awaiting owner review.
+Date: 18 October 2026 · Status: Firebase Auth + Firestore + Cloud Run selected by owner; implementation underway.
 
 Primary question: **Can an authorized user sign in, find their next action, do governed work, inspect its sources, and return after a deployment without losing it?**
 
@@ -9,12 +9,12 @@ This document defines the next workstream. It does not claim these gaps are impl
 ## Current evidence
 
 - Implemented locally: dashboard with scoped next actions; searchable accepted topics; proposal editor; independent review/diffs/history; standalone task runs; source inspector; activity and evidence export; isolated step-by-step Demo.
-- Firebase signed-token/claim checks exist in the API with mocked tests. The UI currently offers a developer token-entry bridge, not a normal login/logout experience.
+- Firebase session-cookie exchange, email/password login/logout UI and token/claim checks are implemented with mocked tests. Real provider sign-in is not yet verified.
 - SQLite is the working local store. Firestore adapter exists, uses atomic aggregate transactions, and has not been verified live. No Supabase adapter exists.
 - Relationships appear as dependency buttons in Insights; no dedicated interactive relationship view exists.
 - Tasks are individual runs, not persisted multi-turn conversations.
 - CI is configured; hosted CI, container, cloud deployment, real auth, monitoring and restore evidence must be inspected or produced rather than assumed.
-- Latest local verification: 42 tests passed on 15 October; rerun appropriate checks during implementation. No changes to auth/storage runtime in this planning increment.
+- Latest local verification: 56 Python tests and 4 Node auth contract tests pass on 18 October. Identity/UI and storage configuration slices are implemented; cloud resources and live behavior are unverified.
 
 ## Capability map
 
@@ -31,7 +31,7 @@ Provider APIs and data contracts will be specified after this map is reviewed. A
 
 Build order: identity + chosen persistence path → workspace-ui → task-experience → operations → release-evidence. Existing standalone offline rehearsal remains usable between increments. Implement one tested vertical slice per commit; deployment has an additional live verification gate.
 
-## Proposed stack and decision
+## Selected stack and alternatives
 
 **Recommended first release: Firebase Authentication + Firestore + Cloud Run + Vertex AI.** This extends the existing code and avoids changing both identity and storage on the submission day. The supplied event notes require Google AI and hosting on Cloud Run/GCP/Firebase; a Supabase database alone would not satisfy the hosting requirement.
 
@@ -41,7 +41,7 @@ Build order: identity + chosen persistence path → workspace-ui → task-experi
 | Supabase Auth + Postgres; app on Cloud Run | FastAPI/domain rules, UI and Google model adapter | Supabase verified identity mapping, transactional Postgres store, schema/migrations, pooling and policy verification | SQL and Supabase are explicit product priorities |
 | Firebase Auth + Cloud SQL for PostgreSQL | Existing identity checks and Google hosting | SQL adapter, schema/migrations, IAM/connection/pool configuration | Relational database required with Google-managed operations |
 
-Do not implement multiple new database paths at once. No provider selected by this proposal; owner answer controls implementation. SQLite stays the local demo/test backend.
+Do not implement multiple new database paths at once. Owner selected Firebase Auth + Firestore + Cloud Run. Supabase/Postgres remains an evaluated alternative, not an active implementation path. SQLite stays the local demo/test backend.
 
 For a Supabase MVP, keep privileged database credentials only in the server. The browser uses identity APIs; business writes still pass through FastAPI governance. A server key that bypasses RLS does not replace backend tenant/role checks. Initially preserve the bounded workspace aggregate and atomic mutation semantics; normalization is a later, explicitly designed migration. If using Data API RPC, publication must be one transactional compare-and-write operation, not separate GET/PATCH calls. If using direct PostgreSQL, require TLS, parameterized queries and transaction-safe connection pooling. Unknown STORE_BACKEND values must fail closed instead of silently selecting SQLite.
 

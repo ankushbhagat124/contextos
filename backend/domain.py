@@ -63,6 +63,14 @@ def seed():
     return state
 
 
+def empty_workspace():
+    """Real accounts start with no synthetic project knowledge."""
+    state = {'contexts': {}, 'proposals': {}, 'tasks': {}, 'events': [], 'usage': [],
+             'role': 'developer', 'project': {'name': 'Your workspace', 'description': '', 'id': 'workspace'}}
+    audit(state, 'system', 'Workspace created', None, 'Empty authenticated workspace initialized.')
+    return state
+
+
 def digest(proposal):
     return sha256(json.dumps({k: proposal[k] for k in ('context_id', 'base_revision', 'title', 'domain', 'body', 'reason', 'sources')}, sort_keys=True).encode()).hexdigest()
 

@@ -87,7 +87,7 @@ node --test tests/browser_auth.test.cjs
 
 Windows: use `.\.venv\Scripts\python.exe -m pytest -q` and the same Python executable for the helper scripts.
 
-**50 Python tests and 4 browser-auth contract tests passed locally**, plus browser walkthroughs at mobile and desktop widths. Google service calls are mocked in adapter tests. [Verification details and limits →](TESTING.md)
+**56 Python tests and 4 browser-auth contract tests passed locally**, plus browser walkthroughs at mobile and desktop widths. Google service calls are mocked in adapter tests. [Verification details and limits →](TESTING.md)
 
 GitHub Actions is configured to run tests, repository checks, JavaScript syntax validation, and a Linux container build after the repository is pushed. The latest hosted workflow outcome is **not verified in this session**; its configuration alone is not evidence of a successful Linux/cloud deployment.
 
