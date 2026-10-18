@@ -46,6 +46,8 @@ Show all five implemented personas and their responsibilities, and provide repea
 
 Design clarification (15 October): use the palette and typography from 4e1bd51 with the current shorter CTA-focused interface and persona workflows. This supersedes the original-style rollback requirement above.
 
+Collaboration verification (18 October): provide one repeatable API scenario for two distinct authenticated members sharing an accepted decision, independent review/audit, exact source revisions, stale warnings, fresh-session persistence and logout. Local mocks and explicit offline runs must remain distinct from live evidence; verifier output must exclude credentials and content. Cloud project selection/setup is deferred by the user.
+
 ## Person 3 workstream — 18 October
 
 See PERSON3_DELIVERY.md for the proposed capability map and measurable acceptance criteria, P3-01 through P3-11. Real sign-in/session/logout, authoritative identity handoff, managed persistence, relationship UI, conversation UX, dedicated activity, readiness, CI promotion, secrets, monitoring and judge access are tracked separately. Preserve current governance/privacy and the selected 4e1bd51 theme. Provider selection is open: recommend Firebase/Firestore/Cloud Run to reuse existing adapters; Supabase Auth/Postgres on Cloud Run is an explicit alternative. No cloud resources are provisioned by this planning task.

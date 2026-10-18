@@ -113,3 +113,11 @@ Replaced the developer token-entry bridge with an email/password sign-in screen,
 ## 2026-10-18 — Selected persistence configuration slice
 
 Added clean authenticated-workspace initialization without synthetic knowledge, preserved existing data, made unknown backend/missing Firestore project settings fail explicitly, and retained the Cloud Run SQLite guard. Added five config/init tests. Prepared Firestore client-deny rules, payload index exclusions and a separate live/emulator verification script; only its CLI help was exercised, no cloud writes occurred. 55 Python + 4 Node tests pass.
+
+## 2026-10-18 — First enhancement slice: collaboration verification
+
+- User authorized incremental product enhancements with small, architecturally focused slices; subsequently deferred Google Cloud project selection/setup until we can do it together.
+- Added an external API verifier with an injected HTTP-client factory. It exchanges two Firebase ID tokens for independent cookie sessions and verifies shared decisions, denied author approval, independent publication/audit, original vs refreshed manifests, stale warnings, fresh-session history and logout. Existing domain/identity/store rules remain authoritative.
+- Tokens enter through operator environment variables; redirects are not followed, staging uses HTTPS except loopback, output excludes credentials/content, and offline rehearsal requires an explicit flag. Synthetic verification records are retained; live mode can make two billable calls.
+- Added ten regression cases. Full validation: 66 Python tests and 4 Node auth tests pass; CLI help, repository hygiene and diff checks pass. Two existing upstream deprecation warnings remain.
+- No target project was configured and no cloud writes occurred. Live provider, Firestore/redeploy and browser UI evidence remain open. Palette edits from the preceding task are preserved separately.

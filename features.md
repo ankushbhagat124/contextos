@@ -62,3 +62,5 @@ P3-01/02 backend slice: session exchange/config/logout and verified cookie ident
 P3-01/02 UI slice: normal email/password login/logout, session recovery, hidden persona switching and protected-buffer cleanup implemented. 50 Python + 4 Node tests pass; live provider-account verification remains open.
 
 P3-03 configuration slice: authenticated workspaces start empty; Firestore selection validates project/config, Cloud Run refuses SQLite. Firestore rules/index config and explicit concurrency verification script prepared. Five new tests pass; no live Firestore durability/restore claim.
+
+P3 release-verification slice: `scripts/verify_collaboration.py` exercises two independent Firebase session exchanges, shared decisions, owner review, publication audit, immutable v1/v2 task snapshots, stale warnings, fresh-session history and logout through the API. Ten local regression cases use mocked Firebase and offline AI. Live staging execution and cloud setup remain pending.

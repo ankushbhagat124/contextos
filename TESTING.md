@@ -66,3 +66,13 @@ Theme restoration verification (15 October): 42 tests pass; JavaScript syntax pa
 Selected-store preparation: five tests cover unknown backend rejection, empty real-account vs seeded demo initialization, data preservation, Cloud Run SQLite refusal, explicit Firestore project requirement and factory initializer. Total: 55 Python + 4 Node tests. Firestore rules/index JSON parse and verifier CLI help checked; actual transaction/emulator/live verification remains open.
 
 Final identity/storage checkpoint: 56 Python tests + 4 Node auth contract tests pass. Added a regression showing that logout clears the browser session even when its audit write fails. Live provider/cloud checks remain pending.
+
+18 October collaboration-verifier slice: 66 Python tests + 4 Node auth contract
+tests pass. Ten new cases exercise the staging verifier against independent
+FastAPI cookie sessions, mocked Firebase, offline AI and an empty SQLite
+workspace. Coverage includes shared v1/v2 knowledge, independent owner review,
+publication attribution, stale snapshots, fresh-session history, logout, wrong
+identity/role/tenant rejection, explicit offline labeling, credential redaction
+and unsafe origin rejection. CLI help, repository checks and diff whitespace
+pass. Two existing upstream deprecation warnings remain. No live Firebase,
+Gemini, Firestore, deployment or browser sign-in was tested by this slice.

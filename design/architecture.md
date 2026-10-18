@@ -56,3 +56,10 @@ Theme restoration: visual rules come from 4e1bd51; new action components use its
 Owner chose Firebase Auth + Firestore + Cloud Run. Identity contract is design/specs/identity.md; Firebase-mode browser sessions use HttpOnly eight-hour cookies and CSRF-bound exchange, with trusted workspace/role claims and per-request revocation checks. Browser credentials go to Firebase REST and no ID/refresh tokens are persisted. The existing Bearer interface remains for API consumers.
 
 Store initialization now distinguishes real empty workspaces from synthetic demo baselines, without modifying existing records. Firestore client rules deny direct browser access; server-side access uses IAM plus domain checks. The bounded JSON aggregate and atomic transaction boundary are retained. Supabase is not the selected provider; migration/normalization and live multi-instance/restore evidence remain separate work.
+
+The collaboration verifier is an external API client, not a second implementation
+of domain rules. An injected client factory runs the same scenario against local
+TestClient sessions or staging HTTP. Authentication, publication, retrieval and
+audit stay behind the existing service boundary. Tokens enter only through the
+operator environment; output excludes credentials and content. Offline mode
+requires an explicit flag. No application endpoints or storage schema changed.

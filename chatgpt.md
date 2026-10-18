@@ -90,3 +90,7 @@ Owner selected Firebase Auth + Firestore + Cloud Run. Implemented and tested pro
 Persistence checkpoint: selected Firestore path now validates configuration and initializes new real workspaces without synthetic data. Existing data is preserved. Prepared client-deny rules/index exclusions and separate verification script; no live project credentials or datastore access were used. Five configuration tests added, for 55 Python + 4 Node checks.
 
 Final local verification: 56 Python + 4 Node tests pass, including logout with unavailable audit storage. Latest Gemini audit unchanged; theme/CSP retained, live cloud gate not claimed complete.
+
+## Incremental enhancement: collaboration verification — 2026-10-18
+
+Latest reviewer checkpoint reread; no new actionable review items. Added a two-user API verifier behind an injected client factory, keeping domain rules and identity enforcement in their existing services. Ten regression cases bring local totals to 66 Python + 4 Node tests, all passing. The user deferred cloud project setup for later assistance, so live evidence remains open and no resources were provisioned. Previous palette edits are preserved.
