@@ -18,5 +18,6 @@ Selected stack: Firebase Auth + Firestore + Cloud Run. Provider contract: design
 - [ ] P3-S13: Capture live multi-persona release evidence. Verify: full P3-11 flow and measured browser/device conditions.
 
 - [x] P3-V01: Add a reusable authenticated two-user API verifier with independent local sessions, mocked Firebase regression coverage and redacted evidence. Live staging execution remains pending; cloud project setup is deferred at the user's request.
+- [x] P3-U01: Simplify primary navigation to Work/Knowledge/Inbox; keep secondary tools and legacy links, exact run sources, proposal filters, attention scoping and draft recovery. Seven Node controller tests added, including late-response cleanup; new visual browser QA remains pending. Persistent conversation work is still P3-S07/08.
 
 Split each implementation task into changes of roughly five source files or fewer, plus required project logs. Test and commit each working slice. A provider-specific task list replaces this proposal only after map review; no tests are skipped to meet a deadline.

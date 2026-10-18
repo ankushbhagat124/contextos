@@ -94,3 +94,7 @@ Final local verification: 56 Python + 4 Node tests pass, including logout with u
 ## Incremental enhancement: collaboration verification — 2026-10-18
 
 Latest reviewer checkpoint reread; no new actionable review items. Added a two-user API verifier behind an injected client factory, keeping domain rules and identity enforcement in their existing services. Ten regression cases bring local totals to 66 Python + 4 Node tests, all passing. The user deferred cloud project setup for later assistance, so live evidence remains open and no resources were provisioned. Previous palette edits are preserved.
+
+## Incremental enhancement: simplified workspace — 2026-10-18
+
+Latest reviewer checkpoint remains unchanged. User approved the Work/Knowledge/Inbox slice; the earlier overview-card layout is superseded while review authority and source provenance remain intact. Added seven Node controller regressions, including late-response cleanup; fixed a pre-existing missing Knowledge filtering function revealed by them. 66 Python + 11 Node tests and static/asset checks pass. No connected browser was available for new visual QA; cloud setup remains deferred.

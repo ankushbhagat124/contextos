@@ -63,3 +63,14 @@ TestClient sessions or staging HTTP. Authentication, publication, retrieval and
 audit stay behind the existing service boundary. Tokens enter only through the
 operator environment; output excludes credentials and content. Offline mode
 requires an explicit flag. No application endpoints or storage schema changed.
+
+## Decision ADR-005: three primary workspace destinations
+
+Work, Knowledge and Inbox use the existing filtered workspace snapshot and API.
+A single route resolver preserves overview/tasks/reviews links; activity/usage
+and demo remain secondary. UI helpers project independent owned reviews and
+affected personal runs for attention counts; the server continues to authorize
+every action. Work's source panel reads the selected run's immutable manifest,
+not the latest accepted body. Drafts/budgets use session storage and clear with
+protected buffers. No new backend service, schema or publication authority was
+introduced. These are standalone runs, not persisted chat conversations.

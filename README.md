@@ -46,17 +46,17 @@ Offline answers are explicitly labeled deterministic source briefings. To config
 
 ## Try the complete workflow
 
-1. Open **Overview** and use your persona’s **Next action** card, or open **Demo → Start walkthrough**. Advance one step at a time with **Next step**, revisit with **Back**, then finish. **Verify all 12 cases** runs the checks in bulk.
+1. Open **Work** to start a task, **Knowledge** to inspect accepted decisions, or **Inbox** to review proposals and affected work. **Walkthroughs → Start walkthrough** is available in the secondary navigation (on mobile, open **More**). Advance with **Next step**, revisit with **Back**, then finish. **Verify all 12 cases** runs the checks in bulk.
 2. Choose **Try in workspace** to explore the corresponding persistent workflow.
 3. As **Developer**, run a payment-retry task and inspect its source manifest.
-4. Propose an architecture revision; switch to **Architect** to review and publish it.
-5. Inspect the previous task's stale warning, then rerun with the updated source.
+4. Propose an architecture revision in **Knowledge**; switch to **Architect** and open **Inbox** to review and publish it.
+5. Open the affected run from **Inbox** or **Work**, inspect its original sources, then rerun with the updated source. Context budgets are under **Advanced options**; drafts survive navigation. Old `#overview`, `#tasks` and `#reviews` bookmarks still work.
 
 The Demo tab also covers note ingestion, manual authoring, restricted access, stale competing proposals, rejection, rollback, mandatory budget constraints, audit history, and truthful usage reporting. [Demo guide →](demo.md)
 
 ## Persona actions and next steps
 
-Overview leads with a permission-scoped next action. Pending proposals owned by your persona come first, followed by your stale runs and a relevant task. CTAs open a review or prepare a task; publication still requires an explicit independent owner decision.
+Work leads with one task form and a role-specific suggestion. Its source panel shows the exact revisions used by the selected run. Inbox combines proposals with affected personal runs, with Pending, For my review and History filters. Its attention badge counts independent owned reviews and affected personal runs; publication still requires an explicit independent owner decision.
 
 | Persona | Work to do | Review authority |
 |---|---|---|
@@ -66,7 +66,7 @@ Overview leads with a permission-scoped next action. Pending proposals owned by 
 | QA engineer | Plan tests; refresh work after source changes | Quality |
 | Security | Inspect guardrails and restricted findings | Security |
 
-**Context insights → Persona activity** records actor, persona, action, timestamp, and outcome. Proposals, publication, rejection, tasks, context assembly, topic/manifest inspections, extraction, exports, and demo persona switches are logged. Domain-level blocked attempts and model-processing failures are recorded too. Restricted sources and derived activity remain permission-filtered.
+**Activity & usage → Persona activity** records actor, persona, action, timestamp, and outcome. Proposals, publication, rejection, tasks, context assembly, topic/manifest inspections, extraction, exports, and demo persona switches are logged. Domain-level blocked attempts and model-processing failures are recorded too. Restricted sources and derived activity remain permission-filtered.
 
 The activity view/export returns the latest 100 visible events. It is a prototype workspace ledger, not a tamper-proof compliance archive. Unauthenticated requests, schema-validation errors, and ordinary navigation are outside its scope; at workspace capacity an additional failure log may be unavailable. Demo walkthroughs keep their own captured step activity and do not write to the persistent workspace.
 
@@ -80,14 +80,14 @@ From the repository root:
 .venv/bin/pytest -q
 node --check web/app.js
 node --check web/auth.js
-node --test tests/browser_auth.test.cjs
+node --test tests/browser_*.test.cjs
 .venv/bin/python scripts/rehearsal.py
 .venv/bin/python scripts/check_repo.py
 ```
 
 Windows: use `.\.venv\Scripts\python.exe -m pytest -q` and the same Python executable for the helper scripts.
 
-**56 Python tests and 4 browser-auth contract tests passed locally**, plus browser walkthroughs at mobile and desktop widths. Google service calls are mocked in adapter tests. [Verification details and limits →](TESTING.md)
+**66 Python tests and 11 Node contract tests pass locally.** Google service calls are mocked in adapter tests. The current navigation is checked with DOM/API fixtures; a connected browser was unavailable for new visual QA. Earlier mobile/desktop browser evidence is historical. [Verification details and limits →](TESTING.md)
 
 GitHub Actions is configured to run tests, repository checks, JavaScript syntax validation, and a Linux container build after the repository is pushed. The latest hosted workflow outcome is **not verified in this session**; its configuration alone is not evidence of a successful Linux/cloud deployment.
 

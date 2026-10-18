@@ -76,3 +76,14 @@ identity/role/tenant rejection, explicit offline labeling, credential redaction
 and unsafe origin rejection. CLI help, repository checks and diff whitespace
 pass. Two existing upstream deprecation warnings remain. No live Firebase,
 Gemini, Firestore, deployment or browser sign-in was tested by this slice.
+
+Workspace simplification: 66 Python tests and 11 Node contract tests pass. Seven
+new controller tests run the shipped app.js with DOM sinks/API fixtures: primary
+and legacy routes, secondary/mobile tool links, owner/actor-scoped attention,
+original run source inspection, draft/budget persistence and protected cleanup,
+Inbox refresh/history controls, Knowledge search/domain filtering, and rejection
+of workspace responses that arrive after protected-session cleanup. The new
+checks found and fixed a pre-existing missing filteredKnowledge function. CI now
+runs both Node files. Syntax, asset serving, repository hygiene and diff checks
+pass. No connected browser was available for new layout, responsive or keyboard
+visual verification; fixture tests do not replace that evidence.

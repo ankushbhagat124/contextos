@@ -121,3 +121,10 @@ Added clean authenticated-workspace initialization without synthetic knowledge, 
 - Tokens enter through operator environment variables; redirects are not followed, staging uses HTTPS except loopback, output excludes credentials/content, and offline rehearsal requires an explicit flag. Synthetic verification records are retained; live mode can make two billable calls.
 - Added ten regression cases. Full validation: 66 Python tests and 4 Node auth tests pass; CLI help, repository hygiene and diff checks pass. Two existing upstream deprecation warnings remain.
 - No target project was configured and no cloud writes occurred. Live provider, Firestore/redeploy and browser UI evidence remain open. Palette edits from the preceding task are preserved separately.
+
+## 2026-10-18 — Second enhancement slice: Work, Knowledge and Inbox
+
+- Replaced six primary links with Work/Knowledge/Inbox. Activity & usage and Walkthroughs remain secondary, including a mobile More menu. A shared resolver retains old overview/tasks/reviews URLs and demo destinations.
+- Work now has one task form, advanced budgets, preserved drafts and a source panel tied to the selected run's original manifest. Inbox combines owner-scoped proposal attention with affected personal runs and Pending/For my review/History filters. Publication remains explicit and server-authorized.
+- Seven Node controller tests cover routing, attention scope, original sources, draft/budget recovery and protected cleanup, shared refresh/history, Knowledge search and late workspace responses after sign-out. They uncovered a pre-existing missing filteredKnowledge function, now restored with text/domain filtering and focus-preserving updates. Refresh uses a protected-view generation to discard responses after cleanup. CI runs all browser contract files.
+- Validation: 66 Python + 11 Node tests pass; syntax, page structure/assets, CSS references/braces, repository hygiene and diff checks pass. No browser connection was available for visual/responsive QA. Existing upstream warnings remain. Backend behavior, storage and cloud resources are unchanged; persistent conversations remain a future slice.
