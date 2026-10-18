@@ -21,7 +21,7 @@ const roleNames = {developer:'Developer',pm:'Product manager',architect:'Archite
 const owners = {Requirements:'pm',Architecture:'architect',Implementation:'developer',Quality:'qa',Security:'security'};
 const navItems = [['overview','Overview'],['knowledge','Shared knowledge'],['tasks','Agent workspace'],['reviews','Change reviews'],['insights','Context insights'],['demo','Demo']];
 let state, activeRun, selectedContext, toastTimer, queryFilter = '', domainFilter = 'All domains';
-let currentView = location.hash.slice(1) || 'overview';
+let currentView = viewFromUrl();
 let busy = false;
 let demoPositions = {}, demoCompleted = {};
 let demoCatalog = [], demoRole = 'all', demoCategory = 'All cases', demoSelected = 'handoff', demoReports = {}, demoRunning = null;
@@ -68,7 +68,20 @@ function empty(title, description, action = '', glyph = 'spark') {
 function btn(label, action, primary = false, attrs = '') {
   return `<button class="btn ${primary ? 'primary' : ''}" data-action="${action}" ${attrs}>${label}</button>`;
 }
-function go(view) { if (currentView === view) render(); else location.hash = view; }
+function viewFromUrl() {
+  const view = location.hash.slice(1);
+  return view === 'contextpages' ? 'knowledge' : view || (location.pathname === '/knowledge' ? 'knowledge' : 'overview');
+}
+function syncViewUrl() {
+  const path = currentView === 'knowledge' ? '/knowledge' : location.pathname === '/knowledge' ? '/' : null;
+  if (path === null) return;
+  const url = path + location.search + (currentView === 'knowledge' ? '' : '#' + currentView);
+  if (location.pathname + location.search + location.hash !== url) history.replaceState(history.state, '', url);
+}
+function go(view) {
+  view = view === 'contextpages' ? 'knowledge' : view;
+  if (currentView === view) render(); else location.hash = view;
+}
 function formatTime(value) { return new Date(value).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
 function eventRows(events) {
   return events.map(e => `<div class="activity"><span class="activity-marker">${e.action.includes('published') ? '✓' : '↗'}</span><div><strong>${esc(e.action)}</strong><p>${esc(e.detail)}</p><small>${esc(e.actor)}${e.role ? ` · ${roleNames[e.role]}` : ''} · ${esc(e.outcome || 'completed')}</small></div><time datetime="${esc(e.at)}">${formatTime(e.at)}</time></div>`).join('');
@@ -79,12 +92,16 @@ function contextRow(c) {
 function stat(label, value, description, glyph) { return `<div class="stat"><div class="stat-top"><span>${label}</span>${icon(glyph)}</div><div class="stat-value">${value}</div><div class="stat-foot">${description}</div></div>`; }
 function render() {
   if (!state) return;
-  if (!navItems.some(x => x[0] === currentView)) currentView = 'overview';
+  window.contextPages.clear();
+  const visibleNav = navItems;
+  if (!visibleNav.some(x => x[0] === currentView)) currentView = 'overview';
+  syncViewUrl();
   const pending = state.proposals.filter(p => p.status === 'pending').length;
-  $('#nav').innerHTML = navItems.map(([id,label]) => `<a href="#${id}" class="nav-item ${currentView === id ? 'active' : ''}" ${currentView === id ? 'aria-current="page"' : ''} title="${label}">${icon(id)}<span class="nav-text">${label}</span>${id === 'reviews' && pending ? `<span class="nav-badge">${pending}</span>` : ''}</a>`).join('');
-  $('#crumb').textContent = navItems.find(x => x[0] === currentView)[1];
+  $('#nav').innerHTML = visibleNav.map(([id,label]) => `<a href="${id === 'knowledge' ? '/knowledge' : '#' + id}" class="nav-item ${currentView === id ? 'active' : ''}" ${currentView === id ? 'aria-current="page"' : ''} title="${label}">${icon(id)}<span class="nav-text">${label}</span>${id === 'reviews' && pending ? `<span class="nav-badge">${pending}</span>` : ''}</a>`).join('');
+  $('#crumb').textContent = visibleNav.find(x => x[0] === currentView)[1];
   $('#main').innerHTML = ({overview, knowledge, tasks, reviews, insights, demo})[currentView]();
-  if (currentView === 'knowledge') $('#search').value = queryFilter;
+  if (currentView === 'knowledge' && state.context_pages_enabled) window.contextPages.mount($('#context-pages'), async () => {toast('Proposal created. Open project proposals for independent review.');}, message => showSignIn(message));
+  else if (currentView === 'knowledge') $('#search').value = queryFilter;
 }
 function nextActionPanel() {
   const actions = state.next_actions || [];
@@ -109,6 +126,7 @@ function updateKnowledgeResults() {
   $('#knowledge-count').textContent = `${list.length} context items`;
 }
 function knowledge() {
+  if (state.context_pages_enabled) return heading('PROJECT KNOWLEDGE','Shared knowledge','Explore project context, relationships and review status.') + '<div id="context-pages"><div class="loading">Loading shared knowledge…</div></div>';
   const list = filteredKnowledge();
   return heading('SHARED KNOWLEDGE','Find a decision.','Open a topic to inspect or propose a change.',btn(`${icon('plus')} Add knowledge`,'ingest',true))+
   `<div class="toolbar"><div class="search"><input id="search" type="search" placeholder="Search decisions, requirements, or source IDs…" aria-label="Search shared knowledge"></div><select id="domain-filter" aria-label="Filter by domain">${['All domains',...Object.keys(owners)].map(d => `<option ${d === domainFilter ? 'selected' : ''}>${d}</option>`).join('')}</select><span class="muted" id="knowledge-count" aria-live="polite">${list.length} context items</span></div><div id="knowledge-results">${knowledgeResults(list)}</div>`;
@@ -230,6 +248,7 @@ function addKnowledge() {
     <form id="manual-proposal-form" class="gap-top" hidden><label class="field">Topic title<input name="title" required maxlength="120"></label><label class="field">Domain<select name="domain">${Object.keys(owners).map((domain,index) => `<option${index === 0 ? ' selected' : ''}>${domain}</option>`).join('')}</select></label><label class="field">Proposed content<textarea name="body" required maxlength="10000" class="tall"></textarea></label><label class="field">Reason for this topic<input name="reason" required maxlength="1500"></label><label class="field">Source reference<input name="source" required maxlength="200"></label><div class="note">No model call is needed. An independent reviewer who owns this domain must approve your proposal. New topics use the Reviewed policy and are visible to project members after publication.</div><button type="submit" class="btn primary">Send manual proposal for review</button></form>`);
 }
 function clearProtectedView() {
+  window.contextPages.clear();
   state = undefined; activeRun = undefined; selectedContext = undefined;
   queryFilter = ''; domainFilter = 'All domains';
   demoCatalog = []; demoReports = {}; demoPositions = {}; demoCompleted = {};
@@ -342,6 +361,10 @@ async function action(el) {
   if (a === 'rerun') {const t = state.tasks.find(x => x.id === id); await runTask(t.query,t.manifest.budget);}
 }
 document.addEventListener('click', async e => {
+  const knowledgeLink = e.target.closest('a[href="/knowledge"]');
+  if (knowledgeLink && e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault(); go('knowledge'); return;
+  }
   const el = e.target.closest('[data-action]'); if (!el || busy) return;
   busy = true; const wasDisabled = el.disabled; el.disabled = true;
   try {await action(el);} catch(err) {toast(err.message,true);} finally {el.disabled = wasDisabled; busy = false;}
@@ -385,7 +408,16 @@ $('#dialog').addEventListener('click', e => {
   if (dirty) {toast('Your draft is still here. Use the close button to discard it.'); return;}
   dialog.close();
 });
-window.addEventListener('hashchange',async () => {currentView = location.hash.slice(1) || 'overview'; window.scrollTo({top:0,behavior:'instant'}); if(currentView==='insights') {try {await refresh();} catch(err) {toast(err.message,true);}} else render();});
+async function routeChanged() {
+  const next = viewFromUrl();
+  if (next === currentView) {syncViewUrl(); return;}
+  currentView = next;
+  window.scrollTo({top:0,behavior:'instant'});
+  if (currentView === 'insights') {try {await refresh();} catch(error) {toast(error.message,true);}}
+  else render();
+}
+window.addEventListener('hashchange', routeChanged);
+window.addEventListener('popstate', routeChanged);
 // Revalidate pages restored from the browser's back-forward cache before showing data.
 window.addEventListener('pageshow', e => {
   if (e.persisted && identityConfig?.auth_mode === 'firebase') {
