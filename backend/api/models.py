@@ -27,6 +27,7 @@ class Relationship(Input):
 
 
 class NewContext(Input):
+    name: str | None = Field(default=None, min_length=1, max_length=120, description='Human-readable context name shown in the graph and reader. Separate from filename.')
     filename: str = Field(min_length=4, max_length=100)
     content: str = Field(min_length=1, max_length=10000)
     owner: str = Field(min_length=1, max_length=128)

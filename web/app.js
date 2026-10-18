@@ -126,7 +126,7 @@ function updateKnowledgeResults() {
   $('#knowledge-count').textContent = `${list.length} context items`;
 }
 function knowledge() {
-  if (state.context_pages_enabled) return heading('PROJECT KNOWLEDGE','Shared knowledge','Explore project context, relationships and review status.') + '<div id="context-pages"><div class="loading">Loading shared knowledge…</div></div>';
+  if (state.context_pages_enabled) return '<div class="cp-page-heading"><h1>Shared knowledge</h1><p>Explore the map. Open a context to focus on its content.</p></div>' + '<div id="context-pages"><div class="loading">Loading shared knowledge…</div></div>';
   const list = filteredKnowledge();
   return heading('SHARED KNOWLEDGE','Find a decision.','Open a topic to inspect or propose a change.',btn(`${icon('plus')} Add knowledge`,'ingest',true))+
   `<div class="toolbar"><div class="search"><input id="search" type="search" placeholder="Search decisions, requirements, or source IDs…" aria-label="Search shared knowledge"></div><select id="domain-filter" aria-label="Filter by domain">${['All domains',...Object.keys(owners)].map(d => `<option ${d === domainFilter ? 'selected' : ''}>${d}</option>`).join('')}</select><span class="muted" id="knowledge-count" aria-live="polite">${list.length} context items</span></div><div id="knowledge-results">${knowledgeResults(list)}</div>`;

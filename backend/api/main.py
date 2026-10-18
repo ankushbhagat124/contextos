@@ -56,7 +56,7 @@ def create_router(workspace_endpoint):
         item = get_project(request, project_id)
         terms = q.casefold().split()
         rows = [s.context_metadata(item, doc) for doc in item['contexts'].values()
-                if not doc['deleted'] and all(term in (doc['filename'] + ' ' + doc['content'] + ' ' + doc['owner']).casefold() for term in terms)]
+                if not doc['deleted'] and all(term in (s.context_name(doc) + ' ' + doc['filename'] + ' ' + doc['content'] + ' ' + doc['owner']).casefold() for term in terms)]
         return {'items': rows[offset:offset + limit], 'total': len(rows)}
 
     router.add_api_route('/projects/{project_id}/search', contexts, methods=['GET'])
@@ -108,7 +108,7 @@ def create_router(workspace_endpoint):
     @router.get('/projects/{project_id}/contexts/{context_id}/versions')
     def versions(project_id: str, context_id: str, request: Request):
         item, doc = get_context(request, project_id, context_id, True)
-        return [{key: value for key, value in version.items() if key != 'content'} for version in reversed(doc['history'])]
+        return [{**{key: value for key, value in version.items() if key != 'content'}, 'name': s.context_name(version)} for version in reversed(doc['history'])]
 
     @router.get('/projects/{project_id}/contexts/{context_id}/versions/{version}')
     def version(project_id: str, context_id: str, version: int, request: Request):
@@ -116,7 +116,7 @@ def create_router(workspace_endpoint):
         found = next((entry for entry in doc['history'] if entry['version'] == version), None)
         if found is None:
             raise Problem('Version not found.', 404)
-        return found
+        return {**found, 'name': s.context_name(found)}
 
     @router.get('/projects/{project_id}/graph')
     def graph(project_id: str, request: Request):
@@ -138,7 +138,7 @@ def create_router(workspace_endpoint):
     def proposals(project_id: str, request: Request):
         item = get_project(request, project_id)
         # Lists contain metadata; read one proposal before deciding its exact hash.
-        return [{**{key: value for key, value in proposal.items() if key != 'candidate'}, 'filename': proposal['candidate']['filename']}
+        return [{**{key: value for key, value in proposal.items() if key != 'candidate'}, 'name': s.context_name(proposal['candidate']), 'filename': proposal['candidate']['filename']}
                 for proposal in reversed(list(item['proposals'].values()))]
 
     @router.get('/projects/{project_id}/proposals/{proposal_id}')

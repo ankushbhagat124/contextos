@@ -9,7 +9,7 @@ python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
 ~~~
 
 1. Create a project with name, type and description. Your authenticated user ID is the admin; the server records timestamps. Projects start empty.
-2. Propose a context with a plain .md filename, Markdown, owner, owner type and optional relationships.
+2. Propose a context with a display name, a separate plain .md filename, Markdown, owner, owner type and optional relationships.
 3. Open **Proposals**, inspect the proposed content and metadata, and approve as an independent reviewer with the designated owner role.
 4. Read the approved Markdown and map. Edits and deletions use the same review flow.
 
@@ -27,7 +27,9 @@ Every Markdown file uses these fixed headings, in order. Content under them supp
 ## Next steps
 ~~~
 
-Context records contain filename, content, owner, owner_type, relationships, version, creation/update timestamps and immutable approved history. owner is a person/team label; owner_type selects the trusted reviewer role (pm, architect, developer, qa, security). A transfer requires the current owner role to review. The proposal author cannot decide their own proposal.
+Context records contain name, filename, content, owner, owner_type, relationships, version, creation/update timestamps and immutable approved history. The graph, reader and relationships show name; filename remains file metadata and the download filename. The UI requires a context name. Older API/MCP clients may omit name: creation derives a readable label, and updates keep the accepted name. Existing records are read with the same fallback; no migration is needed. Name changes require approval and are preserved in version history.
+
+owner is a person/team label; owner_type selects the trusted reviewer role (pm, architect, developer, qa, security). A transfer requires the current owner role to review. The proposal author cannot decide their own proposal.
 
 All projects in a workspace are readable by its authenticated members. Workspace membership/roles come from the host's verified identity, never request fields. This prototype has no per-project invitations or private-document policies. Existing restricted knowledge and legacy workflows remain in their original API.
 
@@ -79,7 +81,7 @@ New project:
 New context (returns a pending proposal):
 
 ~~~json
-{"filename":"architecture.md","content":"## Overview\n\nShared service.\n\n## Details\n\nFastAPI.\n\n## Next steps\n\nReview the design.","owner":"Architecture team","owner_type":"architect","relationships":[],"reason":"Record the design"}
+{"name":"System Architecture","filename":"architecture.md","content":"## Overview\n\nShared service.\n\n## Details\n\nFastAPI.\n\n## Next steps\n\nReview the design.","owner":"Architecture team","owner_type":"architect","relationships":[],"reason":"Record the design"}
 ~~~
 
 Update: same context fields plus expected_version. Delete: {"expected_version":1,"reason":"No longer needed"}. Project update: name, project_type, description, admin, expected_version and optional archived. Project deletion requires expected_version and reason.

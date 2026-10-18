@@ -97,7 +97,7 @@ def discover_context(project_id: str, offset: Offset = 0, limit: Limit = 20) -> 
 
 @server.tool()
 def create_context(project_id: str, context: NewContext) -> dict:
-    """Propose a Markdown context with filename, owner/type and relationships. Requires independent owner-role approval."""
+    """Propose a context with a human-readable name, separate Markdown filename, owner/type and relationships. Requires independent owner-role approval."""
     return request('POST', project_path(project_id) + '/contexts', context.model_dump())
 
 
@@ -109,7 +109,7 @@ def read_context(project_id: str, context_id: str, max_chars: Size = 12000) -> d
 
 @server.tool()
 def update_context(project_id: str, context_id: str, changes: Update) -> dict:
-    """Propose a full replacement of content/metadata/relationships against the accepted version; never publishes."""
+    """Propose a full replacement of name/content/metadata/relationships against the accepted version; never publishes."""
     return request('PUT', context_path(project_id, context_id), changes.model_dump())
 
 
@@ -140,7 +140,7 @@ def get_context_status(project_id: str, context_id: str, known_version: Annotate
 
 @server.tool()
 def search_context(project_id: str, query: str, offset: Offset = 0, limit: Limit = 20) -> dict:
-    """Search approved filenames, Markdown and owner labels for all supplied words."""
+    """Search approved context names, filenames, Markdown and owner labels for all supplied words."""
     return request('GET', project_path(project_id) + '/search?' + urlencode({'q': query, 'offset': offset, 'limit': limit}))
 
 

@@ -64,6 +64,13 @@ def dependency_versions(item, relationships):
     return {link['target_id']: context(item, link['target_id'])['version'] for link in relationships if link['kind'] == 'depends_on'}
 
 
+def context_name(doc):
+    if doc.get('name'):
+        return doc['name']
+    label = re.sub(r'[_-]+', ' ', doc['filename'][:-3]).strip()
+    return label[:1].upper() + label[1:]
+
+
 def validate_candidate(item, candidate, context_id):
     name = candidate['filename']
     reserved = {'CON', 'PRN', 'AUX', 'NUL', *[f'COM{i}' for i in range(1, 10)], *[f'LPT{i}' for i in range(1, 10)]}
@@ -113,6 +120,7 @@ def propose(item, actor, action, data, context_id=None):
     context_id = context_id or uid('CTX')
     source = previous if action == 'delete' else data
     candidate = {key: deepcopy(source[key]) for key in ('filename', 'content', 'owner', 'owner_type', 'relationships')}
+    candidate['name'] = source.get('name') or context_name(previous or candidate)
     validate_candidate(item, candidate, context_id)
     proposal = {'id': uid('PROP'), 'project_id': item['id'], 'action': action, 'context_id': context_id,
                 'base_version': base_version, 'candidate': candidate, 'reason': data['reason'], 'author': actor,
@@ -183,7 +191,7 @@ def status(item, doc, known_version=None):
 
 
 def context_metadata(item, doc):
-    return {**{key: value for key, value in doc.items() if key not in ('content', 'history')}, 'status': status(item, doc)['status']}
+    return {**{key: value for key, value in doc.items() if key not in ('content', 'history')}, 'name': context_name(doc), 'status': status(item, doc)['status']}
 
 
 def graph(item):

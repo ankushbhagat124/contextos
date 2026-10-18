@@ -75,6 +75,50 @@ def replacement(doc, **overrides):
             'expected_version': doc['version'], 'reason': 'New evidence', **overrides}
 
 
+def test_context_names_are_separate_reviewed_searchable_and_versioned(client):
+    project = create_project(client)
+    doc = publish(client, project, 'internal-001.md', name='System Architecture')
+    path = base(project) + '/contexts/' + doc['id']
+    assert doc['name'] == 'System Architecture'
+    assert client.get(base(project) + '/graph').json()['nodes'][0]['name'] == doc['name']
+    assert client.get(base(project) + '/search?q=System+Architecture').json()['total'] == 1
+    proposal = client.put(path, json=replacement(doc, name='Platform Design')).json()
+    assert client.get(path).json()['name'] == 'System Architecture'
+    assert client.get(base(project) + '/proposals').json()[0]['name'] == 'Platform Design'
+    approve(client, project, proposal)
+    assert client.get(path).json()['name'] == 'Platform Design'
+    assert client.get(path + '/versions/1').json()['name'] == 'System Architecture'
+    assert [row['name'] for row in client.get(path + '/versions').json()] == ['Platform Design', 'System Architecture']
+    assert 'internal-001.md' in client.get(path + '/markdown').headers['content-disposition']
+    current = client.get(path).json()
+    # Older clients omitting name must not erase an accepted display name.
+    next_proposal = client.put(path, json=replacement(current)).json()
+    assert next_proposal['candidate']['name'] == 'Platform Design'
+    for invalid in ('', '   ', 'x' * 121):
+        assert client.put(path, json=replacement(current, name=invalid)).status_code == 422
+
+
+def test_pre_name_records_and_pending_proposals_need_no_migration(client):
+    from backend.api import service as s
+    state = {}
+    project = s.create_project(state, 'author', {'name': 'Legacy', 'project_type': 'software'})
+    item = s.project(state, project['id'])
+    proposal = s.propose(item, 'author', 'create', candidate(client, 'system-architecture.md'))
+    # Simulate an immutable proposal written before display names existed.
+    proposal['candidate'].pop('name')
+    proposal['hash'] = s.proposal_hash(proposal)
+    original = deepcopy(proposal)
+    assert s.context_name(proposal['candidate']) == 'System architecture'
+    assert proposal == original
+    s.review(item, 'reviewer', 'architect', proposal['id'], {'hash': proposal['hash'], 'decision': 'approve'})
+    doc = s.context(item, proposal['context_id'])
+    original_history = deepcopy(doc['history'])
+    assert s.context_metadata(item, doc)['name'] == 'System architecture'
+    update = s.propose(item, 'author', 'update', replacement(doc, name='System Architecture'), doc['id'])
+    s.review(item, 'reviewer', 'architect', update['id'], {'hash': update['hash'], 'decision': 'approve'})
+    assert item['contexts'][doc['id']]['history'][0] == original_history[0]
+
+
 def test_projects_start_empty_have_metadata_and_admin_crud(client):
     assert client.get('/api/context/projects').json() == []
     project = create_project(client)
@@ -242,7 +286,7 @@ def test_proposal_hash_binds_owner_filename_relationships_and_content(client):
     from backend.api.service import proposal_hash
     project = create_project(client)
     proposal = client.post(base(project) + '/contexts', json=candidate(client)).json()
-    for key, value in [('filename', 'other.md'), ('content', 'tampered'), ('owner', 'other'), ('owner_type', 'security'), ('relationships', [{'target_id': 'other', 'kind': 'references'}])]:
+    for key, value in [('name', 'Other Display Name'), ('filename', 'other.md'), ('content', 'tampered'), ('owner', 'other'), ('owner_type', 'security'), ('relationships', [{'target_id': 'other', 'kind': 'references'}])]:
         altered = deepcopy(proposal)
         altered['candidate'][key] = value
         assert proposal_hash(altered) != proposal['hash']
@@ -302,9 +346,11 @@ def test_real_mcp_stdio_creates_empty_project_and_proposes_context(client):
                     project_id = result['id']
                     assert (await call('read_project', {'project_id': project_id}))['contexts'] == []
                     template = await call('get_context_template', {})
-                    proposal = await call('create_context', {'project_id': project_id, 'context': {'filename': 'research.md', 'content': template['content'], 'owner': 'Research team', 'owner_type': 'architect', 'reason': 'Agent evidence'}})
+                    proposal = await call('create_context', {'project_id': project_id, 'context': {'name': 'Research Findings', 'filename': 'research.md', 'content': template['content'], 'owner': 'Research team', 'owner_type': 'architect', 'reason': 'Agent evidence'}})
                     assert proposal['status'] == 'pending'
-                    assert (await call('read_context_proposal', {'project_id': project_id, 'proposal_id': proposal['id']}))['candidate']['filename'] == 'research.md'
+                    proposed_context = (await call('read_context_proposal', {'project_id': project_id, 'proposal_id': proposal['id']}))['candidate']
+                    assert proposed_context['filename'] == 'research.md'
+                    assert proposed_context['name'] == 'Research Findings'
                     assert (await call('discover_context', {'project_id': project_id}))['total'] == 0
         asyncio.run(run())
     finally:

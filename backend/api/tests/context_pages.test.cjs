@@ -42,7 +42,7 @@ test('an expired context request returns control to the existing sign-in flow', 
   assert.equal(root.textContent,'');
 });
 
-const card = id => ({id,title:`Context ${id}`,domain:'Requirements',revision:1,version:1,filename:`Context ${id}`,owner_type:'pm',status:'up_to_date',relationships:[],content:`Body ${id}`,owner:'pm',body:`Body ${id}`,dependencies:[]});
+const card = id => ({id,name:`Context ${id}`,title:`Context ${id}`,domain:'Requirements',revision:1,version:1,filename:`internal-${id}.md`,owner_type:'pm',status:'up_to_date',relationships:[],content:`Body ${id}`,owner:'pm',body:`Body ${id}`,dependencies:[]});
 const link = (source_id,target_id,kind='depends_on') => ({source_id,target_id,kind});
 
 function assertRoutesAvoidCards(map) {
@@ -108,10 +108,75 @@ test('rapid selection keeps the last selected page when an earlier request finis
   choose('B');await flush();
   choose('C');await flush();
   releaseC(response(card('C')));await flush();
-  assert.match(root.innerHTML,/<h2>Context C<\/h2>/);
+  assert.match(root.innerHTML,/<h2[^>]*>Context C<\/h2>/);
   releaseB(response(card('B')));await flush();
-  assert.match(root.innerHTML,/<h2>Context C<\/h2>/);
-  assert.doesNotMatch(root.innerHTML,/<h2>Context B<\/h2>/);
+  assert.match(root.innerHTML,/<h2[^>]*>Context C<\/h2>/);
+  assert.doesNotMatch(root.innerHTML,/<h2[^>]*>Context B<\/h2>/);
+});
+
+function workspaceHarness() {
+  const handlers={}, requests=[], documents=['A','B'].map(card);
+  const root={...element(),addEventListener:(name,handler)=>{handlers[name]=handler;}};
+  let pending;
+  const sandbox={window:{contextMap},fetch:async url=>{
+    requests.push(url);
+    if(url.endsWith('/template'))return response({});
+    if(url.endsWith('/projects?include_archived=true'))return response([{id:'current'}]);
+    if(url.endsWith('/projects/current'))return response({project:{id:'current',name:'Test project'},contexts:documents,relationships:[link('B','A')]});
+    if(url.endsWith('/proposals'))return response([]);
+    if(url.endsWith('/sections'))return response({sections:[]});
+    if(url.endsWith('/status'))return response({status:'up_to_date',pending_proposals:0});
+    if(url.endsWith('/versions'))return response([]);
+    if(pending)return new Promise(resolve=>{pending.release=resolve;});
+    return response(card(url.endsWith('/B')?'B':'A'));
+  }};
+  vm.runInNewContext(source,sandbox);
+  const click=(cpAction,extra={})=>handlers.click({target:{closest:()=>({dataset:{cpAction,...extra}})}});
+  const flush=()=>new Promise(resolve=>setImmediate(resolve));
+  return {root,requests,mount:()=>sandbox.window.contextPages.mount(root),click,flush,defer:()=>{pending={};return pending;}};
+}
+
+test('knowledge opens on the map and selection focuses content with supporting metadata',async()=>{
+  const h=workspaceHarness();await h.mount();
+  assert.match(h.root.innerHTML,/aria-label="Knowledge visualization"/);
+  assert.match(h.root.innerHTML,/data-context-map/);
+  assert.match(h.root.innerHTML,/aria-label="Open Context A, pm, version 1"/);
+  assert.doesNotMatch(h.root.innerHTML,/internal-A\.md/);
+  assert.doesNotMatch(h.root.innerHTML,/context-reader-title/);
+  assert.ok(!h.requests.some(url=>url.includes('/contexts/')),'Opening a project must not load an arbitrary context');
+  h.click('select',{id:'B'});await h.flush();
+  assert.match(h.root.innerHTML,/id="context-reader-title"[^>]*>Context B/);
+  assert.match(h.root.innerHTML,/Body B/);
+  assert.match(h.root.innerHTML,/<aside[^>]*aria-label="Context metadata"/);
+  assert.match(h.root.innerHTML,/Back to map/);
+  assert.doesNotMatch(h.root.innerHTML,/data-context-map/);
+  h.click('source');await h.flush();
+  assert.match(h.root.innerHTML,/class="cp-markdown cp-source">Body B/);
+  h.click('map');await h.flush();
+  assert.match(h.root.innerHTML,/data-context-map/);
+  assert.doesNotMatch(h.root.innerHTML,/context-reader-title/);
+});
+
+test('context editing separates the display name from the Markdown filename',async()=>{
+  const h=workspaceHarness();await h.mount();
+  h.click('select',{id:'A'});await h.flush();
+  h.click('edit');await h.flush();
+  assert.match(h.root.innerHTML,/Context name<input name="name" required[^>]*value="Context A"/);
+  assert.match(h.root.innerHTML,/File name<input name="filename"[^>]*value="internal-A.md"/);
+  h.click('cancel');await h.flush();
+  assert.match(h.root.innerHTML,/id="context-reader-title"[^>]*>Context A/);
+});
+
+test('returning to the map cancels a pending context selection',async()=>{
+  const h=workspaceHarness();await h.mount();
+  h.click('select',{id:'A'});await h.flush();
+  const pending=h.defer();
+  h.click('select',{id:'B'});await h.flush();
+  h.click('map');await h.flush();
+  pending.release(response(card('B')));await h.flush();
+  assert.match(h.root.innerHTML,/aria-label="Knowledge visualization"/);
+  assert.match(h.root.innerHTML,/data-context-map/);
+  assert.doesNotMatch(h.root.innerHTML,/context-reader-title/);
 });
 
 
