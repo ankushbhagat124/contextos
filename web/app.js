@@ -25,14 +25,17 @@ let currentView = location.hash.slice(1) || 'overview';
 let busy = false;
 let demoPositions = {}, demoCompleted = {};
 let demoCatalog = [], demoRole = 'all', demoCategory = 'All cases', demoSelected = 'handoff', demoReports = {}, demoRunning = null;
-let firebaseToken = ''; // Kept in memory only, never in browser storage.
+let identityConfig;
 
 async function api(path, body) {
-  const response = await fetch(`/api/${path}`, {method:body === undefined ? 'GET' : 'POST', credentials:'same-origin', headers:{'Content-Type':'application/json','X-ContextOS-Client':'workspace',...(firebaseToken ? {Authorization:`Bearer ${firebaseToken}`} : {})}, ...(body === undefined ? {} : {body:JSON.stringify(body)})});
+  const response = await fetch(`/api/${path}`, {method:body === undefined ? 'GET' : 'POST', credentials:'same-origin', headers:{'Content-Type':'application/json','X-ContextOS-Client':'workspace'}, ...(body === undefined ? {} : {body:JSON.stringify(body)})});
   const data = await response.json();
   if (!response.ok) {
     const detail = Array.isArray(data.detail) ? data.detail.map(x => `${x.loc.at(-1)}: ${x.msg}`).join('; ') : data.detail;
-    throw new Error(detail || 'The request could not be completed.');
+    const error = new Error(detail || 'The request could not be completed.');
+    error.status = response.status;
+    if (response.status === 401 && identityConfig?.auth_mode === 'firebase') showSignIn(error.message);
+    throw error;
   }
   return data;
 }
@@ -43,6 +46,10 @@ function toast(message, error = false) {
 async function refresh() {
   state = await api('workspace');
   if (state.auth_mode === 'demo' && !demoCatalog.length) demoCatalog = (await api('demo/scenarios')).scenarios;
+  document.body.classList.remove('signed-out');
+  $('#sign-out').hidden = state.auth_mode !== 'firebase';
+  $('#persona').hidden = state.auth_mode !== 'demo';
+  document.querySelector('.persona-label').hidden = state.auth_mode !== 'demo';
   $('#project-name').textContent = state.project.name;
   $('#persona').value = state.role; $('#persona').disabled = state.auth_mode !== 'demo';
   $('#profile-initial').textContent = roleNames[state.role][0];
@@ -222,8 +229,42 @@ function addKnowledge() {
     <form id="ingest-form" class="gap-top"><label class="field">Stakeholder notes<textarea class="tall" name="notes" required minlength="10" maxlength="8000" placeholder="Paste a decision, requirement, or meeting note…"></textarea></label><label class="field">Source reference<input name="source" required maxlength="200" placeholder="e.g. Product workshop, 14 October"></label><div class="note">${state.ai_mode === 'offline' ? 'Offline mode preserves your notes verbatim as a requirement candidate. Gemini extraction becomes available when configured.' : 'Gemini extracts one candidate topic. Nothing is accepted until human review.'}</div><button type="submit" class="btn primary">${icon('spark')} Create review candidate</button></form>
     <form id="manual-proposal-form" class="gap-top" hidden><label class="field">Topic title<input name="title" required maxlength="120"></label><label class="field">Domain<select name="domain">${Object.keys(owners).map((domain,index) => `<option${index === 0 ? ' selected' : ''}>${domain}</option>`).join('')}</select></label><label class="field">Proposed content<textarea name="body" required maxlength="10000" class="tall"></textarea></label><label class="field">Reason for this topic<input name="reason" required maxlength="1500"></label><label class="field">Source reference<input name="source" required maxlength="200"></label><div class="note">No model call is needed. An independent reviewer who owns this domain must approve your proposal. New topics use the Reviewed policy and are visible to project members after publication.</div><button type="submit" class="btn primary">Send manual proposal for review</button></form>`);
 }
+function clearProtectedView() {
+  state = undefined; activeRun = undefined; selectedContext = undefined;
+  queryFilter = ''; domainFilter = 'All domains';
+  demoCatalog = []; demoReports = {}; demoPositions = {}; demoCompleted = {};
+  sessionStorage.removeItem('task-draft');
+  $('#dialog').close(); $('#dialog-content').replaceChildren();
+  $('#main').replaceChildren(); $('#nav').replaceChildren();
+  $('#project-name').textContent = ''; $('#profile-label').textContent = '';
+  $('#sign-out').hidden = true;
+}
+function showSignIn(message='') {
+  clearProtectedView();
+  document.body.classList.add('signed-out');
+  const ready = identityConfig?.login_ready;
+  $('#main').innerHTML = `<section class="auth-panel"><div class="auth-intro"><a class="brand" href="#overview">ContextOS</a><div class="eyebrow">SHARED KNOWLEDGE. CLEAR OWNERSHIP.</div><h1>Your workspace,<br>with the right access.</h1><p>Sign in to continue with your team’s accepted decisions.</p><span class="tag">Firebase · Protected session</span></div><div class="auth-form-panel"><h2>Sign in</h2><p class="subtitle">Use your administrator-provisioned account.</p>${message ? `<div class="note amber" role="alert">${esc(message)}</div>` : ''}${!ready ? '<div class="note">Firebase sign-in is awaiting project configuration. Ask your administrator to enable email/password sign-in and set the public Web API key.</div>' : ''}<form id="login-form" class="gap-top"><label class="field">Email<input type="email" name="email" autocomplete="username" required maxlength="254" ${ready?'':'disabled'}></label><label class="field">Password<input type="password" name="password" autocomplete="current-password" required maxlength="4096" ${ready?'':'disabled'}></label><button class="btn primary" type="submit" ${ready?'':'disabled'}>Sign in to workspace ${icon('arrow')}</button><p class="form-help">Workspace and role are assigned by your administrator.</p></form><button class="text-btn" data-action="retry-sign-in">Refresh sign-in</button></div></section>`;
+}
+async function bootstrapIdentity() {
+  try {
+    identityConfig = await window.contextosIdentity.configuration();
+    await refresh();
+  } catch(error) {
+    if (identityConfig?.auth_mode === 'firebase') showSignIn(error.status===401?'':error.message);
+    else {
+      $('#mode').textContent = 'Workspace unavailable';
+      $('#main').innerHTML = `<div class="error-panel"><h1>Workspace unavailable</h1><p>${esc(error.message)}</p>${btn('Retry','retry-sign-in',true)}</div>`;
+    }
+  }
+}
 async function action(el) {
   const a = el.dataset.action, id = el.dataset.id;
+  if (a === 'retry-sign-in') return bootstrapIdentity();
+  if (a === 'sign-out') {
+    await window.contextosIdentity.signOut();
+    showSignIn('You signed out of this browser.');
+    return;
+  }
   if (a === 'task-suggestion') {
     const suggestion = state.next_actions.find(x=>x.kind==='task');
     sessionStorage.setItem('task-draft',suggestion.query); go('tasks');
@@ -306,7 +347,7 @@ document.addEventListener('click', async e => {
   try {await action(el);} catch(err) {toast(err.message,true);} finally {el.disabled = wasDisabled; busy = false;}
 });
 document.addEventListener('submit', async e => {
-  const form = e.target; if (!['task-form','proposal-form','ingest-form','manual-proposal-form','auth-form'].includes(form.id)) return;
+  const form = e.target; if (!['task-form','proposal-form','ingest-form','manual-proposal-form','login-form'].includes(form.id)) return;
   e.preventDefault(); if (busy) return; busy = true;
   const button = form.querySelector('[type="submit"]'), previous = button.innerHTML; button.disabled = true; button.textContent = 'Working…';
   const data = Object.fromEntries(new FormData(form));
@@ -315,7 +356,12 @@ document.addEventListener('submit', async e => {
     if (form.id === 'proposal-form') {await api('proposals',{context_id:selectedContext.id,base_revision:selectedContext.revision,body:data.body,reason:data.reason,sources:selectedContext.sources}); $('#dialog').close(); await refresh(); go('reviews'); toast('Change proposed. The accepted revision is unchanged.');}
     if (form.id === 'manual-proposal-form') {const {source,...proposal} = data; await api('proposals',{...proposal,sources:[source]}); $('#dialog').close(); await refresh(); go('reviews'); toast('Manual proposal created. Independent owner review is required.');}
     if (form.id === 'ingest-form') {await api('ingest',data); $('#dialog').close(); await refresh(); go('reviews'); toast('Review candidate created.');}
-    if (form.id === 'auth-form') {firebaseToken = data.token.trim(); await refresh();}
+    if (form.id === 'login-form') {
+      form.elements.password.value = '';
+      await window.contextosIdentity.signIn(data.email,data.password);
+      data.password = '';
+      await refresh();
+    }
   } catch(err) {toast(err.message,true);} finally {busy = false; button.disabled = false; button.innerHTML = previous;}
 });
 $('#persona').addEventListener('change',async e => {
@@ -340,7 +386,13 @@ $('#dialog').addEventListener('click', e => {
   dialog.close();
 });
 window.addEventListener('hashchange',async () => {currentView = location.hash.slice(1) || 'overview'; window.scrollTo({top:0,behavior:'instant'}); if(currentView==='insights') {try {await refresh();} catch(err) {toast(err.message,true);}} else render();});
-refresh().catch(err => {
-  $('#mode').textContent = 'Workspace unavailable';
-  $('#main').innerHTML = `<div class="error-panel"><h2>We couldn’t open this workspace.</h2><p>${esc(err.message)}</p><p>For Firebase API mode, provide a valid, administrator-provisioned ID token. It is kept only in memory.</p><form id="auth-form"><label class="field">Firebase ID token<textarea name="token" required aria-label="Firebase ID token"></textarea></label><button class="btn primary" type="submit">Connect account</button></form></div>`;
+// Revalidate pages restored from the browser's back-forward cache before showing data.
+window.addEventListener('pageshow', e => {
+  if (e.persisted && identityConfig?.auth_mode === 'firebase') {
+    clearProtectedView(); bootstrapIdentity();
+  }
 });
+window.addEventListener('pagehide', () => {
+  if (identityConfig?.auth_mode === 'firebase') clearProtectedView();
+});
+bootstrapIdentity();

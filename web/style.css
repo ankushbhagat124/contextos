@@ -2011,3 +2011,19 @@ dialog::backdrop{
 .review-summary {cursor:pointer;font-weight:600;font-size:13px;}
 .review-summary .tag {margin-left:10px;}
 .review-card[open] .review-summary {padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:18px;}
+
+/* Real-account entry and protected-session states. */
+[hidden] {display:none!important;}
+.signed-out .sidebar,.signed-out .topbar,.signed-out .page-footer {display:none;}
+.signed-out .shell {margin-left:0;}
+.signed-out main {display:grid;align-items:center;min-height:100vh;max-width:1100px;}
+.auth-panel {display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:var(--paper);}
+.auth-intro {background:var(--sidebar-bg);color:var(--sidebar-text-bright);padding:44px;}
+.auth-intro .brand {padding:0;margin-bottom:65px;font-size:34px;color:var(--sidebar-text-bright);}
+.auth-intro h1 {font-size:36px;line-height:1.2;color:var(--sidebar-text-bright);}
+.auth-intro p {margin:20px 0 28px;font-size:13px;line-height:1.8;color:var(--sidebar-text);}
+.auth-intro .eyebrow {color:var(--gold-muted);}
+.auth-form-panel {padding:44px;align-self:center;}
+.auth-form-panel h2 {font-size:30px;}
+.auth-form-panel form>.btn {width:100%;}
+@media(max-width:768px) {.auth-panel {grid-template-columns:1fr;}.auth-intro,.auth-form-panel {padding:28px;}.auth-intro .brand {margin-bottom:25px;}.auth-intro h1 {font-size:30px;}.signed-out main {padding:20px;}}

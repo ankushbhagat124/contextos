@@ -79,13 +79,15 @@ From the repository root:
 ```sh
 .venv/bin/pytest -q
 node --check web/app.js
+node --check web/auth.js
+node --test tests/browser_auth.test.cjs
 .venv/bin/python scripts/rehearsal.py
 .venv/bin/python scripts/check_repo.py
 ```
 
 Windows: use `.\.venv\Scripts\python.exe -m pytest -q` and the same Python executable for the helper scripts.
 
-**42 automated tests passed locally**, plus browser walkthroughs at mobile and desktop widths. Google service calls are mocked in adapter tests. [Verification details and limits →](TESTING.md)
+**50 Python tests and 4 browser-auth contract tests passed locally**, plus browser walkthroughs at mobile and desktop widths. Google service calls are mocked in adapter tests. [Verification details and limits →](TESTING.md)
 
 GitHub Actions is configured to run tests, repository checks, JavaScript syntax validation, and a Linux container build after the repository is pushed. The latest hosted workflow outcome is **not verified in this session**; its configuration alone is not evidence of a successful Linux/cloud deployment.
 
@@ -123,11 +125,11 @@ Original sources: [project blueprint](ContextOS_Complete_Project_Blueprint.md) a
 
 ## Person 3 delivery workstream
 
-[Delivery scope and acceptance criteria](PERSON3_DELIVERY.md) now track real login/logout, verified sessions, managed database integration, remaining screens, task chat, hosting, CI/CD and monitoring. See [ordered plan](tasks/plan.md) and [task backlog](tasks/todo.md). Firebase/Firestore and Supabase/Postgres are compared; the final provider choice is pending. These proposed capabilities are not yet completion claims.
+[Delivery scope and acceptance criteria](PERSON3_DELIVERY.md) now track real login/logout, verified sessions, managed database integration, remaining screens, task chat, hosting, CI/CD and monitoring. See [ordered plan](tasks/plan.md) and [task backlog](tasks/todo.md). Firebase/Firestore and Supabase/Postgres are compared; the owner selected Firebase Auth + Firestore + Cloud Run. These proposed capabilities are not yet completion claims.
 
 ## Limitations and next steps
 
-The local demo is ready for review. Cloud setup remains deferred by the project owner. The GitHub target is [silent-doom/contextos](https://github.com/silent-doom/contextos). Live AI, durable cloud deployment, normal Firebase sign-in, public judge access, and submission artifacts remain open gates. Semantic search, MCP/IDE integration, repository synchronization, and enterprise administration are future work. [Deployment guide →](DEPLOYMENT.md)
+The local demo is ready for review. Firebase-mode login/logout and protected browser sessions are implemented with mocked provider tests; real project verification remains open. Cloud setup remains deferred by the project owner. The GitHub target is [silent-doom/contextos](https://github.com/silent-doom/contextos). Live AI, durable cloud deployment, live Firebase sign-in verification, public judge access, and submission artifacts remain open gates. Semantic search, MCP/IDE integration, repository synchronization, and enterprise administration are future work. [Deployment guide →](DEPLOYMENT.md)
 
 ## Contributing and security
 

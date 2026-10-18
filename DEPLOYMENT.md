@@ -2,7 +2,7 @@
 
 ## Current verification boundary
 
-The application runs locally with SQLite and explicit offline rehearsal. Gemini, Firebase, and Firestore adapters exist but require live project configuration and verification. No cloud deployment or live Google AI result is claimed. GitHub setup is deferred by the user.
+The application runs locally with SQLite and explicit offline rehearsal. Gemini, Firebase, and Firestore adapters exist but require live project configuration and verification. No cloud deployment or live Google AI result is claimed. GitHub is configured at silent-doom/contextos. Selected stack: Firebase Auth + Firestore + Cloud Run.
 
 ## Local configuration
 
@@ -68,7 +68,11 @@ Set `AUTH_MODE=firebase` and provision accounts with administrator-set custom cl
 
 Allowed roles: `pm`, `architect`, `developer`, `qa`, `security`. Members sharing the same workspace claim share the accepted project state. Verify signed ID tokens server-side with revocation checks. All mutation authority uses verified claims, never client-selected personas. Role switching is denied in this mode.
 
-The current UI offers a development token-entry bridge held in memory; a normal Firebase sign-in/refresh flow is not yet implemented. Do not describe this as a polished production authentication experience. Claims are administrator-provisioned, not editable by users.
+The browser now offers email/password sign-in and a protected eight-hour Firebase session cookie. Enable Email/Password in Firebase Authentication and set `FIREBASE_WEB_API_KEY` to the Firebase web app public API key. The key is public configuration; it is not a service-account credential. Restrict it appropriately in the Google console for your application. Server authentication uses attached Google identity/ADC, never that public key as authorization.
+
+Accounts must already have administrator-set custom claims. No self-signup role picker exists. Passwords go directly from the browser to Firebase's documented REST endpoint. The browser exchanges a recent ID token through `/api/auth/session`, with a CSRF nonce, then discards ID/refresh tokens. The session cookie is HttpOnly, SameSite=Strict and Secure on HTTPS/Cloud Run. Reload retains identity; expiry/revocation returns the user to sign-in. Sessions do not auto-extend. Sign out clears the current browser session and local app buffers; it does not revoke other devices. For compromised sessions or changed memberships, an administrator must revoke refresh tokens so the backend's per-request revocation check rejects old cookies. Existing verified Bearer tokens remain supported for API clients.
+
+A live provider test account, correct project ID and working ADC are still needed to verify this flow end-to-end. Local tests mock Firebase. `/api/auth/config` exposes only the public web key, mode, CSRF nonce and session lifetime; it never exposes model/service secrets. Contract: [design/specs/identity.md](design/specs/identity.md).
 
 ## Deployment acceptance checks
 

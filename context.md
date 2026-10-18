@@ -105,3 +105,7 @@ User clarified that palette/idea from 4e1bd51 should be restored. Restored that 
 ## 2026-10-18 — P3 identity backend slice
 
 Owner selected Firebase Auth + Firestore + Cloud Run. Added identity contract and Firebase session endpoints with recent-auth checks, trusted claims, HttpOnly eight-hour cookies, CSRF nonce binding and idempotent browser logout. Existing verified Bearer API clients remain supported; invalid explicit Bearer cannot fall back to a cookie. Added rejection/expiry/cookie/privacy tests before implementation. Sign-out clears its browser cookie even if activity storage is unavailable. No live project or database provisioned.
+
+## 2026-10-18 — P3 sign-in UI slice
+
+Replaced the developer token-entry bridge with an email/password sign-in screen, protected-cookie exchange and sign-out. Firebase mode hides demo persona selection. Logout/401/page-cache restoration clears protected content, dialogs and drafts. Added web/auth.js with no persisted credentials, four Node contract tests and CI coverage. Browser verified Firebase missing-config entry screen and demo-mode regression; no real login claimed.

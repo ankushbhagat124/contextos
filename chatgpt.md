@@ -82,3 +82,7 @@ Latest skills-audit review checked at this milestone: P1 theme and P2 Google fon
 ## Person 3 planning checkpoint — 2026-10-18
 
 Rechecked the latest skills audit while scoping UI/auth/deployment ownership. Theme/CSP action items were handled in 586a04c. Cloud, live identity and live persistence remain unverified; no audit PASS label substitutes for that evidence. Added the explicit P3 capability map and acceptance backlog. Existing task runs are not chat threads, the bearer-token bridge is not finished login/logout, and dependency buttons are not a dedicated relationship explorer. Database/auth choice is pending human preference.
+
+## Selected Firebase stack / first identity slices — 2026-10-18
+
+Owner selected Firebase Auth + Firestore + Cloud Run. Implemented and tested protected-session backend and normal sign-in/logout UI without changing persona authority. 50 Python tests + 4 Node auth contract tests pass. Local browser verified missing-config entry screen and preserved offline Demo flow. Real Firebase accounts, ADC/project configuration and live Firestore/deployment evidence remain open; no cloud setup is claimed.
