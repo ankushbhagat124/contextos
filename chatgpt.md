@@ -78,3 +78,7 @@ Re-read gemini.md at the user's request. Latest remains Round 9: next-action gui
 User explicitly chose the palette/idea from 4e1bd51 after clarifying the earlier revert. Restored that theme and typography while preserving the newer action-first layout, step activity and persona audit. This supersedes the prior Round 9 style disposition. Google font origins are narrowly allowed by CSP without unsafe-inline. Reviewer file remains untouched.
 
 Latest skills-audit review checked at this milestone: P1 theme and P2 Google font CSP are addressed by this restoration; P3 cloud verification remains deferred by the user. Audit praise is not verification evidence: SQLite currently uses BEGIN IMMEDIATE without explicit WAL configuration; source manifests preserve exact payloads but are not themselves cryptographic seals; sub-second test duration is observed, not an enforced performance budget; live-cloud properties remain unverified. No unrelated changes made on the strength of those claims.
+
+## Person 3 planning checkpoint — 2026-10-18
+
+Rechecked the latest skills audit while scoping UI/auth/deployment ownership. Theme/CSP action items were handled in 586a04c. Cloud, live identity and live persistence remain unverified; no audit PASS label substitutes for that evidence. Added the explicit P3 capability map and acceptance backlog. Existing task runs are not chat threads, the bearer-token bridge is not finished login/logout, and dependency buttons are not a dedicated relationship explorer. Database/auth choice is pending human preference.

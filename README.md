@@ -121,6 +121,10 @@ One deployable service keeps the prototype easy to run. A workspace is a bounded
 
 Original sources: [project blueprint](ContextOS_Complete_Project_Blueprint.md) and [event notes](ai_builder_cup_challenges_and_themes.txt).
 
+## Person 3 delivery workstream
+
+[Delivery scope and acceptance criteria](PERSON3_DELIVERY.md) now track real login/logout, verified sessions, managed database integration, remaining screens, task chat, hosting, CI/CD and monitoring. See [ordered plan](tasks/plan.md) and [task backlog](tasks/todo.md). Firebase/Firestore and Supabase/Postgres are compared; the final provider choice is pending. These proposed capabilities are not yet completion claims.
+
 ## Limitations and next steps
 
 The local demo is ready for review. Cloud setup remains deferred by the project owner. The GitHub target is [silent-doom/contextos](https://github.com/silent-doom/contextos). Live AI, durable cloud deployment, normal Firebase sign-in, public judge access, and submission artifacts remain open gates. Semantic search, MCP/IDE integration, repository synchronization, and enterprise administration are future work. [Deployment guide →](DEPLOYMENT.md)

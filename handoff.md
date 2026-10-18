@@ -1,12 +1,12 @@
 # Handoff — ContextOS local prototype
 
-Last updated: 14 October 2026, Asia/Kolkata.
+Last updated: 18 October 2026, Asia/Kolkata.
 
 ## User direction
 
 Build ContextOS feature by feature from the two supplied documents, commit stages locally, and maintain context.md, features.md, requirements.md, handoff.md and design/architecture.md. Git author: **Faizan Choudhary <choudharyfaizan15@gmail.com>**.
 
-**User explicitly deferred Google Cloud setup until the local solution looks good. GitHub publishing is deferred; local GitHub preparation is authorized and complete. Do not deploy, push, or repeatedly request cloud credentials before that local review.**
+**Current direction: build the Person 3 UI/auth/deployment workstream; see PERSON3_DELIVERY.md and tasks/. GitHub push to silent-doom/contextos is authorized. Database/auth provider choice is pending. Earlier cloud deferral remains until the target and provisioning scope are confirmed. Theme follows 4e1bd51. Historical checkpoints below may describe superseded states.**
 
 ## Review protocol
 
@@ -94,3 +94,7 @@ Latest Gemini read: Round 9. Its style-regression alert was explicitly declined 
 User now authorizes GitHub push to silent-doom/contextos (origin already matches). Prior GitHub deferral is lifted for this repository; cloud setup remains deferred. Persona headings and review instructions preserve “QA engineer” capitalization.
 
 Latest design direction supersedes the earlier revert: user explicitly selected the palette and idea from 4e1bd51. That theme is restored while keeping the newer shorter CTA layout, guided steps, persona audit and QA capitalization. Do not restore the old overview copy or roll back current behavior.
+
+## Active next workstream — Person 3 (18 October)
+
+User asks for features/criteria covering all screens, login/logout/provider sessions, verified identity, hosting/DB/CI/secrets/logs/monitoring, and Supabase or a Google alternative. Proposed map/criteria are in PERSON3_DELIVERY.md; order in tasks/plan.md and checklist tasks/todo.md. Recommended first release uses existing Firebase/Firestore adapters with Cloud Run; Supabase Auth/Postgres on Cloud Run is the alternative. Async database choice asked, not yet answered at writing. Spec skill requires human map review before provider-specific implementation. Planning-only increment: runtime and data unchanged. Latest implemented local verification remains 42 tests.

@@ -36,3 +36,23 @@ Demo coverage: cross-role handoff; note candidates; manual authoring; owner auth
 F11 now reveals a single checkpoint at a time with Next/Back, actor attribution and an expandable activity record. Original light/green theme restored per user direction.
 
 Visual refinement: restored palette/typography from 4e1bd51 per clarified user direction; current F11/F13 workflows remain intact.
+
+## Person 3 delivery backlog — 18 October 2026
+
+Full candidate features, priorities and verification: [PERSON3_DELIVERY.md](PERSON3_DELIVERY.md). These are proposed scope, not implemented features.
+
+| ID | Capability | Priority | Current gap |
+|---|---|---|---|
+| P3-01 | Provider login/logout | P0 | Developer token bridge only |
+| P3-02 | Session lifecycle and verified identity handoff | P0 | Backend token checks exist; normal session UX missing |
+| P3-03 | Managed database and durable workspace | P0 | SQLite works; Firestore adapter unverified; Supabase proposed alternative |
+| P3-04 | Dashboard/context/editor completion | P0 | Existing screens need authenticated states and recovery checks |
+| P3-05 | Dedicated relationship explorer | P1 | Dependency buttons only |
+| P3-06 | Review queue completion | P0 | Existing governance; add filters and reconciliation UX |
+| P3-07 | Persisted task chat | P1 | Current runs are standalone |
+| P3-08 | Activity destination and per-turn inspector | P0 | Existing audit/inspector; add filters and conversation selection |
+| P3-09 | Staging hosting/CI promotion/secrets/rollback | P0 | Configured local package; live evidence open |
+| P3-10 | Readiness/logging/monitoring | P0 | Basic health and domain audit; operational controls missing |
+| P3-11 | Release/judge-access evidence | P0 | Real sign-in, store and deployment flow unverified |
+
+P0 = launch-critical. P1 = complete Person 3 scope after the critical path; not silently marked done if deferred.

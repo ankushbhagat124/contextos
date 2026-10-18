@@ -94,3 +94,10 @@ Append an entry in every implementation commit: change, reason, verification, li
 ## 2026-10-15 — Restore the chosen heritage theme
 
 User clarified that palette/idea from 4e1bd51 should be restored. Restored that stylesheet and font families, preserving the current action-first extension rules with matching theme tokens. Retained all current JS flows, QA capitalization, persona suggestions and activity logging. CSP permits only the named Google stylesheet/font origins; no inline-style relaxation.
+
+## 2026-10-18 — Person 3 scope and managed data plan
+
+- Audited existing UI, identity checks, store adapters, CI/deployment docs and latest Gemini audit. Distinguished working offline flows from missing live auth/session/conversation/operations evidence.
+- Created PERSON3_DELIVERY.md: six-module capability map, eleven candidate features, P0/P1 acceptance criteria, security/ownership boundaries, store comparison and live verification gates. Added tasks/plan.md and tasks/todo.md.
+- Recommended Firebase Auth + Firestore + Cloud Run based on existing adapters and supplied event requirements; requested owner choice versus Supabase Auth/Postgres on Cloud Run. Choice remains open. No provider credentials requested in chat.
+- Used spec/documentation workflows; map is proposed and needs owner review before provider-specific contracts/implementation. No application behavior, cloud resources or database contents changed.
