@@ -49,7 +49,7 @@ This proves domain behavior without changing user data. The conflict scenario mo
 
 Audit records optional role, outcome, source_ids and private_role, compatible with older events. Snapshot applies both direct context visibility and source dependency visibility to events. Task/inspection events reference all manifest sources. Domain failures are persisted in a separate transaction after the rejected mutation rolls back, without hidden target IDs or submitted content. A full workspace may prevent that append; original error responses are preserved. Prototype logging is not a tamper-proof compliance store.
 
-Theme restoration: visual rules come from 4e1bd51; new action components use its existing semantic tokens. Font CSS and binaries are allowed only from fonts.googleapis.com and fonts.gstatic.com; system fallbacks keep UI usable offline. No JavaScript/business behavior was reverted.
+Current theme (18 October): royal-blue navigation and accents, an off-white canvas, white cards, and pale-blue interactive surfaces replace the earlier brown/beige palette. Typography and layout remain from 4e1bd51 and the subsequent action-first work. Shared CSS tokens cover workspace and sign-in surfaces, with lighter sidebar accents for contrast. Font CSS and binaries are allowed only from fonts.googleapis.com and fonts.gstatic.com; system fallbacks keep UI usable offline.
 
 ## Selected Firebase identity and storage (18 October)
 

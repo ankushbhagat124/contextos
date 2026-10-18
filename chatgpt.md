@@ -91,6 +91,10 @@ Persistence checkpoint: selected Firestore path now validates configuration and 
 
 Final local verification: 56 Python + 4 Node tests pass, including logout with unavailable audit storage. Latest Gemini audit unchanged; theme/CSP retained, live cloud gate not claimed complete.
 
+## User palette update — 2026-10-18
+
+Reread the latest reviewer checkpoint. User now requests royal blue and off-white, superseding earlier brown/beige palette guidance; existing typography/layout and CSP stay in place. Updated CSS/favicon and current project notes. Contrast samples, in-process asset checks, the existing asset/security-header regression and repository checks pass. No browser connection was available for new visual QA; no cloud behavior is claimed.
+
 ## Incremental enhancement: collaboration verification — 2026-10-18
 
 Latest reviewer checkpoint reread; no new actionable review items. Added a two-user API verifier behind an injected client factory, keeping domain rules and identity enforcement in their existing services. Ten regression cases bring local totals to 66 Python + 4 Node tests, all passing. The user deferred cloud project setup for later assistance, so live evidence remains open and no resources were provisioned. Previous palette edits are preserved.

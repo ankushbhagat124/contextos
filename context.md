@@ -114,6 +114,13 @@ Replaced the developer token-entry bridge with an email/password sign-in screen,
 
 Added clean authenticated-workspace initialization without synthetic knowledge, preserved existing data, made unknown backend/missing Firestore project settings fail explicitly, and retained the Cloud Run SQLite guard. Added five config/init tests. Prepared Firestore client-deny rules, payload index exclusions and a separate live/emulator verification script; only its CLI help was exercised, no cloud writes occurred. 55 Python + 4 Node tests pass.
 
+## 2026-10-18 — Royal-blue and off-white palette
+
+- User requested replacing brown/beige with royal blue and an off-white background. Updated shared colors, sidebar surfaces, links, buttons, focus rings, status/diff treatments and favicon. White cards and pale-blue interactive surfaces separate content from the canvas; existing layout, typography and behavior remain.
+- Bumped the stylesheet URL and updated current theme directions in project documentation, superseding earlier palette choices. Historical prototypes/screenshots remain as references.
+- Verified six representative text/background pairs above 4.5:1 contrast, CSS variable references/braces, updated assets served through FastAPI TestClient, the existing static-assets/security-header test, repository hygiene and diff whitespace. The local service still listens on port 8000.
+- Browser inventory was empty, so no new visual/responsive browser verification or screenshots are claimed. Source changes are on local branch codex/royal-blue-theme; no commit or push performed.
+
 ## 2026-10-18 — First enhancement slice: collaboration verification
 
 - User authorized incremental product enhancements with small, architecturally focused slices; subsequently deferred Google Cloud project selection/setup until we can do it together.

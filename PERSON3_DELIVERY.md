@@ -4,7 +4,7 @@ Date: 18 October 2026 · Status: Firebase Auth + Firestore + Cloud Run selected 
 
 Primary question: **Can an authorized user sign in, find their next action, do governed work, inspect its sources, and return after a deployment without losing it?**
 
-This document defines the next workstream. It does not claim these gaps are implemented or that cloud resources exist. Preserve the selected 4e1bd51 visual language and the current shorter CTA-led layout.
+This document defines the next workstream. It does not claim these gaps are implemented or that cloud resources exist. Preserve the royal-blue/off-white palette selected on 18 October, the typography from 4e1bd51, and the current shorter CTA-led layout.
 
 ## Current evidence
 

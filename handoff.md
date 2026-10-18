@@ -6,7 +6,7 @@ Last updated: 18 October 2026, Asia/Kolkata.
 
 Build ContextOS feature by feature from the two supplied documents, commit stages locally, and maintain context.md, features.md, requirements.md, handoff.md and design/architecture.md. Git author: **Faizan Choudhary <choudharyfaizan15@gmail.com>**.
 
-**Current direction: build the Person 3 UI/auth/deployment workstream; see PERSON3_DELIVERY.md and tasks/. GitHub push to silent-doom/contextos is authorized. Database/auth provider choice is pending. Earlier cloud deferral remains until the target and provisioning scope are confirmed. Theme follows 4e1bd51. Historical checkpoints below may describe superseded states.**
+**Current direction: build the Person 3 UI/auth/deployment workstream; see PERSON3_DELIVERY.md and tasks/. GitHub push to silent-doom/contextos is authorized. Database/auth provider choice is pending. Earlier cloud deferral remains until the target and provisioning scope are confirmed. Theme uses the royal-blue/off-white palette selected on 18 October with existing typography/layout. Historical checkpoints below may describe superseded states.**
 
 ## Review protocol
 
@@ -106,6 +106,10 @@ P3 UI slice replaces the developer ID-token bridge. web/auth.js handles direct F
 P3 persistence preparation: backend/store.py supports explicit initializer; production factory uses domain.empty_workspace for Firebase mode, synthetic seed only for demo. Unknown backend and missing Firestore project fail clearly. firestore.rules denies browser access; server uses IAM. scripts/verify_firestore.py creates/retains a separate synthetic verification workspace and has not been run live. 55 Python + 4 Node tests now pass. P3-S02 and S03 remain open for live checks; do not check them complete based only on mocks.
 
 Latest test count: 56 Python + 4 Node. Added logout-during-storage-outage regression. gcloud CLI is available locally; no target project selected by the user yet. Firebase CLI is not installed here. Latest Gemini audit reread; no new actionable items beyond the previously handled theme/CSP and pending cloud gates.
+
+## Current palette — 18 October
+
+User selected royal-blue navigation/buttons/accents, off-white background and white cards. This supersedes prior palette directions while retaining existing typography/layout and workflows. Updated web/style.css, web/index.html stylesheet version and favicon; docs reflect the current selection. Changes are uncommitted on codex/royal-blue-theme. Contrast samples, asset serving, the existing asset/security-header regression and repository checks pass. No connected browser was available for visual QA. The demo service remains at http://127.0.0.1:8000; refresh to load the new stylesheet.
 
 ## First product-enhancement slice — collaboration verification
 

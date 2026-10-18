@@ -72,7 +72,7 @@ Work leads with one task form and a role-specific suggestion. Its source panel s
 
 The activity view/export returns the latest 100 visible events. It is a prototype workspace ledger, not a tamper-proof compliance archive. Unauthenticated requests, schema-validation errors, and ordinary navigation are outside its scope; at workspace capacity an additional failure log may be unavailable. Demo walkthroughs keep their own captured step activity and do not write to the persistent workspace.
 
-The UI uses the institutional palette and typography from commit `4e1bd51`, alongside the newer CTA-focused layout and guided walkthroughs. Fonts load from Google Fonts, with system fallbacks when offline. Design references remain in `design_revamp/`.
+The UI uses royal-blue accents and navigation, an off-white background, and white cards, retaining the typography from commit `4e1bd51`, the CTA-focused layout, and guided walkthroughs. Fonts load from Google Fonts, with system fallbacks when offline. Historical design references remain in `design_revamp/`.
 
 ## Development checks
 

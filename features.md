@@ -37,6 +37,8 @@ F11 now reveals a single checkpoint at a time with Next/Back, actor attribution 
 
 Visual refinement: restored palette/typography from 4e1bd51 per clarified user direction; current F11/F13 workflows remain intact.
 
+18 October visual refinement: user selected royal-blue navigation/buttons/accents with an off-white canvas and white cards. Palette and favicon updated; existing typography and F11/F13 workflows retained. This supersedes earlier palette directions.
+
 ## Person 3 delivery backlog — 18 October 2026
 
 Full candidate features, priorities and verification: [PERSON3_DELIVERY.md](PERSON3_DELIVERY.md). These are proposed scope, not implemented features.
