@@ -98,3 +98,13 @@ Latest reviewer checkpoint reread; no new actionable review items. Added a two-u
 ## Incremental enhancement: simplified workspace — 2026-10-18
 
 Latest reviewer checkpoint remains unchanged. User approved the Work/Knowledge/Inbox slice; the earlier overview-card layout is superseded while review authority and source provenance remain intact. Added seven Node controller regressions, including late-response cleanup; fixed a pre-existing missing Knowledge filtering function revealed by them. 66 Python + 11 Node tests and static/asset checks pass. No connected browser was available for new visual QA; cloud setup remains deferred.
+
+## Incremental enhancement: conversation backend — 2026-10-18
+
+Latest reviewer checkpoint unchanged. Added P3-S07 behind an application-service
+boundary: private persisted conversations, exact per-turn sources/history,
+explicit refresh, bounded transcripts, idempotent turns and leased attempt
+fencing. Current permissions filter history and derived events/exports; the model
+has no publication authority. 85 Python + 11 Node tests pass, with actual SQLite
+concurrency and provider contracts mocked. P3-S08 UI and live cloud evidence
+remain separate open work. Earlier palette edits are preserved independently.

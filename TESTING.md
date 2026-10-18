@@ -87,3 +87,18 @@ checks found and fixed a pre-existing missing filteredKnowledge function. CI now
 runs both Node files. Syntax, asset serving, repository hygiene and diff checks
 pass. No connected browser was available for new layout, responsive or keyboard
 visual verification; fixture tests do not replace that evidence.
+
+Conversation-backend slice: 85 Python + 11 Node contract tests pass. Seventeen
+new conversation cases cover persisted reopening, exact follow-up history/source
+references, idempotent creation/turns, known-usage failure/retry, redacted errors,
+actual simultaneous requests, pending deduplication, expired-attempt fencing,
+explicit stale refresh and preserved snapshots, source changes during inference,
+revoked-source/actor/role/tenant privacy across history/activity/exports, bounded
+history/output, quota/preflight rollback and turn limits. Two AI contract cases
+check separation of accepted context from working notes and offline labeling.
+All provider calls are mocked/offline; this is backend evidence, without new
+browser or live Firestore/Gemini claims. The existing two dependency deprecation
+warnings remain. Standalone task and browser-controller regressions still pass.
+Restarted the local offline service on port 8000 and verified health/page serving,
+saved follow-up history, reopen and duplicate retry through HTTP in a separate
+synthetic sandbox. Two offline attempts were recorded; no cloud call was made.

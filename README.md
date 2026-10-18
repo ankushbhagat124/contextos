@@ -87,7 +87,7 @@ node --test tests/browser_*.test.cjs
 
 Windows: use `.\.venv\Scripts\python.exe -m pytest -q` and the same Python executable for the helper scripts.
 
-**66 Python tests and 11 Node contract tests pass locally.** Google service calls are mocked in adapter tests. The current navigation is checked with DOM/API fixtures; a connected browser was unavailable for new visual QA. Earlier mobile/desktop browser evidence is historical. [Verification details and limits →](TESTING.md)
+**85 Python tests and 11 Node contract tests pass locally.** Google service calls are mocked in adapter tests. The current navigation is checked with DOM/API fixtures; a connected browser was unavailable for new visual QA. Earlier mobile/desktop browser evidence is historical. [Verification details and limits →](TESTING.md)
 
 GitHub Actions is configured to run tests, repository checks, JavaScript syntax validation, and a Linux container build after the repository is pushed. The latest hosted workflow outcome is **not verified in this session**; its configuration alone is not evidence of a successful Linux/cloud deployment.
 
@@ -105,6 +105,10 @@ FastAPI ── identity + policy ── governed revisions + retrieval
 ```
 
 One deployable service keeps the prototype easy to run. A workspace is a bounded transactional aggregate: 30 contexts, 750 KB serialized storage, and 50 model-call attempts. Larger deployments need storage decomposition and operational controls. [Architecture and decisions →](design/architecture.md)
+
+Private multi-turn conversation APIs now support saved history, exact per-turn
+sources, explicit stale-context refresh and safe retries. The Work UI still uses
+standalone runs; chat UI is the next slice. [Backend contract →](design/specs/conversations.md)
 
 ## Repository map
 

@@ -74,3 +74,23 @@ every action. Work's source panel reads the selected run's immutable manifest,
 not the latest accepted body. Drafts/budgets use session storage and clear with
 protected buffers. No new backend service, schema or publication authority was
 introduced. These are standalone runs, not persisted chat conversations.
+
+## Decision ADR-006: private conversations through an application service
+
+ConversationService coordinates the existing transactional workspace store and
+AI adapter. FastAPI validates identity/input; pure domain helpers enforce source
+visibility, stale dependencies and shared call quotas. Accepted project memory
+remains shared; task transcripts are private to their creator and fixed role.
+Old aggregate payloads gain conversation metadata lazily and reuse the tasks
+collection for ordered per-turn runs. Standalone tasks remain compatible.
+
+Each turn reserves quota and an attempt lease atomically, invokes the model
+outside the transaction, then atomically records outcome/usage/audit. Request
+keys deduplicate turns; attempt IDs fence late results after lease recovery.
+Retries retain the original manifest. Historical messages reference immutable
+turns and remain untrusted working state; explicit refresh starts a new segment
+against current accepted context. Every history source is reauthorized, including
+in exports/activity; revocation hides the entire conversation conservatively.
+History/output and workspace caps fail visibly rather than silently truncate.
+See design/specs/conversations.md for API, recovery semantics and prototype limits.
+This slice adds the backend only; the chat UI and live cloud checks remain open.

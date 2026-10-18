@@ -12,9 +12,9 @@ This document defines the next workstream. It does not claim these gaps are impl
 - Firebase session-cookie exchange, email/password login/logout UI and token/claim checks are implemented with mocked tests. Real provider sign-in is not yet verified.
 - SQLite is the working local store. Firestore adapter exists, uses atomic aggregate transactions, and has not been verified live. No Supabase adapter exists.
 - Relationships appear as dependency buttons in Insights; no dedicated interactive relationship view exists.
-- Tasks are individual runs, not persisted multi-turn conversations.
+- Private persisted conversation APIs now support exact per-turn sources/history, explicit refresh and safe retries. The Work UI still uses standalone runs; conversation UI remains P3-S08.
 - CI is configured; hosted CI, container, cloud deployment, real auth, monitoring and restore evidence must be inspected or produced rather than assumed.
-- Latest local verification: 56 Python tests and 4 Node auth contract tests pass on 18 October. Identity/UI and storage configuration slices are implemented; cloud resources and live behavior are unverified.
+- Latest local verification: 85 Python tests and 11 Node contract tests pass on 18 October. Identity/UI, storage configuration, simplified navigation and conversation backend slices are implemented; cloud resources and live behavior are unverified.
 
 ## Capability map
 

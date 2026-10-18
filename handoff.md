@@ -114,3 +114,22 @@ User requests one part at a time and sound backend boundaries. Cloud project set
 ## Second product-enhancement slice — simplified workspace
 
 Primary UI is now Work/Knowledge/Inbox. Work combines task entry, recent runs and selected-run sources; Inbox has Pending/My review/History and affected personal runs. Activity/usage and walkthroughs are secondary, with mobile More access. Old overview/tasks/reviews links still resolve. Drafts/budgets persist across navigation and clear with protected data; late workspace responses after cleanup are discarded. Restored the missing Knowledge filter function discovered by controller tests. 66 Python + 11 Node tests and static/asset checks pass; visual browser QA is pending because no browser was connected. No backend/cloud changes or persistent chat were added. Keep the separately uncommitted palette edits intact.
+
+## Third product-enhancement slice — conversation backend
+
+P3-S07 is implemented locally. backend/conversations.py coordinates private
+conversation metadata and ordered turns through existing atomic storage; model
+calls run outside transactions. Routes/semantics are in design/specs/conversations.md.
+Each turn retains exact sources and working-history references. Reuse request IDs
+on errors/pending retries; expired attempts are fenced from newer results. Failed
+retries keep the original snapshot. Explicit refresh uses current accepted
+sources and resets working history without deleting earlier turns. Revoked
+historical source access hides the whole conversation and its derived views.
+85 Python + 11 Node tests pass with concurrent SQLite and mocked providers.
+
+Next is P3-S08: connect Work to saved conversations, reopen/follow-up/poll/retry,
+explicit refresh and per-turn inspection. Existing Work still uses standalone
+runs. Preserve request IDs across retries and protected-session cleanup; inspect
+the selected turn's original sources and history, not current documents. Live
+Firebase/Gemini/Firestore and deployment remain open; cloud setup is deferred by
+the user. Keep previous palette edits separate from this backend commit.

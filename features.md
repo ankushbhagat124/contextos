@@ -49,7 +49,7 @@ Full candidate features, priorities and verification: [PERSON3_DELIVERY.md](PERS
 | P3-04 | Dashboard/context/editor completion | P0 | Existing screens need authenticated states and recovery checks |
 | P3-05 | Dedicated relationship explorer | P1 | Dependency buttons only |
 | P3-06 | Review queue completion | P0 | Existing governance; add filters and reconciliation UX |
-| P3-07 | Persisted task chat | P1 | Current runs are standalone |
+| P3-07 | Persisted task chat | P1 | Backend complete locally; Work chat UI remains open |
 | P3-08 | Activity destination and per-turn inspector | P0 | Existing audit/inspector; add filters and conversation selection |
 | P3-09 | Staging hosting/CI promotion/secrets/rollback | P0 | Configured local package; live evidence open |
 | P3-10 | Readiness/logging/monitoring | P0 | Basic health and domain audit; operational controls missing |
@@ -66,3 +66,11 @@ P3-03 configuration slice: authenticated workspaces start empty; Firestore selec
 P3 release-verification slice: `scripts/verify_collaboration.py` exercises two independent Firebase session exchanges, shared decisions, owner review, publication audit, immutable v1/v2 task snapshots, stale warnings, fresh-session history and logout through the API. Ten local regression cases use mocked Firebase and offline AI. Live staging execution and cloud setup remain pending.
 
 P3 workspace slice: Work/Knowledge/Inbox replace six primary navigation entries. Work has one task form, advanced budget controls, draft recovery and original source revisions. Inbox includes scoped attention, affected runs and Pending/My review/History filters; Activity & usage and Walkthroughs remain secondary. Legacy links/demo entry points resolve to current destinations. Seven Node controller regressions pass, including late-response cleanup; visual browser verification remains pending. Standalone runs remain distinct from future multi-turn conversations.
+
+P3-S07 conversation backend: private saved conversations and follow-up turns now
+have exact manifests/history references, pending/succeeded/failed states,
+idempotent retries with attempt fencing, explicit stale-context refresh and
+permission-filtered activity/exports. Seventeen conversation tests and two model
+contract tests added; total 85 Python + 11 Node tests. Existing task API remains
+compatible. Work still uses standalone runs; P3-S08 chat UI and live checks remain
+open. See design/specs/conversations.md for bounds and recovery behavior.
