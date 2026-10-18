@@ -98,3 +98,5 @@ Latest design direction supersedes the earlier revert: user explicitly selected 
 ## Active next workstream — Person 3 (18 October)
 
 User asks for features/criteria covering all screens, login/logout/provider sessions, verified identity, hosting/DB/CI/secrets/logs/monitoring, and Supabase or a Google alternative. Proposed map/criteria are in PERSON3_DELIVERY.md; order in tasks/plan.md and checklist tasks/todo.md. Recommended first release uses existing Firebase/Firestore adapters with Cloud Run; Supabase Auth/Postgres on Cloud Run is the alternative. Async database choice asked, not yet answered at writing. Spec skill requires human map review before provider-specific implementation. Planning-only increment: runtime and data unchanged. Latest implemented local verification remains 42 tests.
+
+Owner answered stack choice: Firebase Auth + Firestore + Cloud Run. Identity backend slice adds backend/identity.py and tests/test_identity.py (50 total tests pass with provider mocks). Contract: design/specs/identity.md. Next implement the normal email/password login screen and sign-out UI; project config/live sign-in still needed.

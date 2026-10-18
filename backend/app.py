@@ -107,24 +107,16 @@ def create_app(store=None, ai=None):
             response.set_cookie('contextos_session', request.state.new_session, httponly=True, samesite='strict', secure=bool(os.getenv('K_SERVICE')), max_age=604800)
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'same-origin'
-        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         if request.url.path.startswith('/api/') or request.url.path == '/' or request.url.path.startswith('/assets/'):
             response.headers['Cache-Control'] = 'no-store'
         return response
 
     def identity(request, response):
         if auth_mode == 'firebase':
-            from firebase_admin import auth
-            token = request.headers.get('authorization', '').removeprefix('Bearer ')
-            try:
-                claims = auth.verify_id_token(token, check_revoked=True)
-                role, workspace = claims['contextos_role'], claims['contextos_workspace']
-                if role not in d.ROLES or not isinstance(workspace, str) or not re.fullmatch(r'[a-zA-Z0-9_-]{1,80}', workspace):
-                    raise ValueError()
-                request.state.identity_info = (workspace, claims['uid'], role)
-                return request.state.identity_info
-            except Exception as exc:
-                raise d.Problem('Sign in with a provisioned Firebase workspace account.', 401) from exc
+            from backend.identity import verified_identity
+            request.state.identity_info = verified_identity(request)
+            return request.state.identity_info
         workspace = request.cookies.get('contextos_session', '')
         if not re.fullmatch(r'[a-f0-9]{64}', workspace):
             workspace = secrets.token_hex(32)
@@ -153,6 +145,9 @@ def create_app(store=None, ai=None):
         entry = next(u for u in state['usage'] if u['id'] == call_id)
         entry.update(usage or {})
         entry['status'] = 'completed' if usage is not None and not failed else 'failed'
+
+    from backend.identity import register_auth_routes
+    register_auth_routes(app, auth_mode)
 
     @app.get('/api/demo/scenarios')
     def demo_scenarios(request: Request, response: Response):

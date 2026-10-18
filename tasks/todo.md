@@ -2,8 +2,8 @@
 
 Proposed tasks; select provider-specific files/contracts after module-map review. Acceptance criteria are in PERSON3_DELIVERY.md.
 
-- [ ] P3-S00: Review module map and choose persistence/auth stack. Verify: owner decision recorded.
-- [ ] P3-S01: Specify provider config + identity/session contracts. Verify: trusted membership and logout/expiry cases enumerated; no client role authority.
+- [x] P3-S00: Review module map and choose persistence/auth stack. Verify: owner decision recorded.
+- [x] P3-S01: Specify provider config + identity/session contracts. Verify: trusted membership and logout/expiry cases enumerated; no client role authority.
 - [ ] P3-S02: Implement login/logout vertical slice. Verify: mock rejection suite + provider test-account browser flow (P3-01/02).
 - [ ] P3-S03: Add selected store contract tests and fail-closed configuration. Verify: transaction rollback and one-winner concurrency (P3-03).
 - [ ] P3-S04: Integrate/provision staging store. Verify: redeploy, two-instance visibility, separate-workspace restore; no real data migration without a plan.

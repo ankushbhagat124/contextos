@@ -56,3 +56,5 @@ Full candidate features, priorities and verification: [PERSON3_DELIVERY.md](PERS
 | P3-11 | Release/judge-access evidence | P0 | Real sign-in, store and deployment flow unverified |
 
 P0 = launch-critical. P1 = complete Person 3 scope after the critical path; not silently marked done if deferred.
+
+P3-01/02 backend slice: session exchange/config/logout and verified cookie identity implemented with mocked Firebase tests. UI sign-in and live provider verification remain open. Chosen stack: Firebase Auth + Firestore + Cloud Run.
