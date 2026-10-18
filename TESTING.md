@@ -102,3 +102,12 @@ warnings remain. Standalone task and browser-controller regressions still pass.
 Restarted the local offline service on port 8000 and verified health/page serving,
 saved follow-up history, reopen and duplicate retry through HTTP in a separate
 synthetic sandbox. Two offline attempts were recorded; no cloud call was made.
+
+Overview restoration: 85 Python + 16 Node tests pass. Controller checks cover the
+four-tab/default routing, required-source priority and revision evidence, personal
+scope, escaped content, original-run inspection, honest empty/failure states,
+author/reviewer proposal conflicts, correct Inbox filters, entry/manual refresh
+and late Overview responses after protected cleanup. The fixture now normalizes
+location.hash like a browser. Updated page/JS/CSS serve through FastAPI; CSS
+braces/variables and Critical badge contrast (6.20:1) pass. No connected browser
+was available for new visual/responsive verification. Existing warnings remain.

@@ -108,3 +108,12 @@ fencing. Current permissions filter history and derived events/exports; the mode
 has no publication authority. 85 Python + 11 Node tests pass, with actual SQLite
 concurrency and provider contracts mocked. P3-S08 UI and live cloud evidence
 remain separate open work. Earlier palette edits are preserved independently.
+
+## User refinement: restore Overview — 2026-10-18
+
+Latest reviewer checkpoint unchanged. Owner requested Overview back; restored it
+as the first/default tab with project counts, recent activity and scoped personal
+actions. Critical flags changed required sources with exact revision evidence;
+reviews/conflicts and stale work remain separate actionable descriptions. No
+backend authority changed. 85 Python + 16 Node tests pass; assets, CSS and contrast
+checked. Connected-browser visual QA remains unavailable; palette edits preserved.

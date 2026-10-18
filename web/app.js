@@ -19,11 +19,11 @@ const paths = {
 const icon = (name) => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name] || paths.knowledge}"/></svg>`;
 const roleNames = {developer:'Developer',pm:'Product manager',architect:'Architect',qa:'QA engineer',security:'Security'};
 const owners = {Requirements:'pm',Architecture:'architect',Implementation:'developer',Quality:'qa',Security:'security'};
-const navItems = [['work','Work','tasks'],['knowledge','Knowledge','knowledge'],['inbox','Inbox','reviews']];
+const navItems = [['overview','Overview','overview'],['work','Work','tasks'],['knowledge','Knowledge','knowledge'],['inbox','Inbox','reviews']];
 const secondaryItems = [['insights','Activity & usage','insights'],['demo','Walkthroughs','demo']];
-const routeAliases = {overview:'work',tasks:'work',reviews:'inbox'};
+const routeAliases = {tasks:'work',reviews:'inbox'};
 function resolveView(view) {
-  return Object.hasOwn(routeAliases,view) ? routeAliases[view] : ([...navItems,...secondaryItems].some(([id]) => id === view) ? view : 'work');
+  return Object.hasOwn(routeAliases,view) ? routeAliases[view] : ([...navItems,...secondaryItems].some(([id]) => id === view) ? view : 'overview');
 }
 function viewLabel(view) {
   return [...navItems,...secondaryItems].find(([id]) => id === resolveView(view))[1];
@@ -96,7 +96,7 @@ function render() {
   $('#secondary-nav').innerHTML = tools;
   $('#mobile-tools').innerHTML = tools;
   $('#crumb').textContent = viewLabel(currentView);
-  $('#main').innerHTML = ({work, knowledge, inbox, insights, demo})[currentView]();
+  $('#main').innerHTML = ({overview, work, knowledge, inbox, insights, demo})[currentView]();
   if (currentView === 'knowledge') $('#search').value = queryFilter;
 }
 function canReview(proposal) {
@@ -107,6 +107,41 @@ function affectedRuns() {
 }
 function attentionCount() {
   return state.proposals.filter(canReview).length + affectedRuns().length;
+}
+function overviewAttention() {
+  const contexts = new Map(state.contexts.map(c => [c.id,c]));
+  const items = affectedRuns().slice().reverse().map(t => {
+    const required = t.manifest.sources.filter(s => contexts.get(s.id)?.mandatory && contexts.get(s.id).revision !== s.revision);
+    return {priority:required.length ? 0 : 2, label:required.length ? 'Critical' : 'Needs review',
+      title:t.query, detail:required.length ? `Required context changed: ${required.map(s => `${s.id} v${s.revision} → v${contexts.get(s.id).revision}`).join(', ')}. Check this work before continuing.` : 'An accepted source or dependency changed after this run.',
+      button:'Inspect run', action:'open-run', attrs:`data-id="${esc(t.id)}"`};
+  });
+  for (const p of state.proposals.filter(p => p.status === 'pending')) {
+    const current = contexts.get(p.context_id);
+    const conflict = current && current.revision !== p.base_revision;
+    if (!canReview(p) && !(conflict && p.author === state.actor)) continue;
+    items.push({priority:1, label:conflict ? 'Conflict' : 'Review', title:p.title,
+      detail:conflict ? `Based on v${p.base_revision}; accepted context is now v${current.revision}. A new proposal is needed.` : `${roleNames[owners[p.domain]]} review requested by ${p.author}.`,
+      button:'View proposal', action:'navigate', attrs:`data-view="inbox" data-filter="${canReview(p) ? 'mine' : 'pending'}"`});
+  }
+  if (state.usage.at(-1)?.status === 'failed') items.push({priority:1, label:'Call failed',
+    title:'Latest model attempt failed', detail:'Check activity and usage before retrying the task.',
+    button:'View activity', action:'navigate', attrs:'data-view="insights"'});
+  return items.sort((a,b) => a.priority - b.priority);
+}
+function overview() {
+  const items = overviewAttention(), critical = items.filter(item => item.priority === 0).length;
+  const accepted = state.contexts.filter(c => c.status === 'accepted');
+  const pending = state.proposals.filter(p => p.status === 'pending').length;
+  const stale = state.tasks.filter(t => t.stale).length;
+  const required = accepted.filter(c => c.mandatory).length;
+  const status = critical ? `${critical} critical ${critical === 1 ? 'item' : 'items'}` : items.length ? 'Needs attention' : 'No actions flagged';
+  const summary = critical ? 'Required context changed in your earlier work.' : items.length ? `${items.length} ${items.length === 1 ? 'item needs' : 'items need'} your attention.` : accepted.length ? 'Your review queue and recorded runs have no flagged actions.' : 'Start by adding your project’s shared knowledge.';
+  return heading('PROJECT OVERVIEW',esc(state.project.name),'Shared decisions, reviews and work at a glance.',btn('Refresh overview','refresh-overview'))+
+    `<section class="overview-status ${critical ? 'is-critical' : ''}" aria-label="Your attention summary"><div><span class="tag ${critical ? 'critical' : items.length ? 'amber' : ''}">${status}</span><h2>${summary}</h2><p>Showing project information available to you · ${roleNames[state.role]}</p></div><div class="button-group">${btn(`${icon('plus')} Start a task`,'navigate',true,'data-view="work"')}${btn('Browse knowledge','navigate',false,'data-view="knowledge"')}</div></section>`+
+    `<div class="stats">${stat('Accepted topics',accepted.length,'Shared project knowledge','knowledge')}${stat('Pending proposals',pending,'Awaiting independent review','reviews')}${stat('Affected runs',stale,'Visible runs with changed context','branch')}${stat('Required constraints',required,'Included in context assembly','shield')}</div>`+
+    `<div class="grid-2 overview-grid"><section class="panel" aria-labelledby="attention-title"><div class="panel-head"><div><h2 id="attention-title">Needs your attention</h2><p>Changed required context comes first.</p></div><span class="tag">${items.length} ${items.length === 1 ? 'item' : 'items'}</span></div>${items.length ? `<ul class="overview-attention">${items.slice(0,6).map(item => `<li class="overview-attention-item"><div><span class="tag ${item.priority === 0 ? 'critical' : 'amber'}">${item.label}</span><h3>${esc(item.title)}</h3><p>${esc(item.detail)}</p></div>${btn(item.button,item.action,false,item.attrs)}</li>`).join('')}</ul>${items.length > 6 ? `<p class="overview-more">Showing the first 6 of ${items.length} items. Open Inbox for reviews and affected runs.</p>` : ''}` : empty(accepted.length ? 'Nothing needs your attention' : 'No shared knowledge yet',accepted.length ? 'Start a task or explore your team’s accepted decisions.' : 'Add requirements or decisions for an independent owner to review.',accepted.length ? btn('Start a task','navigate',true,'data-view="work"') : btn('Add knowledge','ingest',true),'check')}<div class="panel-bottom">${btn('Open Inbox','navigate',false,'data-view="inbox" data-filter="pending"')}</div></section>`+
+    `<section class="panel" aria-labelledby="recent-activity-title"><div class="panel-head"><div><h2 id="recent-activity-title">Recent activity</h2><p>Latest changes and outcomes you can access.</p></div>${icon('clock')}</div><div class="panel-body">${state.events.length ? eventRows(state.events.slice(0,5)) : empty('No activity yet','Changes and task outcomes will appear here.','','clock')}</div><div class="panel-bottom">${btn('View all activity','navigate',false,'data-view="insights"')}</div></section></div>`;
 }
 function filteredKnowledge() {
   const query = queryFilter.trim().toLowerCase();
@@ -277,7 +312,7 @@ function showSignIn(message='') {
   clearProtectedView();
   document.body.classList.add('signed-out');
   const ready = identityConfig?.login_ready;
-  $('#main').innerHTML = `<section class="auth-panel"><div class="auth-intro"><a class="brand" href="#work">ContextOS</a><div class="eyebrow">SHARED KNOWLEDGE. CLEAR OWNERSHIP.</div><h1>Your workspace,<br>with the right access.</h1><p>Sign in to continue with your team’s accepted decisions.</p><span class="tag">Firebase · Protected session</span></div><div class="auth-form-panel"><h2>Sign in</h2><p class="subtitle">Use your administrator-provisioned account.</p>${message ? `<div class="note amber" role="alert">${esc(message)}</div>` : ''}${!ready ? '<div class="note">Firebase sign-in is awaiting project configuration. Ask your administrator to enable email/password sign-in and set the public Web API key.</div>' : ''}<form id="login-form" class="gap-top"><label class="field">Email<input type="email" name="email" autocomplete="username" required maxlength="254" ${ready?'':'disabled'}></label><label class="field">Password<input type="password" name="password" autocomplete="current-password" required maxlength="4096" ${ready?'':'disabled'}></label><button class="btn primary" type="submit" ${ready?'':'disabled'}>Sign in to workspace ${icon('arrow')}</button><p class="form-help">Workspace and role are assigned by your administrator.</p></form><button class="text-btn" data-action="retry-sign-in">Refresh sign-in</button></div></section>`;
+  $('#main').innerHTML = `<section class="auth-panel"><div class="auth-intro"><a class="brand" href="#overview">ContextOS</a><div class="eyebrow">SHARED KNOWLEDGE. CLEAR OWNERSHIP.</div><h1>Your workspace,<br>with the right access.</h1><p>Sign in to continue with your team’s accepted decisions.</p><span class="tag">Firebase · Protected session</span></div><div class="auth-form-panel"><h2>Sign in</h2><p class="subtitle">Use your administrator-provisioned account.</p>${message ? `<div class="note amber" role="alert">${esc(message)}</div>` : ''}${!ready ? '<div class="note">Firebase sign-in is awaiting project configuration. Ask your administrator to enable email/password sign-in and set the public Web API key.</div>' : ''}<form id="login-form" class="gap-top"><label class="field">Email<input type="email" name="email" autocomplete="username" required maxlength="254" ${ready?'':'disabled'}></label><label class="field">Password<input type="password" name="password" autocomplete="current-password" required maxlength="4096" ${ready?'':'disabled'}></label><button class="btn primary" type="submit" ${ready?'':'disabled'}>Sign in to workspace ${icon('arrow')}</button><p class="form-help">Workspace and role are assigned by your administrator.</p></form><button class="text-btn" data-action="retry-sign-in">Refresh sign-in</button></div></section>`;
 }
 async function bootstrapIdentity() {
   try {
@@ -294,6 +329,7 @@ async function bootstrapIdentity() {
 async function action(el) {
   const a = el.dataset.action, id = el.dataset.id;
   if (a === 'retry-sign-in') return bootstrapIdentity();
+  if (a === 'refresh-overview') return refresh();
   if (a === 'sign-out') {
     await window.contextosIdentity.signOut();
     showSignIn('You signed out of this browser.');
@@ -336,7 +372,10 @@ async function action(el) {
     toast(`Ready to explore as ${demoPersonas[scenario.role].title}.`);
     return;
   }
-  if (a === 'navigate') return go(el.dataset.view);
+  if (a === 'navigate') {
+    if (el.dataset.view === 'inbox' && ['pending','mine','history'].includes(el.dataset.filter)) inboxFilter = el.dataset.filter;
+    return go(el.dataset.view);
+  }
   if (a === 'close') return $('#dialog').close();
   if (a === 'context') return openContext(id);
   if (a === 'edit') return editContext();
@@ -407,7 +446,7 @@ $('#dialog').addEventListener('click', e => {
   if (dirty) {toast('Your draft is still here. Use the close button to discard it.'); return;}
   dialog.close();
 });
-window.addEventListener('hashchange',async () => {currentView = resolveView(location.hash.slice(1)); $('#workspace-tools').open = false; window.scrollTo({top:0,behavior:'instant'}); if(['inbox','insights'].includes(currentView) && state) {try {await refresh();} catch(err) {toast(err.message,true);}} else render();});
+window.addEventListener('hashchange',async () => {currentView = resolveView(location.hash.slice(1)); $('#workspace-tools').open = false; window.scrollTo({top:0,behavior:'instant'}); if(['overview','inbox','insights'].includes(currentView) && state) {try {await refresh();} catch(err) {toast(err.message,true);}} else render();});
 // Revalidate pages restored from the browser's back-forward cache before showing data.
 window.addEventListener('pageshow', e => {
   if (e.persisted && identityConfig?.auth_mode === 'firebase') {

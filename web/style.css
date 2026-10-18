@@ -2080,3 +2080,30 @@ dialog::backdrop{
   .workspace-summary>.btn {white-space:normal;text-align:left;}
   .inbox-filters .btn {font-size:11px;padding:8px 10px;}
 }
+
+/* Project overview: evidence-based priorities over the permitted workspace. */
+.overview-status {display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 24px;margin-bottom:22px;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:4px;}
+.overview-status h2 {margin-top:8px;font-size:23px;}
+.overview-status p {margin-top:8px;font-size:11px;color:var(--muted);}
+.overview-status.is-critical {border-left-color:#a52e49;}
+.overview-status>.button-group {flex-wrap:wrap;flex-shrink:0;}
+.tag.critical {background:#fff1f3;border-color:#edc6d0;color:#a52e49;}
+.overview-grid {align-items:start;}
+.overview-attention {list-style:none;margin:0;padding:0;}
+.overview-attention-item {display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 22px;}
+.overview-attention-item+li {border-top:1px solid var(--line);}
+.overview-attention-item>div {min-width:0;overflow-wrap:anywhere;}
+.overview-attention-item h3 {margin-top:6px;font-family:inherit;font-size:13px;letter-spacing:0;}
+.overview-attention-item p {margin-top:5px;font-size:11px;color:var(--muted);}
+.overview-attention-item>.btn {flex-shrink:0;}
+.overview-more {padding:0 22px 18px;font-size:11px;color:var(--muted);}
+.overview-grid .panel-head {flex-wrap:wrap;}
+.overview-grid .activity>div {min-width:0;overflow-wrap:anywhere;}
+@media(max-width:1150px) {.overview-status {align-items:start;flex-direction:column;gap:16px;}}
+@media(max-width:600px) {
+  .overview-status {padding:18px;}
+  .overview-status h2 {font-size:21px;}
+  .overview-attention-item {align-items:start;flex-direction:column;gap:12px;padding:18px;}
+  .overview-grid .activity {grid-template-columns:24px minmax(0,1fr);}
+  .overview-grid .activity time {grid-column:2;}
+}

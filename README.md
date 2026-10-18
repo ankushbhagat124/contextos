@@ -46,15 +46,17 @@ Offline answers are explicitly labeled deterministic source briefings. To config
 
 ## Try the complete workflow
 
-1. Open **Work** to start a task, **Knowledge** to inspect accepted decisions, or **Inbox** to review proposals and affected work. **Walkthroughs → Start walkthrough** is available in the secondary navigation (on mobile, open **More**). Advance with **Next step**, revisit with **Back**, then finish. **Verify all 12 cases** runs the checks in bulk.
+1. Open **Overview** for project counts, critical changed constraints, reviews and recent activity. Use **Work** to start a task, **Knowledge** to inspect accepted decisions, or **Inbox** to review proposals and affected work. **Walkthroughs → Start walkthrough** is available in the secondary navigation (on mobile, open **More**). Advance with **Next step**, revisit with **Back**, then finish. **Verify all 12 cases** runs the checks in bulk.
 2. Choose **Try in workspace** to explore the corresponding persistent workflow.
 3. As **Developer**, run a payment-retry task and inspect its source manifest.
 4. Propose an architecture revision in **Knowledge**; switch to **Architect** and open **Inbox** to review and publish it.
-5. Open the affected run from **Inbox** or **Work**, inspect its original sources, then rerun with the updated source. Context budgets are under **Advanced options**; drafts survive navigation. Old `#overview`, `#tasks` and `#reviews` bookmarks still work.
+5. Open the affected run from **Overview**, **Inbox** or **Work**, inspect its original sources, then rerun with the updated source. Context budgets are under **Advanced options**; drafts survive navigation. `#overview` opens the restored dashboard; old `#tasks` and `#reviews` bookmarks still work.
 
 The Demo tab also covers note ingestion, manual authoring, restricted access, stale competing proposals, rejection, rollback, mandatory budget constraints, audit history, and truthful usage reporting. [Demo guide →](demo.md)
 
 ## Persona actions and next steps
+
+Overview is the landing page and first navigation tab. It summarizes accessible project knowledge, pending proposals, affected runs and required constraints. Its personal attention list prioritizes runs whose required sources changed, followed by reviews, proposal conflicts, the latest failed model attempt and other stale work. Critical labels identify changed required revisions; they are not a project health or security certification. Entry and manual refresh fetch current permitted data.
 
 Work leads with one task form and a role-specific suggestion. Its source panel shows the exact revisions used by the selected run. Inbox combines proposals with affected personal runs, with Pending, For my review and History filters. Its attention badge counts independent owned reviews and affected personal runs; publication still requires an explicit independent owner decision.
 
@@ -87,7 +89,7 @@ node --test tests/browser_*.test.cjs
 
 Windows: use `.\.venv\Scripts\python.exe -m pytest -q` and the same Python executable for the helper scripts.
 
-**85 Python tests and 11 Node contract tests pass locally.** Google service calls are mocked in adapter tests. The current navigation is checked with DOM/API fixtures; a connected browser was unavailable for new visual QA. Earlier mobile/desktop browser evidence is historical. [Verification details and limits →](TESTING.md)
+**85 Python tests and 16 Node contract tests pass locally.** Google service calls are mocked in adapter tests. The current navigation is checked with DOM/API fixtures; a connected browser was unavailable for new visual QA. Earlier mobile/desktop browser evidence is historical. [Verification details and limits →](TESTING.md)
 
 GitHub Actions is configured to run tests, repository checks, JavaScript syntax validation, and a Linux container build after the repository is pushed. The latest hosted workflow outcome is **not verified in this session**; its configuration alone is not evidence of a successful Linux/cloud deployment.
 

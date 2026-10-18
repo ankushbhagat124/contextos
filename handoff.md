@@ -133,3 +133,15 @@ runs. Preserve request IDs across retries and protected-session cleanup; inspect
 the selected turn's original sources and history, not current documents. Live
 Firebase/Gemini/Firestore and deployment remain open; cloud setup is deferred by
 the user. Keep previous palette edits separate from this backend commit.
+
+## Latest user refinement — Overview restored
+
+Overview is the first/default tab, with accessible project counts, recent activity
+and personal priorities. Critical flags stale personal runs with changed required
+source revisions; independent reviews, proposal/base conflicts, latest failed
+model attempts and other stale runs are also actionable. Links preserve original
+run inspection and correct Inbox filters. Entry/manual refresh uses protected
+cleanup guards. Four primary destinations now supersede the earlier three-tab
+direction; royal-blue/off-white remains. 85 Python + 16 Node tests and asset/CSS
+checks pass; no connected browser was available for visual QA. Backend, cloud and
+the open P3-S08 conversation UI are unchanged. Preserve prior palette edits.

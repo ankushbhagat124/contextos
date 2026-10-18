@@ -74,3 +74,10 @@ permission-filtered activity/exports. Seventeen conversation tests and two model
 contract tests added; total 85 Python + 11 Node tests. Existing task API remains
 compatible. Work still uses standalone runs; P3-S08 chat UI and live checks remain
 open. See design/specs/conversations.md for bounds and recovery behavior.
+
+Overview restoration: Overview is again the first tab and default landing page,
+alongside Work/Knowledge/Inbox. Accessible project counts, recent activity and
+scoped personal actions show changed required constraints as Critical, independent
+reviews, proposal/base conflicts and affected work, with source/review links and
+refresh. No backend or policy changes. 85 Python + 16 Node tests pass; new visual
+browser QA remains unavailable. This supersedes the Overview-to-Work redirect.

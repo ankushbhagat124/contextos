@@ -94,3 +94,16 @@ in exports/activity; revocation hides the entire conversation conservatively.
 History/output and workspace caps fail visibly rather than silently truncate.
 See design/specs/conversations.md for API, recovery semantics and prototype limits.
 This slice adds the backend only; the chat UI and live cloud checks remain open.
+
+## Decision ADR-007: restore an actionable project overview
+
+Owner requested Overview back alongside Work, Knowledge and Inbox, superseding
+ADR-005's three-link navigation and Overview alias. Overview is the default route
+and uses the existing permission-filtered workspace snapshot; no new API/storage
+or policy authority is introduced. The controller projects personal actions and
+visible project counts without changing accepted knowledge. Critical means a
+stale personal run loaded a required source whose accepted revision changed;
+details identify that source and both revisions. Other reviews, base conflicts,
+latest failed calls and stale runs retain descriptive labels. Inspection uses
+the original run, and review links open the appropriate Inbox filter. Snapshot
+refresh shares the protected-generation guard used by Inbox and Activity.
