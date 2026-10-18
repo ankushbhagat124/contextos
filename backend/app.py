@@ -121,7 +121,7 @@ def create_app(store=None, ai=None):
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'same-origin'
         response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
-        if request.url.path.startswith('/api/') or request.url.path == '/' or request.url.path.startswith('/assets/'):
+        if request.url.path.startswith('/api/') or request.url.path in ('/', '/knowledge') or request.url.path.startswith('/assets/'):
             response.headers['Cache-Control'] = 'no-store'
         return response
 
@@ -171,7 +171,7 @@ def create_app(store=None, ai=None):
         current = app.state.store.read(wid)
         result = d.snapshot(current, role, actor)
         result.update(actor=actor, ai_mode=app.state.ai.mode, auth_mode=auth_mode,
-                      next_actions=d.next_actions(current, role, actor))
+                      next_actions=d.next_actions(current, role, actor), context_pages_enabled=True)
         return result
 
     @app.post('/api/persona')
@@ -310,10 +310,14 @@ def create_app(store=None, ai=None):
             return {'recorded': True}
         return app.state.store.mutate(wid, record)
 
+    from backend.api.main import create_router
+    app.include_router(create_router(workspace), prefix='/api/context', tags=['Shared knowledge'])
+
     @app.get('/favicon.ico', include_in_schema=False)
     def favicon():
         return FileResponse(ROOT / 'web' / 'favicon.svg', media_type='image/svg+xml')
 
+    @app.get('/knowledge', include_in_schema=False)
     @app.get('/')
     def index():
         return FileResponse(ROOT / 'web' / 'index.html')
